@@ -29,7 +29,7 @@ public class PagarMeRequest
 		}
 	}
 
-	public void run() {
+	public void run() throws PagarMeException {
 		URL url;
 		HttpURLConnection connection = null;
 		String requestParameters = this.parametersString();
@@ -42,7 +42,6 @@ public class PagarMeRequest
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(requestParameters.getBytes().length));
-			connection.setRequestProperty("Content-Language", "en-US");  
 
 			connection.setUseCaches (false);
 			connection.setDoInput(true);
@@ -57,7 +56,6 @@ public class PagarMeRequest
 
 			if (connection.getResponseCode() != 200) {
 				responseScanner = new Scanner(connection.getErrorStream());
-				System.out.println("error");
 			} else {
 				responseScanner = new Scanner(connection.getInputStream());
 			}
@@ -68,13 +66,8 @@ public class PagarMeRequest
 			System.out.println(response);
 
 		} catch (Exception e) {
-
-			e.printStackTrace();
-			System.out.println("FAIL");
-			/* return null; */
-
+			throw new PagarMeConnectionException("Could not connect to server.");
 		} finally {
-			System.out.println("disconnect");
 			if(connection != null) {
 				connection.disconnect(); 
 			}

@@ -46,6 +46,12 @@ public class App
 		disableCertificateValidation();
 
 		PagarMeRequest request = new PagarMeRequest("/transactions", "GET", false);
-		request.run();
+
+		try {
+			request.run();
+		} catch (PagarMeException e) {
+			System.out.println("EXCEPTION");
+			e.printStackTrace();
+		}
 	}
 }
