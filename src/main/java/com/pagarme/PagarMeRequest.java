@@ -30,7 +30,7 @@ public class PagarMeRequest
 		}
 	}
 
-	public Object run() throws PagarMeException {
+	public HashMap run() throws PagarMeException {
 		URL url;
 		HttpURLConnection connection = null;
 		String requestParameters = this.parametersString();
@@ -73,19 +73,21 @@ public class PagarMeRequest
 			}
 		}
 
-		Object responseObject;
+		HashMap responseObject;
 
 		try {
 			Gson gson = new Gson();
-			responseObject = gson.fromJson(responseString, Object.class);
+			responseObject = gson.fromJson(responseString, HashMap.class);
 		} catch (Exception e) {
 			throw new PagarMeResponseException("Invalid JSON response.");
+		}
+
+		if(responseObject.containsKey("error")) {
+			throw new PagarMeResponseException(responseObject.get("error").toString());
 		}
 
 		System.out.println(responseObject);
 
 		return responseObject;
-
-		/* System.out.println(response); */
 	}
 }
