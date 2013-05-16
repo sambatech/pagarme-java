@@ -7,24 +7,54 @@ import com.google.gson.Gson;
 
 public class PagarMeRequest
 {
-	String path;
-	String method;
-	boolean live;
-	String apiVersion = "1";
+	public String path;
+	public String method;
+	public boolean live;
+	public String apiVersion = "1";
+	public HashMap parameters;
 
 	public PagarMeRequest(String _path, String _method, boolean _live) {
 		this.path = _path;
 		this.method = _method;
 		this.live = _live;
+		this.parameters = new HashMap();
+	}
+
+	private HashMap requestParameters() {
+		HashMap params = new HashMap();
+		params.put("api_key", PagarMe.getInstance().apiKey);
+		params.putAll(parameters);
+		return params;
 	}
 
 	private String requestURL() {
 		return "https://127.0.0.1:3001/" + apiVersion + this.path;
 	}
 
-	private static String parametersString() {
+	private String joinList(List<?> list, char delimiter) {
+		StringBuilder result = new StringBuilder();
+		for (Iterator<?> i = list.iterator(); i.hasNext();) {
+			result.append(i.next());
+			if (i.hasNext()) {
+				result.append(delimiter);
+			}
+		}
+		return result.toString();
+	}
+
+	private String parametersString() {
 		try {
-			return "api_key=" + URLEncoder.encode("123123123", "UTF-8");
+			List<String> formattedParameters = new ArrayList<String> ();
+
+			HashMap params = requestParameters();
+			Iterator it = params.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry pairs = (Map.Entry)it.next();
+				formattedParameters.add(pairs.getKey() + "=" + URLEncoder.encode(pairs.getValue().toString(), "UTF-8"));
+				it.remove(); // avoids a ConcurrentModificationException
+			}
+
+			return joinList(formattedParameters, '&');
 		} catch (UnsupportedEncodingException e) {
 			return null;
 		}
@@ -39,16 +69,17 @@ public class PagarMeRequest
 		String responseString;
 
 		try {
+			System.out.println(this.requestURL());
 			url = new URL(this.requestURL());
 			connection = (HttpURLConnection)url.openConnection();
-			connection.setRequestMethod(this.method);
+
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(requestParameters.getBytes().length));
-
+			connection.setRequestMethod(this.method);
 			connection.setUseCaches(false);
-			connection.setDoInput(true);
 			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setReadTimeout(10000);
 
 			DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
 			outputStream.writeBytes(requestParameters);
