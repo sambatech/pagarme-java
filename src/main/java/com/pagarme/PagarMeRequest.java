@@ -3,6 +3,7 @@ package com.pagarme;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import com.google.gson.Gson;
 
 public class PagarMeRequest
 {
@@ -29,11 +30,13 @@ public class PagarMeRequest
 		}
 	}
 
-	public void run() throws PagarMeException {
+	public Object run() throws PagarMeException {
 		URL url;
 		HttpURLConnection connection = null;
 		String requestParameters = this.parametersString();
 		System.out.println(requestParameters);
+
+		String responseString;
 
 		try {
 			url = new URL(this.requestURL());
@@ -43,7 +46,7 @@ public class PagarMeRequest
 
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(requestParameters.getBytes().length));
 
-			connection.setUseCaches (false);
+			connection.setUseCaches(false);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 
@@ -61,10 +64,7 @@ public class PagarMeRequest
 			}
 
 			responseScanner.useDelimiter("\\Z");
-			String response = responseScanner.next();
-			
-			System.out.println(response);
-
+			responseString = responseScanner.next();
 		} catch (Exception e) {
 			throw new PagarMeConnectionException("Could not connect to server.");
 		} finally {
@@ -72,5 +72,20 @@ public class PagarMeRequest
 				connection.disconnect(); 
 			}
 		}
+
+		Object responseObject;
+
+		try {
+			Gson gson = new Gson();
+			responseObject = gson.fromJson(responseString, Object.class);
+		} catch (Exception e) {
+			throw new PagarMeResponseException("Invalid JSON response.");
+		}
+
+		System.out.println(responseObject);
+
+		return responseObject;
+
+		/* System.out.println(response); */
 	}
 }
