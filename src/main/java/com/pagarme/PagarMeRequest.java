@@ -60,32 +60,57 @@ public class PagarMeRequest
 		}
 	}
 
+	private HttpURLConnection performWriteBodyRequest(String requestURL, String parameters, String method) throws Exception {
+		URL url = new URL(requestURL);
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setFixedLengthStreamingMode(parameters.getBytes().length);
+		connection.setRequestMethod(method);
+		connection.setDoOutput(true);
+		connection.setDoInput(true);
+		connection.setUseCaches(false);
+		connection.setReadTimeout(10000);
+
+		DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+		outputStream.writeBytes(parameters);
+		outputStream.flush();
+		outputStream.close();
+		
+		return connection;
+	}
+	
+	private HttpURLConnection performGetRequest(String requestURL, String parameters) throws Exception {
+		URL url = new URL(requestURL + "?" + parameters);
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		connection.setDoInput(true); // true if we want to read server's response
+		connection.setDoOutput(false); // false indicates this is a GET request
+		connection.setUseCaches(false);
+		connection.setReadTimeout(10000);
+
+		return connection;
+	}
+
 	public HashMap run() throws PagarMeException {
-		URL url;
-		HttpURLConnection connection = null;
+		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
 		System.out.println(requestParameters);
+
+		HttpURLConnection connection;
+
+		try {
+			if(this.method.toUpperCase().equals("GET")) {
+				connection = performGetRequest(requestURL, requestParameters);
+			} else {
+				connection = performWriteBodyRequest(requestURL, requestParameters, this.method);
+			}
+		} catch (Exception e) {
+			throw new PagarMeConnectionException("Could not connect to server.");
+		}
 
 		String responseString;
 
 		try {
-			System.out.println(this.requestURL());
-			url = new URL(this.requestURL());
-			connection = (HttpURLConnection)url.openConnection();
-
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			connection.setRequestProperty("Content-Length", "" + Integer.toString(requestParameters.getBytes().length));
-			connection.setRequestMethod(this.method);
-			connection.setUseCaches(false);
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setReadTimeout(10000);
-
-			DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-			outputStream.writeBytes(requestParameters);
-			outputStream.flush();
-			outputStream.close();
-
 			Scanner responseScanner;
 
 			if (connection.getResponseCode() != 200) {
@@ -96,6 +121,8 @@ public class PagarMeRequest
 
 			responseScanner.useDelimiter("\\Z");
 			responseString = responseScanner.next();
+
+			System.out.println(responseString);
 		} catch (Exception e) {
 			throw new PagarMeConnectionException("Could not connect to server.");
 		} finally {
