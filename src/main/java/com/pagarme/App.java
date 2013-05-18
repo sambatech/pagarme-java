@@ -4,6 +4,7 @@ import java.net.*;
 import java.security.*;
 import java.security.cert.*;
 import java.io.*;
+import java.util.*;
 
 import javax.net.ssl.*;
 
@@ -46,18 +47,36 @@ public class App
 		PagarMe.getInstance().apiKey = "4f0907cdfaf855b83a5d4a83a247772f";
 
 		try {
-			PagarMeTransaction transaction = PagarMeTransaction.findById("6");
-			System.out.println("status: " + transaction.status);
-			System.out.println("amount: " + transaction.amount);
-			System.out.println("installments: " + transaction.installments);
-			System.out.println("id: " + transaction.id);
-			System.out.println("live: " + transaction.live);
-			System.out.println("costumerName: " + transaction.costumerName);
-			System.out.println("cardLastDigits: " + transaction.cardLastDigits);
+			List<PagarMeTransaction> transactions = PagarMeTransaction.all(1, 10);
+			for(int i = 0; i < transactions.size(); i++) {
+				PagarMeTransaction transaction = transactions.get(i);
+				System.out.println("status: " + transaction.status);
+				System.out.println("amount: " + transaction.amount);
+				System.out.println("installments: " + transaction.installments);
+				System.out.println("id: " + transaction.id);
+				System.out.println("live: " + transaction.live);
+				System.out.println("costumerName: " + transaction.costumerName);
+				System.out.println("cardLastDigits: " + transaction.cardLastDigits);
+				System.out.println("");
+			}
 		} catch (PagarMeException e) {
-			System.out.println("EXCEPTION");
+			System.out.println("exception");
 			e.printStackTrace();
 		}
+
+		/* try { */
+		/* 	PagarMeTransaction transaction = PagarMeTransaction.findById("6"); */
+		/* 	System.out.println("status: " + transaction.status); */
+		/* 	System.out.println("amount: " + transaction.amount); */
+		/* 	System.out.println("installments: " + transaction.installments); */
+		/* 	System.out.println("id: " + transaction.id); */
+		/* 	System.out.println("live: " + transaction.live); */
+		/* 	System.out.println("costumerName: " + transaction.costumerName); */
+		/* 	System.out.println("cardLastDigits: " + transaction.cardLastDigits); */
+		/* } catch (PagarMeException e) { */
+		/* 	System.out.println("EXCEPTION"); */
+		/* 	e.printStackTrace(); */
+		/* } */
 
 		/* PagarMeRequest request = new PagarMeRequest("/transactions", "GET", false); */
 

@@ -45,14 +45,31 @@ public class PagarMeTransaction
 
 	public static PagarMeTransaction findById(String id) throws PagarMeException {
 		PagarMeRequest request = new PagarMeRequest("/transactions/" + id, "GET");
-		JsonObject jsonObject = request.run();
+		JsonObject transactionJson = request.run().getAsJsonObject();
 
-		PagarMeTransaction transaction = new PagarMeTransaction(jsonObject);
+		PagarMeTransaction transaction = new PagarMeTransaction(transactionJson);
 		return transaction;
 	}
 
-	public static Object all(int page, int count) {
-		return null;
+	public static List<PagarMeTransaction> all(int page, int count) throws PagarMeException {
+		PagarMeRequest request = new PagarMeRequest("/transactions/", "GET");
+		request.parameters.put("page", String.valueOf(page));
+		request.parameters.put("count", String.valueOf(count));
+		JsonArray transactionsJson = request.run().getAsJsonArray();
+
+		List<PagarMeTransaction> transactions = new ArrayList<PagarMeTransaction>();
+		
+		for(int i = 0; i < transactionsJson.size(); i++) {
+			PagarMeTransaction currentTransaction = new PagarMeTransaction(transactionsJson.get(i).getAsJsonObject());
+			transactions.add(currentTransaction);
+		}
+		
+		return transactions;
+	}
+
+	public static List<PagarMeTransaction> all() throws PagarMeException {
+		// Default: page = 1, count = 10
+		return all(1, 10);
 	}
 
 	public void charge() {

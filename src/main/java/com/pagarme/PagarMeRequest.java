@@ -91,7 +91,7 @@ public class PagarMeRequest
 		return connection;
 	}
 
-	public JsonObject run() throws PagarMeException {
+	public JsonElement run() throws PagarMeException {
 		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
 		System.out.println(requestParameters);
@@ -132,18 +132,19 @@ public class PagarMeRequest
 			}
 		}
 
-		JsonObject returnObject;
+		JsonElement returnObject;
 
 		try {
-			returnObject = new JsonParser().parse(responseString).getAsJsonObject();
+			returnObject = new JsonParser().parse(responseString);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PagarMeResponseException("Invalid JSON response.");
 		}
 
 		if(returnObject.isJsonObject()) {
-			if(returnObject.get("error") != null) {
-				throw new PagarMeResponseException(returnObject.get("error").getAsString());
+			JsonObject errorObject = returnObject.getAsJsonObject();
+			if(errorObject.get("error") != null) {
+				throw new PagarMeResponseException(errorObject.get("error").getAsString());
 			}
 		}
 
