@@ -3,7 +3,7 @@ package com.pagarme;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-import com.google.gson.Gson;
+import com.google.gson.*;
 
 public class PagarMeRequest
 {
@@ -13,10 +13,10 @@ public class PagarMeRequest
 	public String apiVersion = "1";
 	public HashMap parameters;
 
-	public PagarMeRequest(String _path, String _method, boolean _live) {
+	public PagarMeRequest(String _path, String _method) {
 		this.path = _path;
 		this.method = _method;
-		this.live = _live;
+		this.live = PagarMe.getInstance().live;
 		this.parameters = new HashMap();
 	}
 
@@ -65,7 +65,7 @@ public class PagarMeRequest
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setFixedLengthStreamingMode(parameters.getBytes().length);
+		connection.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
 		connection.setRequestMethod(method);
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
@@ -91,7 +91,7 @@ public class PagarMeRequest
 		return connection;
 	}
 
-	public HashMap run() throws PagarMeException {
+	public JsonObject run() throws PagarMeException {
 		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
 		System.out.println(requestParameters);
@@ -124,6 +124,7 @@ public class PagarMeRequest
 
 			System.out.println(responseString);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new PagarMeConnectionException("Could not connect to server.");
 		} finally {
 			if(connection != null) {
@@ -131,21 +132,21 @@ public class PagarMeRequest
 			}
 		}
 
-		HashMap responseObject;
+		JsonObject returnObject;
 
 		try {
-			Gson gson = new Gson();
-			responseObject = gson.fromJson(responseString, HashMap.class);
+			returnObject = new JsonParser().parse(responseString).getAsJsonObject();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new PagarMeResponseException("Invalid JSON response.");
 		}
 
-		if(responseObject.containsKey("error")) {
-			throw new PagarMeResponseException(responseObject.get("error").toString());
+		if(returnObject.isJsonObject()) {
+			if(returnObject.get("error") != null) {
+				throw new PagarMeResponseException(returnObject.get("error").getAsString());
+			}
 		}
 
-		System.out.println(responseObject);
-
-		return responseObject;
+		return returnObject;
 	}
 }

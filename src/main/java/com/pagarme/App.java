@@ -41,19 +41,31 @@ public class App
 
 	public static void main( String[] args )
 	{
-		System.out.println( "Hello World!" );
-
 		disableCertificateValidation();
 
 		PagarMe.getInstance().apiKey = "4f0907cdfaf855b83a5d4a83a247772f";
 
-		PagarMeRequest request = new PagarMeRequest("/transactions", "GET", false);
-
 		try {
-			request.run();
+			PagarMeTransaction transaction = PagarMeTransaction.findById("6");
+			System.out.println("status: " + transaction.status);
+			System.out.println("amount: " + transaction.amount);
+			System.out.println("installments: " + transaction.installments);
+			System.out.println("id: " + transaction.id);
+			System.out.println("live: " + transaction.live);
+			System.out.println("costumerName: " + transaction.costumerName);
+			System.out.println("cardLastDigits: " + transaction.cardLastDigits);
 		} catch (PagarMeException e) {
 			System.out.println("EXCEPTION");
 			e.printStackTrace();
 		}
+
+		/* PagarMeRequest request = new PagarMeRequest("/transactions", "GET", false); */
+
+		/* try { */
+		/* 	request.run(); */
+		/* } catch (PagarMeException e) { */
+		/* 	System.out.println("EXCEPTION"); */
+		/* 	e.printStackTrace(); */
+		/* } */
 	}
 }
