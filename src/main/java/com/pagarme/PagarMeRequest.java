@@ -94,7 +94,6 @@ public class PagarMeRequest
 	public JsonElement run() throws PagarMeException {
 		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
-		System.out.println(requestParameters);
 
 		HttpURLConnection connection;
 
@@ -122,7 +121,6 @@ public class PagarMeRequest
 			responseScanner.useDelimiter("\\Z");
 			responseString = responseScanner.next();
 
-			System.out.println(responseString);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PagarMeConnectionException("Could not connect to server.");

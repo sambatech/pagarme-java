@@ -5,6 +5,30 @@ import java.io.*;
 import java.net.*;
 import com.google.gson.*;
 
+/* import org.bouncycastle.crypto.AsymmetricBlockCipher; */
+/* import org.bouncycastle.crypto.engines.RSAEngine; */
+/* import org.bouncycastle.crypto.params.AsymmetricKeyParameter; */
+/* import org.bouncycastle.crypto.util.PublicKeyFactory; */
+/* import org.bouncycastle.*; */
+/* import java.security.Security; */
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.security.*;
+import javax.crypto.*;
+ 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.crypto.AsymmetricBlockCipher;
+import org.bouncycastle.crypto.engines.RSAEngine;
+import org.bouncycastle.crypto.engines.RSAEngine;
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.util.PublicKeyFactory;
+import org.bouncycastle.util.io.pem.*;
+
+import org.apache.commons.codec.binary.*;
+ 
 /* @statuses_codes = { :local => 0, :approved => 1, :processing => 2, :refused => 3, :chargebacked => 4 } */
 
 public class PagarMeTransaction
@@ -17,23 +41,28 @@ public class PagarMeTransaction
 		chargebacked,
 	}
 
-	public PagarMeTransactionStatus status;
+	public PagarMeTransactionStatus status = PagarMeTransactionStatus.local;
 	public Date dateCreated;
 	public int amount;
-	public int installments;
+	public int installments = 1;
 	public String id;
-	public boolean live;
+	public boolean live = PagarMe.getInstance().live;
 	public String costumerName;
 	public String cardLastDigits;
 
+	public String cardNumber;
+	public String cardHolderName;
+	public int cardExpiracyMonth;
+	public int cardExpiracyYear;
+	public String cardCVV;
+
+	public String cardHash = null;
+
 	public PagarMeTransaction() {
-		this.installments = 1;
-		this.live = PagarMe.getInstance().live;
-		this.status = PagarMeTransactionStatus.local;
 	}
 
-	public PagarMeTransaction(JsonObject jsonResponse) {
-		super();
+	private void updateFieldsFromJsonResponse(JsonObject jsonResponse ) {
+		// TODO: 'date_created'
 		this.amount = jsonResponse.get("amount").getAsInt();
 		this.status = PagarMeTransactionStatus.valueOf(jsonResponse.get("status").getAsString());
 		this.installments = jsonResponse.get("installments").getAsInt();
@@ -41,6 +70,16 @@ public class PagarMeTransaction
 		this.live = jsonResponse.get("live").getAsBoolean();
 		this.costumerName = jsonResponse.get("costumer_name").getAsString();
 		this.cardLastDigits = jsonResponse.get("card_last_digits").getAsString();
+	}
+
+	public PagarMeTransaction(JsonObject jsonResponse) {
+		super();
+		updateFieldsFromJsonResponse(jsonResponse);
+	}
+
+	public PagarMeTransaction(String cardHash) {
+		super();
+		this.cardHash = cardHash;
 	}
 
 	public static PagarMeTransaction findById(String id) throws PagarMeException {
@@ -72,7 +111,64 @@ public class PagarMeTransaction
 		return all(1, 10);
 	}
 
-	public void charge() {
+	private String cardHashEncryptionString() {
+		String returnString = "";
+		returnString += "card_number=" + cardNumber + "&";
+		returnString += "card_holder_name=" + cardHolderName + "&";
+		returnString += "card_expiracy_date=" + String.format("%02d", cardExpiracyMonth) + String.format("%02d", cardExpiracyYear) + "&";
+		returnString += "card_cvv=" + cardCVV;
+		return returnString;
+	}
+
+	private String generateCardHash() throws PagarMeException {
+        String encryptedCardHash = null;
+
+		if(cardHash != null) {
+			encryptedCardHash = cardHash;
+		} else {
+			PagarMeRequest request = new PagarMeRequest("/transactions/card_hash_key", "GET");
+			JsonObject cardHashJson = request.run().getAsJsonObject();
+			String publicKeyString = cardHashJson.get("public_key").getAsString();
+			String keyId = cardHashJson.get("id").getAsString();
+
+			String cardHashEncryptionString = cardHashEncryptionString();
+
+			try {
+				Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+				StringReader stringReader = new StringReader(publicKeyString);
+				PemReader pemReader = new PemReader(stringReader);
+				AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(pemReader.readPemObject().getContent());
+
+				AsymmetricBlockCipher blockCipher = new RSAEngine();
+				blockCipher = new org.bouncycastle.crypto.encodings.PKCS1Encoding(blockCipher);
+				blockCipher.init(true, publicKey);
+
+				byte[] bytesToEncrypt = cardHashEncryptionString.getBytes();
+				byte[] encryptedBytes = blockCipher.processBlock(bytesToEncrypt, 0, bytesToEncrypt.length);
+
+				encryptedCardHash = keyId + "_" + new String(Base64.encodeBase64(encryptedBytes));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new PagarMeResponseException("Error generating card_hash.");
+			}
+		}
+
+		return encryptedCardHash;
+	}
+
+	public void charge() throws PagarMeException {
+		String cardHash = generateCardHash();
+		System.out.println(cardHash);
+
+		PagarMeRequest request = new PagarMeRequest("/transactions/", "POST");
+		request.parameters.put("amount", String.valueOf(amount));
+		request.parameters.put("installments", String.valueOf(installments));
+		request.parameters.put("card_hash", cardHash);
+
+		JsonObject transactionJson = request.run().getAsJsonObject();
+		updateFieldsFromJsonResponse(transactionJson);
 	}
 
 	public void chargeback() {

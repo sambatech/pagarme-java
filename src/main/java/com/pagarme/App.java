@@ -46,10 +46,26 @@ public class App
 
 		PagarMe.getInstance().apiKey = "4f0907cdfaf855b83a5d4a83a247772f";
 
+		PagarMeTransaction transaction = new PagarMeTransaction();
+		transaction.cardNumber = "4901720080344448";
+		transaction.cardHolderName = "Test User";
+		transaction.cardExpiracyMonth = 12;
+		transaction.cardExpiracyYear = 13;
+		transaction.cardCVV = "314";
+		transaction.amount = 1000;
+		/* transaction.installments = 2; */
+
 		try {
-			List<PagarMeTransaction> transactions = PagarMeTransaction.all(1, 10);
-			for(int i = 0; i < transactions.size(); i++) {
-				PagarMeTransaction transaction = transactions.get(i);
+			transaction.charge();
+		} catch (PagarMeException e) {
+			System.out.println("exception");
+			e.printStackTrace();
+		}
+
+		/* try { */
+		/* 	List<PagarMeTransaction> transactions = PagarMeTransaction.all(1, 10); */
+		/* 	for(int i = 0; i < transactions.size(); i++) { */
+				/* PagarMeTransaction transaction = transactions.get(i); */
 				System.out.println("status: " + transaction.status);
 				System.out.println("amount: " + transaction.amount);
 				System.out.println("installments: " + transaction.installments);
@@ -58,11 +74,11 @@ public class App
 				System.out.println("costumerName: " + transaction.costumerName);
 				System.out.println("cardLastDigits: " + transaction.cardLastDigits);
 				System.out.println("");
-			}
-		} catch (PagarMeException e) {
-			System.out.println("exception");
-			e.printStackTrace();
-		}
+		/* 	} */
+		/* } catch (PagarMeException e) { */
+		/* 	System.out.println("exception"); */
+		/* 	e.printStackTrace(); */
+		/* } */
 
 		/* try { */
 		/* 	PagarMeTransaction transaction = PagarMeTransaction.findById("6"); */
