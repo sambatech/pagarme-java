@@ -160,7 +160,6 @@ public class PagarMeTransaction
 
 	public void charge() throws PagarMeException {
 		String cardHash = generateCardHash();
-		System.out.println(cardHash);
 
 		PagarMeRequest request = new PagarMeRequest("/transactions/", "POST");
 		request.parameters.put("amount", String.valueOf(amount));

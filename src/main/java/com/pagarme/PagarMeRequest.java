@@ -95,7 +95,6 @@ public class PagarMeRequest
 	public JsonElement run() throws PagarMeException {
 		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
-		System.out.println(requestParameters);
 
 		HttpURLConnection connection;
 
@@ -131,8 +130,6 @@ public class PagarMeRequest
 				connection.disconnect(); 
 			}
 		}
-
-		System.out.println(responseString);
 
 		JsonElement returnObject;
 
