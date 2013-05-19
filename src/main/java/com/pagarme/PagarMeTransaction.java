@@ -46,7 +46,7 @@ public class PagarMeTransaction
 	public int amount;
 	public int installments = 1;
 	public String id;
-	public boolean live = PagarMe.getInstance().live;
+	public boolean live = PagarMe.live;
 	public String costumerName;
 	public String cardLastDigits;
 

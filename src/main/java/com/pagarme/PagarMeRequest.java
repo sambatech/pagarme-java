@@ -16,13 +16,13 @@ public class PagarMeRequest
 	public PagarMeRequest(String _path, String _method) {
 		this.path = _path;
 		this.method = _method;
-		this.live = PagarMe.getInstance().live;
+		this.live = PagarMe.live;
 		this.parameters = new HashMap();
 	}
 
 	private HashMap requestParameters() {
 		HashMap params = new HashMap();
-		params.put("api_key", PagarMe.getInstance().apiKey);
+		params.put("api_key", PagarMe.apiKey);
 		params.put("live", live ? "1" : "0");
 		params.putAll(parameters);
 		return params;

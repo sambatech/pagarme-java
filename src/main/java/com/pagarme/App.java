@@ -44,7 +44,7 @@ public class App
 	{
 		disableCertificateValidation();
 
-		PagarMe.getInstance().apiKey = "4f0907cdfaf855b83a5d4a83a247772f";
+		PagarMe.apiKey = "4f0907cdfaf855b83a5d4a83a247772f";
 
 		PagarMeTransaction transaction = new PagarMeTransaction();
 		transaction.cardNumber = "4901720080344448";
