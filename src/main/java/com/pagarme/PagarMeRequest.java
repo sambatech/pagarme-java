@@ -23,6 +23,7 @@ public class PagarMeRequest
 	private HashMap requestParameters() {
 		HashMap params = new HashMap();
 		params.put("api_key", PagarMe.getInstance().apiKey);
+		params.put("live", live ? "1" : "0");
 		params.putAll(parameters);
 		return params;
 	}
@@ -94,6 +95,7 @@ public class PagarMeRequest
 	public JsonElement run() throws PagarMeException {
 		String requestURL = this.requestURL();
 		String requestParameters = this.parametersString();
+		System.out.println(requestParameters);
 
 		HttpURLConnection connection;
 
@@ -129,6 +131,8 @@ public class PagarMeRequest
 				connection.disconnect(); 
 			}
 		}
+
+		System.out.println(responseString);
 
 		JsonElement returnObject;
 
