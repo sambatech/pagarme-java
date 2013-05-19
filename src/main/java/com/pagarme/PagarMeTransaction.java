@@ -171,6 +171,9 @@ public class PagarMeTransaction
 		updateFieldsFromJsonResponse(transactionJson);
 	}
 
-	public void chargeback() {
+	public void chargeback() throws PagarMeException {
+		PagarMeRequest request = new PagarMeRequest("/transactions/" + id, "DELETE");
+		JsonObject transactionJson = request.run().getAsJsonObject();
+		updateFieldsFromJsonResponse(transactionJson);
 	}
 }

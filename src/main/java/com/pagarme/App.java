@@ -62,6 +62,13 @@ public class App
 			e.printStackTrace();
 		}
 
+		try {
+			transaction.chargeback();
+		} catch (PagarMeException e) {
+			System.out.println("exception");
+			e.printStackTrace();
+		}
+
 		/* try { */
 		/* 	List<PagarMeTransaction> transactions = PagarMeTransaction.all(1, 10); */
 		/* 	for(int i = 0; i < transactions.size(); i++) { */
