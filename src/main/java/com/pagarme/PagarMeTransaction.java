@@ -159,6 +159,8 @@ public class PagarMeTransaction
 	}
 
 	public void charge() throws PagarMeException {
+		validateFields();
+
 		String cardHash = generateCardHash();
 
 		PagarMeRequest request = new PagarMeRequest("/transactions/", "POST");
@@ -174,5 +176,33 @@ public class PagarMeTransaction
 		PagarMeRequest request = new PagarMeRequest("/transactions/" + id, "DELETE");
 		JsonObject transactionJson = request.run().getAsJsonObject();
 		updateFieldsFromJsonResponse(transactionJson);
+	}
+
+	public void validateFields() throws PagarMeException {
+		if(cardHash == null) {
+			if(cardNumber.length() < 16 || cardNumber.length() > 20) {
+				throw new PagarMeValidationException("Número do cartão inválido.");
+			}
+
+			if(cardHolderName.length() < 1) {
+				throw new PagarMeValidationException("Nome do portador inválido.");
+			}
+
+			if(cardExpiracyMonth < 1 || cardExpiracyMonth > 12) {
+				throw new PagarMeValidationException("Mês de expiração inválido.");
+			}
+
+			if(cardExpiracyYear < 1) {
+				throw new PagarMeValidationException("Ano de expiração inválido.");
+			}
+
+			if(cardCVV.length() < 3 || cardCVV.length() > 4) {
+				throw new PagarMeValidationException("Código de segurança inválido.");
+			}
+		}
+
+		if(amount < 1 && amount > 100000000) {
+			throw new PagarMeValidationException("Valor inválido.");
+		}
 	}
 }

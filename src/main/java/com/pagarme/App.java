@@ -49,7 +49,7 @@ public class App
 		PagarMeTransaction transaction = new PagarMeTransaction();
 		transaction.cardNumber = "4901720080344448";
 		transaction.cardHolderName = "Test User";
-		transaction.cardExpiracyMonth = 12;
+		transaction.cardExpiracyMonth = 13;
 		transaction.cardExpiracyYear = 13;
 		transaction.cardCVV = "314";
 		transaction.amount = 1000;
@@ -57,8 +57,17 @@ public class App
 
 		try {
 			transaction.charge();
+		} catch (PagarMeValidationException e) {
+			System.out.println("Erro validando a requisição: ");
+			e.printStackTrace();
+		} catch (PagarMeConnectionException e) {
+			System.out.println("Erro de conexão: ");
+			e.printStackTrace();
+		} catch (PagarMeResponseException e) {
+			System.out.println("Erro na requisição: ");
+			e.printStackTrace();
 		} catch (PagarMeException e) {
-			System.out.println("exception");
+			System.out.println("Erro desconhecido: ");
 			e.printStackTrace();
 		}
 
