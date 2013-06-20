@@ -8,10 +8,6 @@ import java.util.*;
 
 import javax.net.ssl.*;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
 	// TODO: remove this method (trust invalid HTTPS certificates!!!)
