@@ -49,6 +49,7 @@ public class PagarMeTransaction
 	public boolean live = PagarMe.live;
 	public String costumerName;
 	public String cardLastDigits;
+	public String postbackURL = null;
 
 	public String cardNumber;
 	public String cardHolderName;
@@ -167,6 +168,9 @@ public class PagarMeTransaction
 		request.parameters.put("amount", String.valueOf(amount));
 		request.parameters.put("installments", String.valueOf(installments));
 		request.parameters.put("card_hash", cardHash);
+		if(postbackURL != null) {
+			request.parameters.put("postback_url", postbackURL);
+		}
 
 		JsonObject transactionJson = request.run().getAsJsonObject();
 		updateFieldsFromJsonResponse(transactionJson);
