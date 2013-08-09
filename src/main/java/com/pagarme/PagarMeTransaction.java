@@ -5,13 +5,6 @@ import java.io.*;
 import java.net.*;
 import com.google.gson.*;
 
-/* import org.bouncycastle.crypto.AsymmetricBlockCipher; */
-/* import org.bouncycastle.crypto.engines.RSAEngine; */
-/* import org.bouncycastle.crypto.params.AsymmetricKeyParameter; */
-/* import org.bouncycastle.crypto.util.PublicKeyFactory; */
-/* import org.bouncycastle.*; */
-/* import java.security.Security; */
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -29,27 +22,17 @@ import org.bouncycastle.util.io.pem.*;
 
 import org.apache.commons.codec.binary.*;
  
-/* @statuses_codes = { :local => 0, :approved => 1, :processing => 2, :refused => 3, :chargebacked => 4 } */
-
 public class PagarMeTransaction
 {
-	public enum PagarMeTransactionStatus {
-		local,
-		processing,
-		approved,
-		refused,
-		chargebacked,
-	}
-
-	public PagarMeTransactionStatus status = PagarMeTransactionStatus.local;
+	public String status = "local";
 	public Date dateCreated;
 	public int amount;
 	public int installments = 1;
 	public String id;
-	public boolean live = PagarMe.live;
-	public String costumerName;
+	public String customerName;
 	public String cardLastDigits;
 	public String postbackURL = null;
+	public String paymentMethod = "credit_card";
 
 	public String cardNumber;
 	public String cardHolderName;
@@ -62,17 +45,6 @@ public class PagarMeTransaction
 	public PagarMeTransaction() {
 	}
 
-	private void updateFieldsFromJsonResponse(JsonObject jsonResponse ) {
-		// TODO: 'date_created'
-		this.amount = jsonResponse.get("amount").getAsInt();
-		this.status = PagarMeTransactionStatus.valueOf(jsonResponse.get("status").getAsString());
-		this.installments = jsonResponse.get("installments").getAsInt();
-		this.id = jsonResponse.get("id").getAsString();
-		this.live = jsonResponse.get("live").getAsBoolean();
-		this.costumerName = jsonResponse.get("costumer_name").getAsString();
-		this.cardLastDigits = jsonResponse.get("card_last_digits").getAsString();
-	}
-
 	public PagarMeTransaction(JsonObject jsonResponse) {
 		super();
 		updateFieldsFromJsonResponse(jsonResponse);
@@ -81,6 +53,17 @@ public class PagarMeTransaction
 	public PagarMeTransaction(String cardHash) {
 		super();
 		this.cardHash = cardHash;
+	}
+
+	private void updateFieldsFromJsonResponse(JsonObject jsonResponse) {
+		// TODO: 'date_created'
+		this.amount = jsonResponse.get("amount").getAsInt();
+		this.status = jsonResponse.get("status").getAsString();
+		this.installments = jsonResponse.get("installments").getAsInt();
+		this.id = jsonResponse.get("id").getAsString();
+		if(!jsonResponse.get("customer_name").isJsonNull()) this.customerName = jsonResponse.get("customer_name").getAsString();
+		if(!jsonResponse.get("card_last_digits").isJsonNull()) this.cardLastDigits = jsonResponse.get("card_last_digits").getAsString();
+		this.paymentMethod = jsonResponse.get("payment_method").getAsString();
 	}
 
 	public static PagarMeTransaction findById(String id) throws PagarMeException {
@@ -168,6 +151,7 @@ public class PagarMeTransaction
 		request.parameters.put("amount", String.valueOf(amount));
 		request.parameters.put("installments", String.valueOf(installments));
 		request.parameters.put("card_hash", cardHash);
+		request.parameters.put("payment_method", paymentMethod);
 		if(postbackURL != null) {
 			request.parameters.put("postback_url", postbackURL);
 		}
@@ -177,13 +161,21 @@ public class PagarMeTransaction
 	}
 
 	public void chargeback() throws PagarMeException {
+		if(status != "approved") {
+			throw new PagarMeValidationException("Transação com status '" + status + "' não pode ser cancelada!");
+		}
+		
+		if(paymentMethod != "credit_card") {
+			throw new PagarMeValidationException("Boletos não podem ser cancelados!");
+		}
+
 		PagarMeRequest request = new PagarMeRequest("/transactions/" + id, "DELETE");
 		JsonObject transactionJson = request.run().getAsJsonObject();
 		updateFieldsFromJsonResponse(transactionJson);
 	}
 
 	public void validateFields() throws PagarMeException {
-		if(cardHash == null) {
+		if(cardHash == null && paymentMethod == "credit_card") {
 			if(cardNumber.length() < 16 || cardNumber.length() > 20) {
 				throw new PagarMeValidationException("Número do cartão inválido.");
 			}

@@ -9,21 +9,18 @@ public class PagarMeRequest
 {
 	public String path;
 	public String method;
-	public boolean live;
 	public String apiVersion = "1";
 	public HashMap parameters;
 
 	public PagarMeRequest(String _path, String _method) {
 		this.path = _path;
 		this.method = _method;
-		this.live = PagarMe.live;
 		this.parameters = new HashMap();
 	}
 
 	private HashMap requestParameters() {
 		HashMap params = new HashMap();
 		params.put("api_key", PagarMe.apiKey);
-		params.put("live", live ? "1" : "0");
 		params.putAll(parameters);
 		return params;
 	}
@@ -67,6 +64,7 @@ public class PagarMeRequest
 
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		connection.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+		connection.setRequestProperty("X-Live", PagarMe.live ? "1" : "0");
 		connection.setRequestMethod(method);
 		connection.setDoOutput(true);
 		connection.setDoInput(true);

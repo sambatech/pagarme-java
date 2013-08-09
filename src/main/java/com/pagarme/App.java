@@ -45,7 +45,7 @@ public class App
 		PagarMeTransaction transaction = new PagarMeTransaction();
 		transaction.cardNumber = "4901720080344448";
 		transaction.cardHolderName = "Test User";
-		transaction.cardExpiracyMonth = 13;
+		transaction.cardExpiracyMonth = 12;
 		transaction.cardExpiracyYear = 13;
 		transaction.cardCVV = "314";
 		transaction.amount = 1000;
@@ -67,12 +67,12 @@ public class App
 			e.printStackTrace();
 		}
 
-		try {
-			transaction.chargeback();
-		} catch (PagarMeException e) {
-			System.out.println("exception");
-			e.printStackTrace();
-		}
+		/* try { */
+		/* 	transaction.chargeback(); */
+		/* } catch (PagarMeException e) { */
+		/* 	System.out.println("exception"); */
+		/* 	e.printStackTrace(); */
+		/* } */
 
 		/* try { */
 		/* 	List<PagarMeTransaction> transactions = PagarMeTransaction.all(1, 10); */
@@ -82,8 +82,7 @@ public class App
 				System.out.println("amount: " + transaction.amount);
 				System.out.println("installments: " + transaction.installments);
 				System.out.println("id: " + transaction.id);
-				System.out.println("live: " + transaction.live);
-				System.out.println("costumerName: " + transaction.costumerName);
+				System.out.println("customerName: " + transaction.customerName);
 				System.out.println("cardLastDigits: " + transaction.cardLastDigits);
 				System.out.println("");
 		/* 	} */
