@@ -1,11 +1,17 @@
 package pagarme.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import com.google.gson.reflect.TypeToken;
 import org.joda.time.LocalDate;
+import pagarme.util.JSONUtils;
+
+import javax.ws.rs.HttpMethod;
 
 public class Customer extends PagarMeModel<Integer>{
 
@@ -36,6 +42,12 @@ public class Customer extends PagarMeModel<Integer>{
     @Expose
     private Address address;
 
+    @Expose
+    private Collection<Address> addresses;
+
+    @Expose
+    private Collection<Phone> phones;
+
     public Customer() {
         super();
     }
@@ -44,7 +56,9 @@ public class Customer extends PagarMeModel<Integer>{
         this();
         this.name = name;
         this.email = email;
+        this.addresses = new ArrayList<Address>();
         this.address = new Address();
+        this.phones = new ArrayList<Phone>();
         this.phone = new Phone();
     }
 
@@ -78,6 +92,14 @@ public class Customer extends PagarMeModel<Integer>{
 
     public Address getAddress() {
         return address;
+    }
+
+    public Collection<Address> getAddresses() {
+        return addresses;
+    }
+
+    public Collection<Phone> getPhones() {
+        return phones;
     }
 
     public void setDocumentNumber(final String documentNumber) {
@@ -125,9 +147,52 @@ public class Customer extends PagarMeModel<Integer>{
         addUnsavedProperty("address");
     }
 
-    @Override
-    public void setId(Integer id) {
-        throw new UnsupportedOperationException("Not allowed.");
+    public void setAddresses(final Collection<Address> addresses) {
+        this.addresses = addresses;
+        addUnsavedProperty("addresses");
+    }
+
+    public void setPhones(final Collection<Phone> phones) {
+        this.phones = phones;
+        addUnsavedProperty("phones");
+    }
+
+    public Customer save() throws PagarMeException {
+
+        final Customer saved = super.save(getClass());
+        copy(saved);
+
+        return saved;
+    }
+
+    public Customer find(int id) throws PagarMeException {
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s", getClassName(), id));
+
+        final Customer other = JSONUtils.getAsObject((JsonObject) request.execute(), Customer.class);
+        copy(other);
+        flush();
+
+        return other;
+    }
+
+    public Collection<Customer> findCollection(int totalPerPage, int page) throws PagarMeException {
+        return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Customer>>() {
+        }.getType());
+    }
+
+    private void copy(Customer other) {
+
+        setId(other.getId());
+
+        this.setId(other.getId());
+        this.documentNumber = other.documentNumber;
+        this.documentType   = other.documentType;
+        this.name           = other.name;
+        this.email          = other.email;
+        this.bornAt         = other.bornAt;
+        this.gender         = other.gender;
     }
 
     @Override

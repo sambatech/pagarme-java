@@ -180,7 +180,7 @@ public class TransactionTest extends BaseTest {
 
         Customer transactionCustomer = transaction.getCustomer();
         Assert.assertEquals(transactionCustomer.getName(), "lucas santos");
-        Assert.assertEquals(transactionCustomer.getDocumentNumber(), "29542749139");
+        Assert.assertEquals(transactionCustomer.getDocumentNumber(), "15317529506");
         Assert.assertEquals(transactionCustomer.getEmail(), "testelibjava@pagar.me");
 
         Address transactionAddress = transactionCustomer.getAddress();
