@@ -98,3 +98,51 @@ transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
 transaction.save();
 ```
 
+## Customer
+
+### Creating customer
+```java
+#### Creating customer object
+Customer customer = new Customer();
+customer.setName("lucas santos");
+customer.setDocumentNumber("15317529506");
+customer.setEmail("testelibjava@pagar.me");
+
+#### Creating customer address object
+Address address = new Address();
+address.setStreet("Rua Piraju");
+address.setStreetNumber("218");
+address.setComplementary("ao lado da consigáz");
+address.setNeighborhood("Interlagos");
+address.setZipcode("29045482");
+
+#### Creating customer phone object
+Phone phone = new Phone();
+phone.setDdd("11");
+phone.setNumber("55284132");
+
+#### Adding address & phone on the customer object
+customer.setAddress(address);
+customer.setPhone(phone);
+
+#### Save customer
+customer.save();
+```
+
+### Find Customer
+```java
+Customer customer = new Customer();
+customer.find("customer_id");
+```
+
+### Find Customer
+```java
+Customer customer = new Customer();
+customer.find("customer_id");
+```
+
+### Find Customer Collection
+```java
+Customer customer = new Customer();
+customer.findCollection(10,0);
+```
