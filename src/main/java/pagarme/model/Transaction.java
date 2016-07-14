@@ -298,7 +298,6 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("refuse_reason")
     private String refuseReason;
 
-    @Expose(deserialize = false)
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 
@@ -600,7 +599,7 @@ public class Transaction extends PagarMeModel<Integer> {
     public void setSplitRules(final Collection<SplitRule> splitRules) {
         this.splitRules = splitRules;
 
-        if (splitRules != null) {
+        if (this.splitRules.size() != 0) {
             addUnsavedProperty("splitRules");
         }
     }
