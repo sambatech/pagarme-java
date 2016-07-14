@@ -298,7 +298,6 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("refuse_reason")
     private String refuseReason;
 
-    //@Expose(deserialize = false)
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 
@@ -599,7 +598,10 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setSplitRules(final Collection<SplitRule> splitRules) {
         this.splitRules = splitRules;
-        //addUnsavedProperty("splitRules");
+
+        if (this.splitRules.size() != 0) {
+            addUnsavedProperty("splitRules");
+        }
     }
 
     public Collection<SplitRule> getSplitRules() {
@@ -656,10 +658,9 @@ public class Transaction extends PagarMeModel<Integer> {
     }
 
     /**
-     * Retorna uma {@link AntifraudAnalysis} específica realizada em uma transação.
      *
-     * @param antifraudAnalysisId ID da {@link AntifraudAnalysis} feita
-     * @return Uma {@link AntifraudAnalysis}
+     * @param antifraudAnalysisId
+     * @return
      * @throws PagarMeException
      */
     public AntifraudAnalysis antifraudAnalysis(final Integer antifraudAnalysisId) throws PagarMeException {

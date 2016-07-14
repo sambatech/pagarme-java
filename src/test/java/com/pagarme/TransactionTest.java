@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import pagarme.model.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,6 @@ public class TransactionTest extends BaseTest {
 
     private Transaction transaction;
     private static Integer AMOUNT = 100;
-    private static Integer INSTALLMENTS_AT_ONCE = 1;
     private static Integer PAID_AMOUNT_PARTIAL = 50;
 
     @Before
@@ -192,5 +193,16 @@ public class TransactionTest extends BaseTest {
         Phone transactionPhone = transactionCustomer.getPhone();
         Assert.assertEquals(transactionPhone.getDdd(), "11");
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
+    }
+
+    @Test
+    public void testSplitTransaction() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setCapture(true);
+
+        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
+
+
     }
 }

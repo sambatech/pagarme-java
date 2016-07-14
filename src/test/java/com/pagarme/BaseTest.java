@@ -79,6 +79,10 @@ public class BaseTest {
         return address;
     }
 
+    /**
+     *
+     * @return
+     */
     protected Phone phoneCommon() {
         Phone phone = new Phone();
         phone.setDdd("11");
@@ -97,6 +101,10 @@ public class BaseTest {
         return transaction;
     }
 
+    /**
+     *
+     * @return
+     */
     protected Customer customerCreateCommon() {
         Customer customer = new Customer();
         customer.setName(NAME);
@@ -156,6 +164,10 @@ public class BaseTest {
         Assert.assertEquals(customerAddress.getZipcode(), ZIP_CODE);
     }
 
+    /**
+     *
+     * @param customerPhone
+     */
     protected void assertPhone(Phone customerPhone) {
         Assert.assertEquals(customerPhone.getDdd(), PHONE_DDD);
         Assert.assertEquals(customerPhone.getNumber(), PHONE_NUMBER);
