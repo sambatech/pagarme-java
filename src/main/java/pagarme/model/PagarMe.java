@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.net.URLDecoder;
 import java.util.Formatter;
 
-public class PagarMe {
+public abstract class PagarMe {
 
     public static final String ENDPOINT = "https://api.pagar.me";
 
@@ -34,7 +34,7 @@ public class PagarMe {
     }
 
     public static String getApiKey() {
-        return "ak_test_hFnW2y4Eg6ddTZQ0Mpa95TU5uWQXDr";
+        return apiKey;
     }
 
     public static void init(String apiKey) {

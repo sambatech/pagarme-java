@@ -2,13 +2,13 @@ package com.pagarme;
 
 import com.google.common.base.Strings;
 import org.junit.Assert;
-import pagarme.PagarMe;
+import pagarme.model.PagarMe;
 import pagarme.model.Address;
 import pagarme.model.Customer;
 import pagarme.model.Phone;
 import pagarme.model.Transaction;
 
-public class BaseTest {
+public abstract class BaseTest {
 
     protected Transaction transaction;
     protected Customer customer;
@@ -36,13 +36,9 @@ public class BaseTest {
 
     public void setUp() {
         transaction = new Transaction();
-        String apiKey = System.getenv("PAGARME_API_KEY");
 
-        if (Strings.isNullOrEmpty(apiKey)) {
-            apiKey = "ak_test_Rw4JR98FmYST2ngEHtMvVf5QJW7Eoo";
-        }
-
-        PagarMe.init("ak_test_Rw4JR98FmYST2ngEHtMvVf5QJW7Eoo");
+        String apiKey = "ak_test_hFnW2y4Eg6ddTZQ0Mpa95TU5uWQXDr";
+        PagarMe.init(apiKey);
     }
 
     /**
