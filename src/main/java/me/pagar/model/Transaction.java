@@ -337,6 +337,11 @@ public class Transaction extends PagarMeModel<Integer> {
         return other;
     }
 
+    public Collection<Transaction> findCollection(int totalPerPage, int page) throws PagarMeException {
+        return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Transaction>>() {
+        }.getType());
+    }
+
     /**
      * @return {@link #subscriptionId}
      */
