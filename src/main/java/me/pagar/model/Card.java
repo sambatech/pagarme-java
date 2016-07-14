@@ -1,9 +1,12 @@
 package me.pagar.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import me.pagar.util.JSONUtils;
 import org.joda.time.DateTime;
+
+import javax.ws.rs.HttpMethod;
 
 public class Card extends PagarMeModel<String> {
 
@@ -14,7 +17,7 @@ public class Card extends PagarMeModel<String> {
     @Expose(serialize = false)
     private Brand brand;
 
-    @Expose(serialize = false)
+    @Expose
     @SerializedName("holder_name")
     private String holderName;
 
@@ -52,6 +55,10 @@ public class Card extends PagarMeModel<String> {
     private DateTime updatedAt;
 
     @Expose(serialize = false)
+    @SerializedName("cvv")
+    private Integer cvv;
+
+    @Expose(serialize = false)
     private Customer customer;
 
     public Brand getBrand() {
@@ -68,6 +75,14 @@ public class Card extends PagarMeModel<String> {
 
     public String getLastDigits() {
         return lastDigits;
+    }
+
+    public Integer getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(Integer cvv) {
+        this.cvv = cvv;
     }
 
     public String getFingerprint() {
@@ -120,6 +135,18 @@ public class Card extends PagarMeModel<String> {
         copy(saved);
 
         return saved;
+    }
+
+    public Card find(String id) throws PagarMeException {
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s", getClassName(), id));
+
+        final Card other = JSONUtils.getAsObject((JsonObject) request.execute(), Card.class);
+        copy(other);
+        flush();
+
+        return other;
     }
 
     public Card refresh() throws PagarMeException {
