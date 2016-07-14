@@ -12,7 +12,10 @@ import java.util.Map;
 
 public class TransactionTest extends BaseTest {
 
-    private Transaction transaction;
+    private Recipient recipient = new Recipient();
+    private SplitRule splitRule = new SplitRule();
+    private BankAccount bankAccount;
+
     private static Integer AMOUNT = 100;
     private static Integer PAID_AMOUNT_PARTIAL = 50;
 
@@ -195,14 +198,85 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
     }
 
-    @Test
-    public void testSplitTransaction() throws Throwable {
-
-        transaction = this.transactionCreditCardCommon();
-        transaction.setCapture(true);
-
-        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
-
-
-    }
+//    @Test
+//    public void testSplitTransaction() throws Throwable {
+//
+//        transaction = this.transactionCreditCardCommon();
+//        transaction.setCapture(true);
+//
+//        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
+//
+//        splitRule.setRecipientId(this.getRecipientId(false));
+//        splitRule.setPercentage(50);
+//        splitRule.setLiable(true);
+//        splitRule.setChargeProcessingFee(true);
+//
+//        splitRules.add(splitRule);
+//
+//        splitRule.setRecipientId(this.getRecipientId(true));
+//        splitRule.setPercentage(50);
+//        splitRule.setLiable(true);
+//        splitRule.setChargeProcessingFee(true);
+//
+//        splitRules.add(splitRule);
+//        transaction.setSplitRules(splitRules);
+//        transaction.save();
+//    }
+//
+//    private String getRecipientId(Boolean documentNumber) {
+//
+//        int bankAccountId = this.getBankAccountId(documentNumber);
+//
+//        recipient.setTransferInterval(Recipient.TransferInterval.WEEKLY);
+//        recipient.setTransferDay(TRANSFER_DAY);
+//        recipient.setTransferEnabled(TRANSFER_ENABLE);
+//        recipient.setBankAccountId(bankAccountId);
+//
+//        try {
+//            recipient.save();
+//            return recipient.getId();
+//
+//        } catch (PagarMeException exception) {
+//            throw new UnsupportedOperationException(exception);
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    private Integer getBankAccountId(Boolean documentNumber) {
+//
+//        System.out.print("Hello " + documentNumber);
+//
+//        if (documentNumber == true) {
+//            bankAccount = new BankAccount();
+//            bankAccount.setAgencia(AGENCIA);
+//            bankAccount.setAgenciaDv(AGENCIA_DV);
+//            bankAccount.setConta(CONTA);
+//            bankAccount.setContaDv(CONTA_DV);
+//            bankAccount.setBankCode(BANK_CODE);
+//            bankAccount.setLegalName(LEGAL_NAME);
+//            bankAccount.setDocumentNumber(DOCUMENT_NUMBER);
+//        } else {
+//            bankAccount = new BankAccount();
+//            System.out.print("Hello " + bankAccount.getConta());
+//            bankAccount.setAgencia("0173");
+//            bankAccount.setAgenciaDv("1");
+//            bankAccount.setConta("506725");
+//            bankAccount.setContaDv(CONTA_DV);
+//            bankAccount.setBankCode(BANK_CODE);
+//            bankAccount.setLegalName("Java Lib Bank Account Number 2");
+//            bankAccount.setDocumentNumber("55278368128");
+//        }
+//
+//        try {
+//
+//            bankAccount.save();
+//            return bankAccount.getId();
+//
+//        } catch (PagarMeException exception) {
+//            throw new UnsupportedOperationException(exception);
+//        }
+//    }
 }

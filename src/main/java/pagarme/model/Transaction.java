@@ -298,6 +298,7 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("refuse_reason")
     private String refuseReason;
 
+    @Expose(serialize = false)
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 

@@ -10,19 +10,29 @@ import pagarme.model.Transaction;
 
 public class BaseTest {
 
-    private Transaction transaction;
-    private Customer customer;
+    protected Transaction transaction;
+    protected Customer customer;
 
-    private static String NAME = "Teste Create Customer";
-    private static String DOCUMENT_NUMBER = "15317529506";
-    private static String EMAIL = "testcreatecustomer@pagar.me";
-    private static String STREET = "Rua Piraju";
-    private static String STREET_NUMBER = "218";
-    private static String COMPLEMENTARY = "ao lado da consigáz";
-    private static String NEIGHBORHOOD = "Interlagos";
-    private static String ZIP_CODE = "04840110";
-    private static String PHONE_DDD = "11";
-    private static String PHONE_NUMBER = "55284132";
+    protected static String NAME = "Teste Create Customer";
+    protected static String DOCUMENT_NUMBER = "84344469283";
+    protected static String EMAIL = "testcreatecustomer@pagar.me";
+    protected static String STREET = "Rua Piraju";
+    protected static String STREET_NUMBER = "218";
+    protected static String COMPLEMENTARY = "ao lado da consigáz";
+    protected static String NEIGHBORHOOD = "Interlagos";
+    protected static String ZIP_CODE = "04840110";
+    protected static String PHONE_DDD = "11";
+    protected static String PHONE_NUMBER = "55284132";
+
+    protected static String AGENCIA = "0192";
+    protected static String AGENCIA_DV = "0";
+    protected static String CONTA = "03245";
+    protected static String CONTA_DV = "0";
+    protected static String BANK_CODE = "0341";
+    protected static String LEGAL_NAME = "Java Lib Bank Account";
+
+    protected static Integer TRANSFER_DAY = 1;
+    protected static Boolean TRANSFER_ENABLE = true;
 
     public void setUp() {
         transaction = new Transaction();
