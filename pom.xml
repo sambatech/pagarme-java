@@ -5,59 +5,89 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>me.pagar</groupId>
+  <groupId>me.example</groupId>
   <artifactId>pagarme-java</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
-
-    <!-- maven plugins versions -->
-    <version.maven.deploy.plugin>2.8.2</version.maven.deploy.plugin>
-    <version.site.maven.plugin>0.12</version.site.maven.plugin>
-
-    <!-- dependencies versions -->
-    <version.jersey.common>2.23.1</version.jersey.common>
-    <version.guava>19.0</version.guava>
-    <version.gson>2.3.1</version.gson>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <version.joda.time>2.9.4</version.joda.time>
     <version.inflector>1.2</version.inflector>
-    <version.junit>4.12</version.junit>
-
-    <!-- github maven plugin setup -->
-    <github.global.server>github</github.global.server>
-
-    <!-- maven-compiler-plugin -->
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <maven.compiler.source>1.6</maven.compiler.source>
   </properties>
 
-  <distributionManagement>
-    <repository>
-      <id>internal</id>
-      <name>Temporary Staging Repository</name>
-      <url>file://${project.build.directory}/mvn-repo</url>
-    </repository>
-  </distributionManagement>
-
   <dependencies>
+    <!-- Testing dependencies. -->
     <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-common</artifactId>
-      <version>${version.jersey.common}</version>
-      <optional>true</optional>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>1.5.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>1.5.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.stefanbirkner</groupId>
+      <artifactId>system-rules</artifactId>
+      <version>1.4.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit-dep</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>${version.guava}</version>
+      <version>10.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+      <version>1.18</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>2.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-server</artifactId>
+      <version>1.18</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <version>0.11</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-      <version>${version.gson}</version>
+      <version>2.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20090211</version>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
@@ -69,50 +99,40 @@
       <artifactId>evo-inflector</artifactId>
       <version>${version.inflector}</version>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${version.junit}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${version.maven.deploy.plugin}</version>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
         <configuration>
-          <altDeploymentRepository>internal::default::file://${project.build.directory}/mvn-repo
-          </altDeploymentRepository>
+          <source>1.6</source>
+          <target>1.6</target>
+          <compilerArgs>
+            <arg>-Xlint</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>${version.site.maven.plugin}</version>
-        <configuration>
-          <message>Maven artifacts for ${project.version}</message>
-          <noJekyll>true</noJekyll>
-          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-          <branch>refs/heads/mvn-repo</branch>
-          <repositoryOwner>socialgroups</repositoryOwner>
-          <repositoryName>pagarme-java</repositoryName>
-          <includes>
-            <include>**/*</include>
-          </includes>
-        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.16</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.16</version>
         <executions>
           <execution>
             <goals>
-              <goal>site</goal>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
             </goals>
-            <phase>deploy</phase>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
-
 </project>
