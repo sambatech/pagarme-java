@@ -6,8 +6,6 @@ import org.junit.Test;
 import pagarme.model.*;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CustomerTest extends BaseTest {
 

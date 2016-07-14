@@ -1,10 +1,12 @@
 package pagarme.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import pagarme.util.JSONUtils;
 
+import javax.ws.rs.HttpMethod;
 import java.util.Collection;
 
 public class BankAccount extends PagarMeModel<Integer> {
@@ -118,11 +120,19 @@ public class BankAccount extends PagarMeModel<Integer> {
         addUnsavedProperty("documentType");
     }
 
-    public Collection<BankAccount> findAll() throws PagarMeException {
-        return find(100, 0);
+    public BankAccount find(int id) throws PagarMeException {
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s", getClassName(), id));
+
+        final BankAccount other = JSONUtils.getAsObject((JsonObject) request.execute(), BankAccount.class);
+        copy(other);
+        flush();
+
+        return other;
     }
 
-    public Collection<BankAccount> find(int totalPerPage, int page) throws PagarMeException {
+    public Collection<BankAccount> findCollection(int totalPerPage, int page) throws PagarMeException {
         return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<BankAccount>>() {
         }.getType());
     }
