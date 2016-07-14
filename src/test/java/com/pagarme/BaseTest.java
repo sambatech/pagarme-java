@@ -1,12 +1,8 @@
 package com.pagarme;
 
-import com.google.common.base.Strings;
 import org.junit.Assert;
-import pagarme.model.PagarMe;
-import pagarme.model.Address;
-import pagarme.model.Customer;
-import pagarme.model.Phone;
-import pagarme.model.Transaction;
+import org.omg.CORBA.Object;
+import pagarme.model.*;
 
 public abstract class BaseTest {
 
@@ -37,8 +33,11 @@ public abstract class BaseTest {
     public void setUp() {
         transaction = new Transaction();
 
-        String apiKey = "ak_test_hFnW2y4Eg6ddTZQ0Mpa95TU5uWQXDr";
-        PagarMe.init(apiKey);
+        if (PagarMe.getApiKey() == null) {
+            PagarMe.init("test_key");
+            String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey();
+            PagarMe.init(apiKey);
+        }
     }
 
     /**
