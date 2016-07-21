@@ -77,15 +77,15 @@ public class CustomerTest extends BaseTest {
 
                 this.assertCustomerData(customer);
 
-                for (Address address : customer.getAddresses()) {
-                    Address customerAddress = address;
-                    this.assertAddress(customerAddress);
-                }
-
-                for (Phone phone : customer.getPhones()) {
-                    Phone customerPhone = phone;
-                    this.assertPhone(phone);
-                }
+//                for (Address address : customer.getAddresses()) {
+//                    Address customerAddress = address;
+//                    this.assertAddress(customerAddress);
+//                }
+//
+//                for (Phone phone : customer.getPhones()) {
+//                    Phone customerPhone = phone;
+//                    this.assertPhone(phone);
+//                }
             }
 
         } catch (PagarMeException ex) {
