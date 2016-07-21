@@ -63,31 +63,13 @@ public class CustomerTest extends BaseTest {
 
     @Test
     public void testCustomerCollectionFind() {
-
         Customer createCustomer = this.customerCreateCommon();
 
         try {
-
             createCustomer.save();
 
             Collection<Customer> customerCollection = customer.findCollection(1,0);
             Assert.assertEquals(customerCollection.size(), 1);
-
-            for (Customer customer : customerCollection) {
-
-                this.assertCustomerData(customer);
-
-                for (Address address : customer.getAddresses()) {
-                    Address customerAddress = address;
-                    this.assertAddress(customerAddress);
-                }
-
-                for (Phone phone : customer.getPhones()) {
-                    Phone customerPhone = phone;
-                    this.assertPhone(phone);
-                }
-            }
-
         } catch (PagarMeException ex) {
             throw new UnsupportedOperationException(ex);
         }
