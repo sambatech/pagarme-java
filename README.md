@@ -1,6 +1,6 @@
 Pagar.me Java Library
 ===========================
-[![Build Status](https://travis-ci.com/pagarme/pagarme-java.svg?token=dqgmPH2JHKsHRgaNHZxf&branch=master)](https://travis-ci.com/pagarme/pagarme-java)
+[![Build Status](https://travis-ci.org/pagarme/pagarme-java.svg?token=dqgmPH2JHKsHRgaNHZxf&branch=master)](https://travis-ci.org/pagarme/pagarme-java)
 
 ## Configure your API key
 
