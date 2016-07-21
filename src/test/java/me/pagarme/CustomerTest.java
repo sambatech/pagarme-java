@@ -60,18 +60,4 @@ public class CustomerTest extends BaseTest {
             throw new UnsupportedOperationException(ex);
         }
     }
-
-    @Test
-    public void testCustomerCollectionFind() {
-        Customer createCustomer = this.customerCreateCommon();
-
-        try {
-            createCustomer.save();
-
-            Collection<Customer> customerCollection = customer.findCollection(1,0);
-            Assert.assertEquals(customerCollection.size(), 1);
-        } catch (PagarMeException ex) {
-            throw new UnsupportedOperationException(ex);
-        }
-    }
 }
