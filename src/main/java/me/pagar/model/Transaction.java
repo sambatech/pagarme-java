@@ -325,7 +325,19 @@ public class Transaction extends PagarMeModel<Integer> {
         this.customer = customer;
     }
 
-    public Transaction find(int id) throws PagarMeException {
+    public Transaction find(String id) throws PagarMeException {
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s", getClassName(), id));
+
+        final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
+        copy(other);
+        flush();
+
+        return other;
+    }
+
+    public Transaction find(Integer id) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
                 String.format("/%s/%s", getClassName(), id));
