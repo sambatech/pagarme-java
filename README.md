@@ -146,3 +146,6 @@ customer.find("customer_id");
 Customer customer = new Customer();
 customer.findCollection(10,0);
 ```
+
+### Agradecimento
+``` library baseada na library pagar-me java do [@adrianoluis](https://github.com/adrianoluis)```
