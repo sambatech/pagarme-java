@@ -148,4 +148,4 @@ customer.findCollection(10,0);
 ```
 
 ### Agradecimento
-``` library baseada na library pagar-me java do [Adriano Luiz](https://github.com/adrianoluis)```
+development based on library pagarme-java [Adriano Luiz](https://github.com/adrianoluis)
