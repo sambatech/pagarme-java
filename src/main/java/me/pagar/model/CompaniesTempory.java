@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import me.pagar.util.JSONUtils;
-import me.pagar.util.JSONUtils;
 
 import javax.ws.rs.HttpMethod;
 import java.util.Map;

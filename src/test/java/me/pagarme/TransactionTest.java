@@ -41,11 +41,29 @@ public class TransactionTest extends BaseTest {
         transaction.setCapture(true);
 
         Map<String, Object> metadata =  new HashMap<String, Object>();
-        metadata.put("metada-key", "meta-value");
-        metadata.put("metada-key2", "meta-value2");
+        metadata.put("metadata1", "value1");
+        metadata.put("metadata2", "value2");
 
         transaction.setMetadata(metadata);
         transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.CREDIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
+    }
+
+    @Test
+    public void testCreateAndCaptureTransactionMetaDataInCapture() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setCapture(false);
+        transaction.save();
+
+        Map<String, Object> metadata =  new HashMap<String, Object>();
+        metadata.put("metadata1", "value1");
+        metadata.put("metadata2", "value2");
+        transaction.setMetadata(metadata);
+
+        transaction.capture(AMOUNT);
 
         Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.CREDIT_CARD);
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);

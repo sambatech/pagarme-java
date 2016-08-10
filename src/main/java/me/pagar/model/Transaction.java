@@ -873,11 +873,16 @@ public class Transaction extends PagarMeModel<Integer> {
      * @throws PagarMeException
      */
     public Transaction capture(final Integer amount) throws PagarMeException {
+
         validateId();
 
-        final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
-                String.format("/%s/%s/capture", getClassName(), getId()));
+        final PagarMeRequest request = new PagarMeRequest(
+                HttpMethod.POST,
+                String.format("/%s/%s/capture", getClassName(), getId())
+        );
+
         request.getParameters().put("amount", amount);
+        request.getParameters().put("metadata", this.getMetadata());
 
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);
