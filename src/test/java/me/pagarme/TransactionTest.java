@@ -105,6 +105,14 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
+    public void testTransactionCanBeMadeString() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+
+        transaction.toString();
+    }
+
+    @Test
     public void testTransactionAuthAndCaptureCapturePartialValue() throws Throwable {
 
         transaction = this.transactionCreditCardCommon();
