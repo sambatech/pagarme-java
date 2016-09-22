@@ -167,6 +167,14 @@ public abstract class PagarMeModel<PK extends Serializable> {
 
     }
 
+    public String toJson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(DateTime.class, new DateTimeAdapter())
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create()
+                .toJson(this);
+    }
+
     @Override
     public int hashCode() {
         return id.hashCode();
@@ -175,11 +183,7 @@ public abstract class PagarMeModel<PK extends Serializable> {
     @Override
     public String toString() {
         try {
-            return new GsonBuilder()
-                    .registerTypeAdapter(DateTime.class, new DateTimeAdapter())
-                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                    .create()
-                    .toJson(this);
+            return this.toJson();
         } catch (UnsupportedOperationException e) {
             return getClass().getSimpleName().concat(String.format("=(%s)", this.id));
         }
