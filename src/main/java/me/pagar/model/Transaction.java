@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class Transaction extends PagarMeModel<Integer> {
 
-    private Integer id;
-
     @Expose(deserialize = false)
     private Boolean async;
 
