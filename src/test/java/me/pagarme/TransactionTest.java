@@ -113,6 +113,19 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
+    public void testTransactionCanBeMadeJSON() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setCapture(false);
+        transaction.save();
+
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
+
+        transaction.capture(50);
+        transaction.toJson();
+    }
+
+    @Test
     public void testTransactionAuthAndCaptureCapturePartialValue() throws Throwable {
 
         transaction = this.transactionCreditCardCommon();
