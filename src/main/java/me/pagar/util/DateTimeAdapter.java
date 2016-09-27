@@ -3,6 +3,7 @@ package me.pagar.util;
 import com.google.common.base.Strings;
 import com.google.gson.*;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -13,9 +14,7 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
     private final DateTimeFormatter formatter;
 
     public DateTimeAdapter() {
-        this.formatter = ISODateTimeFormat
-                .dateOptionalTimeParser()
-                .withZoneUTC();
+        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
     @Override
