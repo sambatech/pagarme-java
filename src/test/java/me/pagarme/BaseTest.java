@@ -48,7 +48,7 @@ public abstract class BaseTest {
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.CREDIT_CARD);
         transaction.setCardHolderName("Lucas Dos Santos Alves");
-        transaction.setCardExpirationDate("0916");
+        transaction.setCardExpirationDate("0517");
         transaction.setCardCvv("401");
         transaction.setCardNumber("4111111111111111");
         transaction.setInstallments(1);

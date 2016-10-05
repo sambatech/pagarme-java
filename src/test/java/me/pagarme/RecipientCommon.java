@@ -11,7 +11,7 @@ public class RecipientCommon extends BaseTest {
     protected static String AGENCIA_DV = "0";
     protected static String CONTA = "03245";
     protected static String CONTA_DV = "0";
-    protected static String BANK_CODE = "0341";
+    protected static String BANK_CODE = "341";
     protected static String DOCUMENT_NUMBER = "26268738888";
     protected static String LEGAL_NAME = "Java Lib Bank Account";
 
