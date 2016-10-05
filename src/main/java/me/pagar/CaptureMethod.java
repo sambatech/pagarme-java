@@ -1,14 +1,14 @@
 package me.pagar;
 
-public enum PaymentMethod {
+public enum CaptureMethod {
     
-    credit_card("credit_card"),
-    boleto("boleto"),
-    debit_card("debit_card");
+    ecommerce("ecommerce"),
+    emv("emv"),
+    magstripe("magstripe");
     
     private String method;
 
-    private PaymentMethod(String method) {
+    private CaptureMethod(String method) {
             this.method=method;
     }
 

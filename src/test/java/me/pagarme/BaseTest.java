@@ -41,6 +41,32 @@ public abstract class BaseTest {
     }
 
     /**
+     * @param pinMode can be online or offline. With online option, the bank will check the card, and with offline the pin is used to check the card. 
+     * @return the transaction
+     */
+    protected Transaction transactionDebitCardCommon(String pinMode) {
+        transaction.setAmount(100);
+        transaction.setPaymentMethod(Transaction.PaymentMethod.DEBIT_CARD);
+        transaction.setCaptureMethod(Transaction.CaptureMethod.EMV);
+        transaction.setCardHolderName("Lucas Dos Santos Alves");
+        transaction.setCardExpirationDate("0517");
+        transaction.setCardNumber("4111111111111111");
+        transaction.setInstallments(1);
+        transaction.setCardEmvData("0");
+        transaction.setCardTrack1("0");
+        transaction.setCardTrack2("0");
+        transaction.setCardTrack3("0");
+        transaction.setCardPinMode(pinMode);
+
+        if (pinMode.equals("offline")) return transaction;
+
+        transaction.setCardPin("0");
+        transaction.setCardPinKek("0");
+
+        return transaction;
+    }
+
+    /**
      *
      * @return
      */
