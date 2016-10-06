@@ -84,6 +84,34 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_cvv")
     private String cardCvv;
 
+    @Expose(deserialize = false)
+    @SerializedName("card_emv_data")
+    private String cardEmvData;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_pin_mode")
+    private String cardPinMode;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_track_1")
+    private String cardTrack1;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_track_2")
+    private String cardTrack2;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_track_3")
+    private String cardTrack3;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_pin")
+    private String cardPin;
+
+    @Expose(deserialize = false)
+    @SerializedName("card_pin_kek")
+    private String cardPinKek;
+
     public String getCardNumber() {
         return cardNumber;
     }
@@ -119,6 +147,70 @@ public class Transaction extends PagarMeModel<Integer> {
         this.cardCvv = cardCvv;
         addUnsavedProperty("cardCvv");
     }
+
+    public String getCardEmvData() {
+        return cardEmvData;
+    }
+
+    public void setCardEmvData(String cardEmvData) {
+        this.cardEmvData = cardEmvData;
+        addUnsavedProperty("cardEmvData");
+    }
+
+    public String getCardTrack1() {
+        return cardTrack2;
+    }
+
+    public void setCardTrack1(String cardTrack1) {
+        this.cardTrack1 = cardTrack1;
+        addUnsavedProperty("cardTrack1");
+    }
+
+    public String getCardTrack2() {
+        return cardTrack2;
+    }
+
+    public void setCardTrack2(String cardTrack2) {
+        this.cardTrack2 = cardTrack2;
+        addUnsavedProperty("cardTrack2");
+    }
+
+    public String getCardTrack3() {
+        return cardTrack3;
+    }
+
+    public void setCardTrack3(String cardTrack3) {
+        this.cardTrack3 = cardTrack3;
+        addUnsavedProperty("cardTrack3");
+    }
+
+    public String getCardPinMode() {
+        return cardPinMode;
+    }
+
+    public void setCardPinMode(String cardPinMode) {
+        this.cardPinMode = cardPinMode;
+        addUnsavedProperty("cardPinMode");
+    }
+
+    public String getCardPin() {
+        return cardPin;
+    }
+
+    public void setCardPin(String cardPin) {
+        this.cardPin = cardPin;
+        addUnsavedProperty("cardPin");
+    }
+
+    public String getCardPinKek() {
+        return cardPinKek;
+    }
+
+    public void setCardPinKek(String cardPinKek) {
+        this.cardPinKek = cardPinKek;
+        addUnsavedProperty("cardPinKek");
+    }
+
 
     /**
      * Custo da transação para o lojista
@@ -206,11 +298,18 @@ public class Transaction extends PagarMeModel<Integer> {
     private AcquirerName acquirerName;
 
     /**
-     * Método de pagamento possíveis: <code>credit_card</code> e <code>boleto</code>
+     * Métodos de pagamento possíveis: <code>credit_card</code>, <code>boleto</code> e <code>debit_card</code>
      */
     @Expose
     @SerializedName("payment_method")
     private PaymentMethod paymentMethod;
+
+    /**
+     * Métodos de captura possíveis: <code>emv</code>, <code>magstripe</code> e <code>ecommerce</code>
+     */
+    @Expose
+    @SerializedName("capture_method")
+    private CaptureMethod captureMethod;
 
     /**
      * Para cada atualização no processamento da transação, esta propriedade será alterada, e o objeto
@@ -483,6 +582,13 @@ public class Transaction extends PagarMeModel<Integer> {
     }
 
     /**
+     * @return {@link #captureMethod}
+     */
+    public CaptureMethod getCaptureMethod() {
+        return captureMethod;
+    }
+
+    /**
      * @return {@link #status}
      */
     public Status getStatus() {
@@ -590,6 +696,11 @@ public class Transaction extends PagarMeModel<Integer> {
     public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
         addUnsavedProperty("paymentMethod");
+    }
+
+    public void setCaptureMethod(final CaptureMethod captureMethod) {
+        this.captureMethod = captureMethod;
+        addUnsavedProperty("captureMethod");
     }
 
     public void setCardId(final String cardId) {
@@ -977,8 +1088,22 @@ public class Transaction extends PagarMeModel<Integer> {
         CREDIT_CARD,
 
         @SerializedName("boleto")
-        BOLETO
+        BOLETO,
 
+        @SerializedName("debit_card")
+        DEBIT_CARD
+    }
+
+    public enum CaptureMethod {
+
+        @SerializedName("emv")
+        EMV,
+
+        @SerializedName("magstripe")
+        MAGSTRIPE,
+
+        @SerializedName("ecommerce")
+        ECOMMERCE
     }
 
     /**

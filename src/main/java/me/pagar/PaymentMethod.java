@@ -3,7 +3,8 @@ package me.pagar;
 public enum PaymentMethod {
     
     credit_card("credit_card"),
-    boleto("boleto");
+    boleto("boleto"),
+    debit_card("debit_card");
     
     private String method;
 

@@ -24,6 +24,50 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
+    public void testCreateAndCaptureTransactionWithOfflineDebitCard() throws Throwable {
+
+        transaction = this.transactionDebitCardCommon("offline");
+        transaction.setCapture(true);
+        transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
+    }
+
+    @Test
+    public void testCreateAndAuthorizedTransactionWithOfflineDebitCard() throws Throwable {
+
+        transaction = this.transactionDebitCardCommon("offline");
+        transaction.setCapture(false);
+        transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
+    }
+
+    @Test
+    public void testCreateAndCaptureTransactionWithOnlineDebitCard() throws Throwable {
+
+        transaction = this.transactionDebitCardCommon("online");
+        transaction.setCapture(true);
+        transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
+    }
+
+    @Test
+    public void testCreateAndAuthorizedTransactionWithOnlineDebitCard() throws Throwable {
+
+        transaction = this.transactionDebitCardCommon("online");
+        transaction.setCapture(false);
+        transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
+    }
+
+    @Test
     public void testCreateAndCaptureTransactionWithCreditCardWithoutGoingThroughFraud() throws Throwable {
 
         transaction = this.transactionCreditCardCommon();
