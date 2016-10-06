@@ -9,7 +9,7 @@ public enum CaptureMethod {
     private String method;
 
     private CaptureMethod(String method) {
-            this.method=method;
+            this.method = method;
     }
 
     @Override
