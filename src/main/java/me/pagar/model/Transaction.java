@@ -298,7 +298,7 @@ public class Transaction extends PagarMeModel<Integer> {
     private AcquirerName acquirerName;
 
     /**
-     * Métodos de pagamento possíveis: <code>credit_card</code> e <code>boleto</code>
+     * Métodos de pagamento possíveis: <code>credit_card</code>, <code>boleto</code> e <code>debit_card</code>
      */
     @Expose
     @SerializedName("payment_method")
