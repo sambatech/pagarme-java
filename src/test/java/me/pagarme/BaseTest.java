@@ -3,6 +3,7 @@ package me.pagarme;
 import me.pagar.model.*;
 import org.junit.Assert;
 import org.omg.CORBA.Object;
+import org.joda.time.LocalDate;
 
 public abstract class BaseTest {
 
@@ -127,6 +128,7 @@ public abstract class BaseTest {
      * @return
      */
     protected Transaction transactionBoletoCommon() {
+        transaction.setBoletoExpirationDate(LocalDate.now().plusDays(4));
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
         return transaction;
