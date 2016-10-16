@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.gson.*;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.lang.reflect.Type;
@@ -13,8 +14,7 @@ public class LocalDateAdapter implements JsonDeserializer<LocalDate>, JsonSerial
     private final DateTimeFormatter formatter;
 
     public LocalDateAdapter() {
-        this.formatter = ISODateTimeFormat
-                .localDateParser();
+        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
     @Override
