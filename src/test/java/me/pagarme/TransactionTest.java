@@ -68,6 +68,18 @@ public class TransactionTest extends BaseTest {
     }
 
     @Test
+    public void testCreateAndCaptureTransactionWithSoftDescriptor() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setSoftDescriptor("API Test");
+        transaction.save();
+
+        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.CREDIT_CARD);
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
+        Assert.assertEquals(transaction.getSoftDescriptor(), "API Test");
+    }
+
+    @Test
     public void testCreateAndCaptureTransactionWithCreditCardWithoutGoingThroughFraud() throws Throwable {
 
         transaction = this.transactionCreditCardCommon();
