@@ -237,6 +237,7 @@ public class Transaction extends PagarMeModel<Integer> {
      * Texto que irá aparecer na fatura do cliente depois do nome da loja.
      * <b>OBS:</b> Limite de 13 caracteres.
      */
+    @Expose
     @SerializedName("soft_descriptor")
     private String softDescriptor;
 
