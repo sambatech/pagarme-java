@@ -1,6 +1,8 @@
 package me.pagarme;
 
 import me.pagar.model.*;
+import me.pagar.util.JSONUtils;
+import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -113,16 +115,16 @@ public class TransactionTest extends BaseTest {
         transaction = this.transactionCreditCardCommon();
         transaction.setCapture(true);
 
-        Map<String, Object> antifraudMetadata =  new HashMap<String, Object>();
-        antifraudMetadata.put("metadata1", "value1");
-        antifraudMetadata.put("metadata2", "value2");
+        AntifraudMetadataPojo antifraudMetadata = new AntifraudMetadataPojo();
+        antifraudMetadata.setName("Philip J. Fry");
 
         transaction.setAntifraudMetadata(antifraudMetadata);
         transaction.save();
 
-        Assert.assertEquals(transaction.getAntifraudMetadata().get("metadata1"), "value1");
-        Assert.assertEquals(transaction.getAntifraudMetadata().get("metadata2"), "value2");
-        
+        JsonObject json = JSONUtils.treeToJson(transaction.getAntifraudMetadata());
+        AntifraudMetadataPojo antifraudMetadataRes = JSONUtils.getAsObject(json, AntifraudMetadataPojo.class);
+
+        Assert.assertEquals(antifraudMetadataRes.getName(), "Philip J. Fry");
     }
 
     @Test
