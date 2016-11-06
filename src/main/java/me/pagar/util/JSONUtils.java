@@ -46,4 +46,7 @@ public class JSONUtils {
         }.getType());
     }
 
+    public static JsonObject treeToJson(Object object) {
+        return GSON_DATA_PROVIDER.toJsonTree(object).getAsJsonObject();
+    }
 }

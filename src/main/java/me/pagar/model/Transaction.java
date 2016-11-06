@@ -375,7 +375,7 @@ public class Transaction extends PagarMeModel<Integer> {
 
     @Expose
     @SerializedName("antifraud_metadata")
-    private Map<String, Object> antifraudMetadata;
+    private Object antifraudMetadata;
 
     @Expose(serialize = false)
     @SerializedName("event")
@@ -669,7 +669,7 @@ public class Transaction extends PagarMeModel<Integer> {
         return desiredStatus;
     }
 
-    public Map<String, Object> getAntifraudMetadata() {
+    public Object getAntifraudMetadata() {
         return antifraudMetadata;
     }
 
@@ -746,7 +746,7 @@ public class Transaction extends PagarMeModel<Integer> {
         }
     }
 
-    public void setAntifraudMetadata(Map<String, Object> antifraudMetadata) {
+    public void setAntifraudMetadata(Object antifraudMetadata) {
         this.antifraudMetadata = antifraudMetadata;
         addUnsavedProperty("antifraud_metadata");
     }
