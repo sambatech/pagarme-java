@@ -108,9 +108,29 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.CREDIT_CARD);
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
     }
+
+    @Test
+    public void testCreateAndCaptureTransactionAntifraudMetaDataMap() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        transaction.setCapture(true);
+
+        Map<String, Object> antifraudMetadata =  new HashMap<String, Object>();
+        antifraudMetadata.put("antifraudMetadata1", "value1");
+        antifraudMetadata.put("antifraudMetadata2", "value2");
+
+        transaction.setAntifraudMetadata(antifraudMetadata);
+        transaction.save();
+
+        JsonObject json = JSONUtils.treeToJson(transaction.getAntifraudMetadata());
+        Map<String, Object> antifraudMetadataRes = JSONUtils.getAsObject(json, HashMap.class);
+
+        Assert.assertEquals(antifraudMetadataRes.get("antifraudMetadata1"), "value1");
+        Assert.assertEquals(antifraudMetadataRes.get("antifraudMetadata2"), "value2");
+    }
     
     @Test
-    public void testCreateAndCaptureTransactionAntifraudMetaData() throws Throwable {
+    public void testCreateAndCaptureTransactionAntifraudMetaDataPojo() throws Throwable {
 
         transaction = this.transactionCreditCardCommon();
         transaction.setCapture(true);
