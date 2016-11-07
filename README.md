@@ -55,7 +55,7 @@ transaction.setCustomer(customer);
 transaction.save();
 ```
 
-### Creating a Boleto Transaction
+### Creating a Boleto Transaction without fraud
 ```java
 transaction = new Transaction();
 transaction.setAmount(100);
@@ -80,22 +80,6 @@ transaction.findCollection(10,0);
 transaction = new Transaction();
 transaction.find("transaction_id");
 transaction.refund(50);
-```
-
-### Reversing a transaction
-```java
-transaction = new Transaction();
-transaction.setAmount(100);
-transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
-transaction.save();
-```
-
-### Creating a Boleto Transaction without fraud
-```java
-transaction = new Transaction();
-transaction.setAmount(100);
-transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
-transaction.save();
 ```
 
 ## Customer
@@ -127,12 +111,6 @@ customer.setPhone(phone);
 
 #### Save customer
 customer.save();
-```
-
-### Find Customer
-```java
-Customer customer = new Customer();
-customer.find("customer_id");
 ```
 
 ### Find Customer
