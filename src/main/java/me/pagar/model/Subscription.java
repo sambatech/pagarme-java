@@ -14,7 +14,7 @@ import me.pagar.PaymentMethod;
 import me.pagar.SubscriptionStatus;
 import me.pagar.util.JSONUtils;
 
-public class Subscription extends PagarMeModel<String> {
+public class Subscription extends PagarMeModel<Integer> {
 
 	@Expose(deserialize = false)
 	@SerializedName("card_hash")

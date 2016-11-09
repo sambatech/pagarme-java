@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import me.pagar.PaymentMethod;
 import me.pagar.util.JSONUtils;
 
-public class Plan extends PagarMeModel<String> {
+public class Plan extends PagarMeModel<Integer> {
 
 	@Expose
     private Integer amount;
