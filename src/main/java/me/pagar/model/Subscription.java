@@ -1,14 +1,17 @@
 package me.pagar.model;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.ws.rs.HttpMethod;
 
 import org.joda.time.DateTime;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import me.pagar.PaymentMethod;
 import me.pagar.SubscriptionStatus;
@@ -91,10 +94,10 @@ public class Subscription extends PagarMeModel<Integer> {
         return saved;
     }
 
-    public Subscription find(String id) throws PagarMeException {
+    public Subscription find(Integer id) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
-                String.format("/%s/%s", getClassName(), id));
+                String.format("/%s/%d", getClassName(), id));
 
         final Subscription other = JSONUtils.getAsObject((JsonObject) request.execute(), Subscription.class);
         copy(other);
@@ -103,7 +106,41 @@ public class Subscription extends PagarMeModel<Integer> {
         return other;
     }
 
-    public Subscription refresh() throws PagarMeException {
+	public Collection<Subscription> list() throws PagarMeException {
+		return list(100, 0);
+	}
+
+	public Collection<Subscription> list(Integer totalPerPage, Integer page) throws PagarMeException {
+		return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Subscription>>() {
+		}.getType());
+	}
+
+	public Subscription cancel() throws PagarMeException {
+		validateId();
+
+		final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
+				String.format("/%s/%d/cancel", getClassName(), getId()));
+
+		final Subscription other = JSONUtils.getAsObject((JsonObject) request.execute(), Subscription.class);
+		copy(other);
+		flush();
+
+		return other;
+	}
+
+	public Collection<Transaction> transactions() throws PagarMeException {
+		validateId();
+
+		final Transaction transaction = new Transaction();
+
+		final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+				String.format("/%s/%s/%s", getClassName(), getId(), transaction.getClassName()));
+
+		return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Postback>>() {
+		}.getType());
+	}
+
+	public Subscription refresh() throws PagarMeException {
         final Subscription other = JSONUtils.getAsObject(refreshModel(), Subscription.class);
         copy(other);
         flush();
@@ -112,6 +149,24 @@ public class Subscription extends PagarMeModel<Integer> {
 
     private void copy(Subscription other) {
         setId(other.getId());
+	    setCardHash(other.getCardHash());
+	    setCardId(other.getCardId());
+	    setPlanId(other.getPlanId());
+	    setPlan(other.getPlan());
+	    setCurrentTransaction(other.getCurrentTransaction());
+	    setPostbackUrl(other.getPostbackUrl());
+	    setPaymentMethod(other.getPaymentMethod());
+	    setCurrentPeriodStart(other.getCurrentPeriodStart());
+	    setCurrentPeriodEnd(other.getCurrentPeriodEnd());
+	    setCharges(other.getCharges());
+	    setStatus(other.getStatus());
+	    setPhone(other.getPhone());
+	    setAddress(other.getAddress());
+	    setCustomer(other.getCustomer());
+	    setCard(other.getCard());
+	    setCardNumber(other.getCardNumber());
+	    setCardHolderName(other.getCardHolderName());
+	    setMetadata(other.getMetadata());
     }
 
 	public String getCardHash() {
@@ -223,5 +278,65 @@ public class Subscription extends PagarMeModel<Integer> {
 	public void setMetadata(Map<String, Object> metadata) {
 		this.metadata = metadata;
 		addUnsavedProperty("metadata");
+	}
+
+	public void setPlan(Plan plan) {
+		this.plan = plan;
+		addUnsavedProperty("plan");
+	}
+
+	public void setCurrentTransaction(Transaction currentTransaction) {
+		this.currentTransaction = currentTransaction;
+		addUnsavedProperty("currentTransaction");
+	}
+
+	public void setCurrentPeriodStart(DateTime currentPeriodStart) {
+		this.currentPeriodStart = currentPeriodStart;
+		addUnsavedProperty("currentPeriodStart");
+	}
+
+	public void setCurrentPeriodEnd(DateTime currentPeriodEnd) {
+		this.currentPeriodEnd = currentPeriodEnd;
+		addUnsavedProperty("currentPeriodEnd");
+	}
+
+	public void setCharges(Integer charges) {
+		this.charges = charges;
+		addUnsavedProperty("charges");
+	}
+
+	public void setStatus(SubscriptionStatus status) {
+		this.status = status;
+		addUnsavedProperty("status");
+	}
+
+	public void setPhone(Phone phone) {
+		this.phone = phone;
+		addUnsavedProperty("phone");
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+		addUnsavedProperty("address");
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+		addUnsavedProperty("card");
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+		addUnsavedProperty("cardNumber");
+	}
+
+	public void setCardHolderName(String cardHolderName) {
+		this.cardHolderName = cardHolderName;
+		addUnsavedProperty("cardHolderName");
+	}
+
+	public void setCardExpirationDate(String cardExpirationDate) {
+		this.cardExpirationDate = cardExpirationDate;
+		addUnsavedProperty("cardExpirationDate");
 	}
 }

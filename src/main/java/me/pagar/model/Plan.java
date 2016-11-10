@@ -7,6 +7,7 @@ import javax.ws.rs.HttpMethod;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import me.pagar.PaymentMethod;
 import me.pagar.util.JSONUtils;
@@ -43,10 +44,10 @@ public class Plan extends PagarMeModel<Integer> {
         return saved;
     }
 
-    public Plan find(String id) throws PagarMeException {
+    public Plan find(Integer id) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
-                String.format("/%s/%s", getClassName(), id));
+                String.format("/%s/%d", getClassName(), id));
 
         final Plan other = JSONUtils.getAsObject((JsonObject) request.execute(), Plan.class);
         copy(other);
@@ -55,7 +56,16 @@ public class Plan extends PagarMeModel<Integer> {
         return other;
     }
 
-    public Plan refresh() throws PagarMeException {
+	public Collection<Plan> list() throws PagarMeException {
+		return list(100, 0);
+	}
+
+	public Collection<Plan> list(Integer totalPerPage, Integer page) throws PagarMeException {
+		return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Plan>>() {
+		}.getType());
+	}
+
+	public Plan refresh() throws PagarMeException {
         final Plan other = JSONUtils.getAsObject(refreshModel(), Plan.class);
         copy(other);
         flush();
@@ -64,13 +74,13 @@ public class Plan extends PagarMeModel<Integer> {
 
     private void copy(Plan other) {
         setId(other.getId());
-	    this.amount = other.amount;
-		this.days = other.days;
-		this.name = other.name;
-		this.trialDays = other.trialDays;
-		this.paymentMethods = other.paymentMethods;
-		this.charges = other.charges;
-		this.installments = other.installments;
+	    setAmount(other.getAmount());
+		setDays(other.getDays());
+		setName(other.getName());
+		setTrialDays(other.getTrialDays());
+	    setPaymentMethods(other.getPaymentMethods());
+	    setCharges(other.getCharges());
+	    setInstallments(other.getInstallments());
     }
 
 	public Integer getAmount() {
@@ -79,6 +89,7 @@ public class Plan extends PagarMeModel<Integer> {
 
 	public void setAmount(Integer amount) {
 		this.amount = amount;
+		addUnsavedProperty("amount");
 	}
 
 	public Integer getDays() {
@@ -87,6 +98,7 @@ public class Plan extends PagarMeModel<Integer> {
 
 	public void setDays(Integer days) {
 		this.days = days;
+		addUnsavedProperty("days");
 	}
 
 	public String getName() {
@@ -95,6 +107,7 @@ public class Plan extends PagarMeModel<Integer> {
 
 	public void setName(String name) {
 		this.name = name;
+		addUnsavedProperty("name");
 	}
 
 	public Integer getTrialDays() {
