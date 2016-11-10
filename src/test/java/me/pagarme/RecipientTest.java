@@ -34,6 +34,8 @@ public class RecipientTest extends BaseTest{
         int bankAccountId = bankAccountFactory.create().save().getId();
         Recipient recipient = recipientFactory.create();
         recipient.setBankAccountId(bankAccountId);
+        recipient.save();
+        recipient.find(recipient.getId());
 
         recipient.save();
         Assert.assertEquals(recipient.getTransferInterval(), RecipientFactory.DEFAULT_TRANSFER_INTERVAL);

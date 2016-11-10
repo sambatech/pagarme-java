@@ -12,7 +12,6 @@ public class BankAccountFactory {
     public static String DEFAULT_LEGAL_NAME = "Conta teste";
     public static String DEFAULT_DOCUMENT_NUMBER = "18344334799";
     
-    
     public BankAccount create(){
         BankAccount bankAccount = new BankAccount();
         bankAccount.setAgencia(DEFAULT_AGENCIA);

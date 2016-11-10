@@ -1,88 +1,56 @@
 package me.pagar.model;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.ws.rs.HttpMethod;
 
 import org.joda.time.DateTime;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
-import me.pagar.PaymentMethod;
+import me.pagar.model.Transaction.PaymentMethod;
 import me.pagar.SubscriptionStatus;
 import me.pagar.util.JSONUtils;
 
-public class Subscription extends PagarMeModel<Integer> {
+public class Subscription extends PagarMeModel<String> {
 
-	@Expose(deserialize = false)
-	@SerializedName("card_hash")
-	private String cardHash;
+    @Expose(deserialize = false)
+    private String cardHash;
+    @Expose(deserialize = false)
+    private String cardId;
+    @Expose(deserialize = false)
+    private String planId;
 
-	@Expose(deserialize = false)
-	@SerializedName("card_id")
-	private String cardId;
+    @Expose
+    private Customer customer;
+    @Expose
+    private String postbackUrl;
+    @Expose
+    private PaymentMethod paymentMethod;
+    @Expose
+    private DateTime currentPeriodStart;
+    @Expose
+    private DateTime currentPeriodEnd;
+    @Expose
+    private Map<String, Object> metadata;
 
-	@Expose(deserialize = false)
-	@SerializedName("plan_id")
-	private Integer planId;
-
-	@Expose(serialize = false)
-	private Plan plan;
-
-	@Expose(serialize = false)
-	@SerializedName("current_transaction")
-	private Transaction currentTransaction;
-
-	@Expose
-	@SerializedName("postback_url")
-	private String postbackUrl;
-
-	@Expose
-	@SerializedName("payment_method")
-	private PaymentMethod paymentMethod;
-
-	@Expose
-	@SerializedName("current_period_start")
-	private DateTime currentPeriodStart;
-
-	@Expose
-	@SerializedName("current_period_end")
-	private DateTime currentPeriodEnd;
-
-	@Expose(serialize = false)
-	private Integer charges;
-
-	@Expose(serialize = false)
-	private SubscriptionStatus status;
-
-	@Expose(serialize = false)
-	private Phone phone;
-
-	@Expose(serialize = false)
-	private Address address;
-
-	@Expose
-	private Customer customer;
-
-	@Expose(serialize = false)
-	private Card card;
-
-	@Expose(deserialize = false)
-	@SerializedName("card_number")
-	private String cardNumber;
-
-	@Expose(deserialize = false)
-	@SerializedName("card_holder_name")
-	private String cardHolderName;
-
-	@Expose(deserialize = false)
-	@SerializedName("card_expiration_date")
-	private String cardExpirationDate; // Format: MMYY
-
-	@Expose
-	private Map<String, Object> metadata;
+    @Expose(serialize = false)
+    private Plan plan;
+    @Expose(serialize = false)
+    private Transaction currentTransaction;
+    @Expose(serialize = false)
+    private Integer charges;
+    @Expose(serialize = false)
+    private SubscriptionStatus status;
+    @Expose(serialize = false)
+    private Phone phone;
+    @Expose(serialize = false)
+    private Address address;
 
     public Subscription save() throws PagarMeException {
         final Subscription saved = super.save(getClass());
@@ -103,6 +71,36 @@ public class Subscription extends PagarMeModel<Integer> {
         return other;
     }
 
+    public Collection<Subscription> findCollection(Integer totalPerPage, Integer page) throws PagarMeException {
+        return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Subscription>>() {
+        }.getType());
+    }
+
+    public Subscription cancel() throws PagarMeException {
+        validateId();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
+                String.format("/%s/%s/cancel", getClassName(), getId()));
+
+        final Subscription other = JSONUtils.getAsObject((JsonObject) request.execute(), Subscription.class);
+        copy(other);
+        flush();
+
+        return other;
+    }
+
+    public Collection<Transaction> transactions() throws PagarMeException {
+        validateId();
+
+        final Transaction transaction = new Transaction();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s/%s", getClassName(), getId(), transaction.getClassName()));
+
+        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Postback>>() {
+        }.getType());
+    }
+
     public Subscription refresh() throws PagarMeException {
         final Subscription other = JSONUtils.getAsObject(refreshModel(), Subscription.class);
         copy(other);
@@ -111,117 +109,108 @@ public class Subscription extends PagarMeModel<Integer> {
     }
 
     private void copy(Subscription other) {
-        setId(other.getId());
+        super.copy(other);
+        this.plan = other.getPlan();
+        this.currentTransaction = other.getCurrentTransaction();
+        this.postbackUrl = other.getPostbackUrl();
+        this.currentPeriodStart = other.getCurrentPeriodStart();
+        this.currentPeriodEnd = other.getCurrentPeriodEnd();
+        this.charges = other.getCharges();
+        this.status = other.getStatus();
     }
 
-	public String getCardHash() {
-		return cardHash;
-	}
+    public void setCreditCardSubscriptionWithCardHash(String planId, String cardHash, Customer customer){
+        this.planId = planId;
+        this.cardHash = cardHash;
+        this.customer = customer;
+        this.paymentMethod = PaymentMethod.CREDIT_CARD;
+    }
 
-	public String getCardId() {
-		return cardId;
-	}
+    public void setCreditCardSubscriptionWithCardId(String planId, String cardId, Customer customer){
+        this.planId = planId;
+        this.cardId = cardId;
+        this.customer = customer;
+        this.paymentMethod = PaymentMethod.CREDIT_CARD;
+    }
 
-	public Integer getPlanId() {
-		return planId;
-	}
+    public void setBoletoSubscription(String planId, Customer customer){
+        this.planId = planId;
+        this.paymentMethod = PaymentMethod.BOLETO;
+        this.customer = customer;
+    }
 
-	public Plan getPlan() {
-		return plan;
-	}
+    public void setRequiredUpdateParameters(String id){
+        setId(id);
+    }
 
-	public Transaction getCurrentTransaction() {
-		return currentTransaction;
-	}
+    public void setUpdatableParameters(String cardId, String cardHash, String planId){
+        this.planId = planId;
 
-	public String getPostbackUrl() {
-		return postbackUrl;
-	}
+        if(!Strings.isNullOrEmpty(cardId)){
+            this.cardHash = cardId;
+        }else if(!Strings.isNullOrEmpty(cardHash)){
+            this.cardHash = cardHash;
+        }
+    }
 
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
+    public String getCardHash() {
+        return cardHash;
+    }
 
-	public DateTime getCurrentPeriodStart() {
-		return currentPeriodStart;
-	}
+    public String getCardId() {
+        return cardId;
+    }
 
-	public DateTime getCurrentPeriodEnd() {
-		return currentPeriodEnd;
-	}
+    public String getPlanId() {
+        return planId;
+    }
 
-	public Integer getCharges() {
-		return charges;
-	}
+    public Plan getPlan() {
+        return plan;
+    }
 
-	public SubscriptionStatus getStatus() {
-		return status;
-	}
+    public Transaction getCurrentTransaction() {
+        return currentTransaction;
+    }
 
-	public Phone getPhone() {
-		return phone;
-	}
+    public String getPostbackUrl() {
+        return postbackUrl;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
 
-	public Customer getCustomer() {
-		return customer;
-	}
+    public DateTime getCurrentPeriodStart() {
+        return currentPeriodStart;
+    }
 
-	public Card getCard() {
-		return card;
-	}
+    public DateTime getCurrentPeriodEnd() {
+        return currentPeriodEnd;
+    }
 
-	public String getCardNumber() {
-		return cardNumber;
-	}
+    public Integer getCharges() {
+        return charges;
+    }
 
-	public String getCardHolderName() {
-		return cardHolderName;
-	}
+    public SubscriptionStatus getStatus() {
+        return status;
+    }
 
-	public String getCardExpirationDate() {
-		return cardExpirationDate;
-	}
+    public Phone getPhone() {
+        return phone;
+    }
 
-	public Map<String, Object> getMetadata() {
-		return metadata;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setCardHash(String cardHash) {
-		this.cardHash = cardHash;
-		addUnsavedProperty("cardHash");
-	}
+    public Customer getCustomer() {
+        return customer;
+    }
 
-	public void setCardId(String cardId) {
-		this.cardId = cardId;
-		addUnsavedProperty("cardId");
-	}
+    public Map<String, Object> getMetadata() {
+        return metadata;
+    }
 
-	public void setPlanId(Integer planId) {
-		this.planId = planId;
-		addUnsavedProperty("planId");
-	}
-
-	public void setPostbackUrl(String postbackUrl) {
-		this.postbackUrl = postbackUrl;
-		addUnsavedProperty("postbackUrl");
-	}
-
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-		addUnsavedProperty("paymentMethod");
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-		addUnsavedProperty("customer");
-	}
-
-	public void setMetadata(Map<String, Object> metadata) {
-		this.metadata = metadata;
-		addUnsavedProperty("metadata");
-	}
 }

@@ -1,23 +1,24 @@
 package me.pagar;
 
+import com.google.gson.annotations.SerializedName;
 
 public enum SubscriptionStatus {
 
-	trialing("trialing"),
-	paid("paid"),
-	pending_payment("pending_payment"),
-	unpaid("unpaid"),
-	canceled("canceled"),
-	ended("ended");
+    @SerializedName("trialing")
+    TRIALING,
 
-	private String status;
-	SubscriptionStatus(String status){
-		this.status=status;
-	}
+    @SerializedName("paid")
+    PAID,
 
-	@Override
-	public String toString() {
-		return status;
-	}
+    @SerializedName("pending_payment")
+    PENDING_PAYMENT,
 
+    @SerializedName("unpaid")
+    UNPAID,
+
+    @SerializedName("canceled")
+    CANCELED,
+
+    @SerializedName("ended")
+    ENDED;
 }

@@ -6,131 +6,118 @@ import javax.ws.rs.HttpMethod;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
-import me.pagar.PaymentMethod;
+import me.pagar.model.Transaction.PaymentMethod;
 import me.pagar.util.JSONUtils;
 
-public class Plan extends PagarMeModel<Integer> {
+public class Plan extends PagarMeModel<String> {
 
-	@Expose
+    @Expose
     private Integer amount;
-
-	@Expose
+    @Expose
     private Integer days;
-
-	@Expose
+    @Expose
     private String name;
-
-	@Expose
-	@SerializedName("trial_days")
+    @Expose
     private Integer trialDays;
-
-	@Expose
-	@SerializedName("payment_methods")
+    @Expose
     private Collection<PaymentMethod> paymentMethods;
-
-	@Expose
+    @Expose
+    private String color;
+    @Expose
     private Integer charges;
-
-	@Expose
+    @Expose
     private Integer installments;
 
     public Plan save() throws PagarMeException {
         final Plan saved = super.save(getClass());
         copy(saved);
-
         return saved;
     }
 
     public Plan find(String id) throws PagarMeException {
-
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
                 String.format("/%s/%s", getClassName(), id));
-
         final Plan other = JSONUtils.getAsObject((JsonObject) request.execute(), Plan.class);
         copy(other);
         flush();
-
         return other;
     }
 
-    public Plan refresh() throws PagarMeException {
-        final Plan other = JSONUtils.getAsObject(refreshModel(), Plan.class);
-        copy(other);
-        flush();
-        return other;
+    public Collection<Plan> findCollection(Integer totalPerPage, Integer page) throws PagarMeException {
+        return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Plan>>() {
+        }.getType());
+    }
+
+    public void setCreationParameters(Integer amount, Integer days, String name){
+        this.amount = amount;
+        this.days = days;
+        this.name = name;
+    }
+
+    @Override
+    public void setId(String id) {
+        super.setId(id);
+    }
+
+    public void setTrialDays(Integer trialDays) {
+        this.trialDays = trialDays;
+    }
+
+    public void setPaymentMethods(Collection<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setCharges(Integer charges) {
+        this.charges = charges;
+    }
+
+    public void setInstallments(Integer installments) {
+        this.installments = installments;
     }
 
     private void copy(Plan other) {
-        setId(other.getId());
-	    this.amount = other.amount;
-		this.days = other.days;
-		this.name = other.name;
-		this.trialDays = other.trialDays;
-		this.paymentMethods = other.paymentMethods;
-		this.charges = other.charges;
-		this.installments = other.installments;
+        super.copy(other);
+        this.amount = other.getAmount();
+        this.days = other.getDays();
+        this.name = other.getName();
+        this.trialDays = other.getTrialDays();
+        this.paymentMethods = other.getPaymentMethods();
+        this.charges = other.getCharges();
+        this.installments = other.getInstallments();
     }
 
-	public Integer getAmount() {
-		return amount;
-	}
+    public Integer getAmount() {
+        return amount;
+    }
 
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
+    public Integer getDays() {
+        return days;
+    }
 
-	public Integer getDays() {
-		return days;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDays(Integer days) {
-		this.days = days;
-	}
+    public Integer getTrialDays() {
+        return trialDays;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Collection<PaymentMethod> getPaymentMethods() {
+        return paymentMethods;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Integer getCharges() {
+        return charges;
+    }
 
-	public Integer getTrialDays() {
-		return trialDays;
-	}
-
-	public void setTrialDays(Integer trialDays) {
-		this.trialDays = trialDays;
-		addUnsavedProperty("trialDays");
-	}
-
-	public Collection<PaymentMethod> getPaymentMethods() {
-		return paymentMethods;
-	}
-
-	public void setPaymentMethods(Collection<PaymentMethod> paymentMethods) {
-		this.paymentMethods = paymentMethods;
-		addUnsavedProperty("paymentMethods");
-	}
-
-	public Integer getCharges() {
-		return charges;
-	}
-
-	public void setCharges(Integer charges) {
-		this.charges = charges;
-		addUnsavedProperty("charges");
-	}
-
-	public Integer getInstallments() {
-		return installments;
-	}
-
-	public void setInstallments(Integer installments) {
-		this.installments = installments;
-		addUnsavedProperty("installments");
-	}
+    public Integer getInstallments() {
+        return installments;
+    }
 
 }
