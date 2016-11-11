@@ -17,8 +17,6 @@ public class RecipientTest extends RecipientCommon {
     public void testCreateRecipient() {
 
         int bankAccountId = this.getBankAccountId();
-
-        recipient = this.recipientDefault();
         recipient.setBankAccountId(bankAccountId);
 
         try {
