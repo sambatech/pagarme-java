@@ -40,7 +40,7 @@ public abstract class PagarMe {
     public static boolean isRequestSignatureValid(final String payload, final String signature) {
 
         if (Strings.isNullOrEmpty(signature)) {
-            return true;
+            return false;
         }
 
 	    String algorithm;
@@ -74,7 +74,7 @@ public abstract class PagarMe {
 
 		    //  Covert array of Hex bytes to a String
 		    String hash = new String(hexBytes, "UTF-8");
-		    return signature.equals(hash);
+		    return parts[1].equals(hash);
 	    } catch (Exception e) {
 		    return false;
 	    }
