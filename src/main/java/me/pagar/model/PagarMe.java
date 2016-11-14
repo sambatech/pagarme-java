@@ -37,14 +37,17 @@ public abstract class PagarMe {
         PagarMe.apiKey = apiKey;
     }
 
-    public static boolean validateRequestSignature(final String payload, final String signature) {
+    public static boolean isRequestSignatureValid(final String payload, final String signature) {
 
         if (Strings.isNullOrEmpty(signature)) {
             return true;
         }
 
 	    String algorithm;
-        final String[] parts = signature.split("=");
+	    final String[] parts = signature.split("=");
+
+	    if (parts.length != 2) // Wrong signature param
+		    return false;
 
 	    if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
 		    algorithm = HMAC_SHA1_ALGORITHM;
@@ -70,7 +73,8 @@ public abstract class PagarMe {
 		    byte[] hexBytes = new Hex().encode(rawHmac);
 
 		    //  Covert array of Hex bytes to a String
-		    return signature.equals( new String(hexBytes, "UTF-8"));
+		    String hash = new String(hexBytes, "UTF-8");
+		    return signature.equals(hash);
 	    } catch (Exception e) {
 		    return false;
 	    }
