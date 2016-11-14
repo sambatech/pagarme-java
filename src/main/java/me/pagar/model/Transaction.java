@@ -1,19 +1,21 @@
 package me.pagar.model;
 
+import java.util.Collection;
+import java.util.Map;
+
+import javax.ws.rs.HttpMethod;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import com.google.common.base.CaseFormat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import me.pagar.util.JSONUtils;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
-import javax.ws.rs.HttpMethod;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import me.pagar.util.JSONUtils;
 
 public class Transaction extends PagarMeModel<Integer> {
 
@@ -88,9 +90,9 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_emv_data")
     private String cardEmvData;
 
-	@Expose(deserialize = false)
-	@SerializedName("card_emv_response")
-	private String cardEmvResponse;	
+    @Expose
+    @SerializedName("card_emv_response")
+    private String cardEmvResponse;	
 
     @Expose(deserialize = false)
     @SerializedName("card_pin_mode")
@@ -1081,6 +1083,7 @@ public class Transaction extends PagarMeModel<Integer> {
         this.antifraudMetadata = other.antifraudMetadata;
         this.setCreatedAt(other.getCreatedAt());
         this.splitRules = other.splitRules;
+        this.cardEmvResponse = other.cardEmvResponse;
     }
 
     /**
