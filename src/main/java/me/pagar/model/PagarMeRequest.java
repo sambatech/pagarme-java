@@ -39,7 +39,6 @@ public class PagarMeRequest extends PagarMe {
 
         final RestClient client = new RestClient(method, fullApiUrl(path), parameters, headers);
         final PagarMeResponse response = client.execute();
-
         final JsonElement decoded = JSONUtils.getInterpreter().fromJson(response.getBody(), JsonElement.class);
 
         if (response.getCode() == 200) {
