@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import me.pagar.SubscriptionStatus;
 
+/**
+ * Used in postback url to parse payload data to object. Can't be used know
+ * because Postback is not returning payload as JSON, just x-www-form-urlencoded
+ */
 public class PostbackSubscriptionPayload extends PagarMeModel<String> {
 
 	@Expose(serialize = false)
@@ -21,5 +25,8 @@ public class PostbackSubscriptionPayload extends PagarMeModel<String> {
 
 	@Expose(serialize = false)
 	private String event;
+
+	@Expose(serialize = false)
+	private Subscription subscription;
 
 }

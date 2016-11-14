@@ -1,11 +1,12 @@
 package me.pagar.model;
 
-import com.google.common.base.Strings;
+import java.net.URLDecoder;
+import java.util.Formatter;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URLDecoder;
-import java.util.Formatter;
+
+import com.google.common.base.Strings;
 
 public abstract class PagarMe {
 
@@ -53,11 +54,13 @@ public abstract class PagarMe {
         try {
             // get an hmac_sha1 key from the raw key bytes
             final SecretKeySpec signingKey = new SecretKeySpec(apiKey.getBytes(ASCII), parts[0]);
+	        System.out.print("Secret key: " + signingKey);
 
             String algorithm = HMAC_MD5_ALGORITHM;
 
             if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
                 algorithm = HMAC_SHA1_ALGORITHM;
+                System.out.print("SHA1 detected");
             } else if (parts[0].equalsIgnoreCase(SHA256_ALGORITHM)) {
                 algorithm = HMAC_SHA256_ALGORITHM;
             }
@@ -77,6 +80,9 @@ public abstract class PagarMe {
             }
 
             final String hash = formatter.toString();
+
+	        System.out.print("Sent hash: " + parts[1]);
+	        System.out.print("Generated Hash: " + hash);
 
             return (parts.length == 2) && (hash.equals(parts[1]));
         } catch (Exception e) {
