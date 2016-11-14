@@ -1080,6 +1080,7 @@ public class Transaction extends PagarMeModel<Integer> {
         this.authorizedAmount = other.authorizedAmount;
         this.refuseReason = other.refuseReason;
         this.antifraudMetadata = other.antifraudMetadata;
+        this.setCreatedAt(other.getCreatedAt());
     }
 
     /**

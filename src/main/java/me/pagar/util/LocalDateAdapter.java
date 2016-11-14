@@ -14,16 +14,14 @@ public class LocalDateAdapter implements JsonDeserializer<LocalDate>, JsonSerial
     private final DateTimeFormatter formatter;
 
     public LocalDateAdapter() {
-        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     }
 
-    @Override
     public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final String dateTime = json.getAsString();
         return Strings.isNullOrEmpty(dateTime) ? null : formatter.parseLocalDate(dateTime);
     }
 
-    @Override
     public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
         return src == null ? null : new JsonPrimitive(formatter.print(src));
     }

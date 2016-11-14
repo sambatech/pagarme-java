@@ -14,10 +14,9 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
     private final DateTimeFormatter formatter;
 
     public DateTimeAdapter() {
-        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     }
 
-    @Override
     public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final String dateTime = json.getAsString();
         try {
@@ -27,7 +26,6 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
         }
     }
 
-    @Override
     public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext context) {
         return src == null ? null : new JsonPrimitive(formatter.print(src));
     }
