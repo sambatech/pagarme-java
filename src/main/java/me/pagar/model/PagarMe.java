@@ -1,19 +1,17 @@
 package me.pagar.model;
 
-import com.google.common.base.Strings;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.URLDecoder;
-import java.util.Formatter;
+
+import org.apache.commons.codec.binary.Hex;
+
+import com.google.common.base.Strings;
 
 public abstract class PagarMe {
 
     public static final String ENDPOINT = "https://api.pagar.me";
 
     public static final String API_VERSION = "1";
-
-    public static final String HMAC_MD5_ALGORITHM = "HmacMD5";
 
     public static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
@@ -22,8 +20,6 @@ public abstract class PagarMe {
     public static final String SHA1_ALGORITHM = "sha1";
 
     public static final String SHA256_ALGORITHM = "sha256";
-
-    public static final String ASCII = "ASCII";
 
     private static String apiKey;
 
@@ -43,45 +39,41 @@ public abstract class PagarMe {
 
     public static boolean validateRequestSignature(final String payload, final String signature) {
 
-        // failsafe
         if (Strings.isNullOrEmpty(signature)) {
             return true;
         }
 
+	    String algorithm;
         final String[] parts = signature.split("=");
 
-        try {
-            // get an hmac_sha1 key from the raw key bytes
-            final SecretKeySpec signingKey = new SecretKeySpec(apiKey.getBytes(ASCII), parts[0]);
+	    if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
+		    algorithm = HMAC_SHA1_ALGORITHM;
+	    } else if (parts[0].equalsIgnoreCase(SHA256_ALGORITHM)) {
+		    algorithm = HMAC_SHA256_ALGORITHM;
+	    } else {
+			return false; // Cannot set algorithm.
+	    }
 
-            String algorithm = HMAC_MD5_ALGORITHM;
+	    try {
+		    // Get hmac key from the raw key bytes
+		    byte[] keyBytes = apiKey.getBytes();
+		    SecretKeySpec signingKey = new SecretKeySpec(keyBytes, algorithm);
 
-            if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
-                algorithm = HMAC_SHA1_ALGORITHM;
-            } else if (parts[0].equalsIgnoreCase(SHA256_ALGORITHM)) {
-                algorithm = HMAC_SHA256_ALGORITHM;
-            }
+		    // Get hmac Mac instance and initialize with the signing key
+		    Mac mac = Mac.getInstance(algorithm);
+		    mac.init(signingKey);
 
-            // get an hmac_sha1 Mac instance and initialize with the signing key
-            final Mac mac = Mac.getInstance(algorithm);
-            mac.init(signingKey);
+		    // Compute the hmac on input data bytes
+		    byte[] rawHmac = mac.doFinal(payload.getBytes());
 
-            // compute the hmac on input data bytes
-            final byte[] rawHmac = mac.doFinal(URLDecoder.decode(payload, ASCII).getBytes(ASCII));
+		    // Convert raw bytes to Hex
+		    byte[] hexBytes = new Hex().encode(rawHmac);
 
-            final Formatter formatter = new Formatter();
-
-            // right transform into sha1 hash
-            for (byte b : rawHmac) {
-                formatter.format("%02x", 0xFF & b);
-            }
-
-            final String hash = formatter.toString();
-
-            return (parts.length == 2) && (hash.equals(parts[1]));
-        } catch (Exception e) {
-            return false;
-        }
+		    //  Covert array of Hex bytes to a String
+		    return signature.equals( new String(hexBytes, "UTF-8"));
+	    } catch (Exception e) {
+		    return false;
+	    }
 
     }
 }
