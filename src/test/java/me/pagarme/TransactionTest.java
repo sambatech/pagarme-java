@@ -20,6 +20,7 @@ import me.pagar.model.SplitRule;
 import me.pagar.model.Transaction;
 import me.pagar.util.JSONUtils;
 import me.pagarme.factory.RecipientFactory;
+import me.pagar.model.PagarMeException;
 
 public class TransactionTest extends BaseTest {
 
