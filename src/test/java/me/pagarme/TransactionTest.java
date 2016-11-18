@@ -289,7 +289,6 @@ public class TransactionTest extends BaseTest {
         transaction.setCapture(true);
         transaction.save();
 
-        
         transaction.refund(50);
 
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
