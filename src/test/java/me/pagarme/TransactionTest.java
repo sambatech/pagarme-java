@@ -12,21 +12,18 @@ import org.junit.Test;
 import com.google.gson.JsonObject;
 
 import me.pagar.model.Address;
-import me.pagar.model.BankAccount;
 import me.pagar.model.Customer;
+import me.pagar.model.PagarMeException;
 import me.pagar.model.Phone;
 import me.pagar.model.Recipient;
 import me.pagar.model.SplitRule;
 import me.pagar.model.Transaction;
+import me.pagar.model.Transaction.CaptureMethod;
 import me.pagar.util.JSONUtils;
 import me.pagarme.factory.RecipientFactory;
-import me.pagar.model.PagarMeException;
 
 public class TransactionTest extends BaseTest {
 
-    private Recipient recipient = new Recipient();
-    private SplitRule splitRule = new SplitRule();
-    private BankAccount bankAccount;
     private RecipientFactory recipientFactory = new RecipientFactory();
 
     private static Integer AMOUNT = 100;
@@ -77,6 +74,21 @@ public class TransactionTest extends BaseTest {
 
         Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
+    }
+    
+    @Test
+    public void testCreateAndCaptureTransactionWithCardEmv() throws Throwable {
+
+        transaction = this.transactionCreditCardCommon();
+        String cardEmvTest = "Card Emv Testee";
+        String cardTrack2Test = "Card Track 2 Testee";
+        transaction.setCardEmvData(cardEmvTest);
+        transaction.setCardTrack2(cardTrack2Test);
+        transaction.setCaptureMethod(CaptureMethod.EMV);
+        transaction.save();
+
+        Assert.assertNotNull(transaction.getCardEmvResponse());
+        
     }
 
     @Test
@@ -130,6 +142,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testCreateAndCaptureTransactionAntifraudMetaDataMap() throws Throwable {
 
@@ -363,6 +376,7 @@ public class TransactionTest extends BaseTest {
         
         Recipient recipient1 = recipientFactory.create();
         recipient1.save();
+        SplitRule splitRule = new SplitRule();
         splitRule.setRecipientId(recipient1.getId());
         splitRule.setPercentage(50);
         splitRule.setLiable(true);
@@ -370,13 +384,14 @@ public class TransactionTest extends BaseTest {
         splitRules.add(splitRule);
 
         Recipient recipient2  = recipientFactory.create();
+        SplitRule splitRule2 = new SplitRule();
         recipient2.save();
-        splitRule.setRecipientId(recipient2.getId());
-        splitRule.setPercentage(50);
-        splitRule.setLiable(true);
-        splitRule.setChargeProcessingFee(true);
+        splitRule2.setRecipientId(recipient2.getId());
+        splitRule2.setPercentage(50);
+        splitRule2.setLiable(true);
+        splitRule2.setChargeProcessingFee(true);
 
-        splitRules.add(splitRule);
+        splitRules.add(splitRule2);
         transaction.setSplitRules(splitRules);
         transaction.save();
         

@@ -88,9 +88,9 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_emv_data")
     private String cardEmvData;
 
-    @Expose(deserialize = false)
+    @Expose
     @SerializedName("card_emv_response")
-    private String cardEmvResponse;
+    private String cardEmvResponse;	
 
     @Expose(deserialize = false)
     @SerializedName("card_pin_mode")
@@ -1081,6 +1081,7 @@ public class Transaction extends PagarMeModel<Integer> {
         this.antifraudMetadata = other.antifraudMetadata;
         this.setCreatedAt(other.getCreatedAt());
         this.splitRules = other.splitRules;
+        this.cardEmvResponse = other.cardEmvResponse;
     }
 
     /**
