@@ -18,8 +18,8 @@ import me.pagarme.factory.SubscriptionFactory;
 
 public class SubscriptionTest extends BaseTest {
 
-    private PlanFactory planFactory;
-    private SubscriptionFactory subscriptionFactory;
+    private PlanFactory planFactory = new PlanFactory();
+    private SubscriptionFactory subscriptionFactory = new SubscriptionFactory();
 
     private static String CARD_HOLDER_NAME = "Pagarme LTDA";
     private static String CARD_NUMBER = "4111111111111111";
