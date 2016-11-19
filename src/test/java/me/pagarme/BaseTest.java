@@ -213,42 +213,4 @@ public abstract class BaseTest {
         Assert.assertEquals(customerPhone.getDdd(), PHONE_DDD);
         Assert.assertEquals(customerPhone.getNumber(), PHONE_NUMBER);
     }
-
-    /**
-     *
-     * @return plan
-     */
-    protected Plan planCommon(Integer amount) {
-        Plan plan = new Plan();
-
-        plan.setTrialDays(0);
-        plan.setDays(30);
-        plan.setAmount(amount);
-        plan.setName("Test Plan Pagarme");
-
-        return plan;
-    }
-
-    protected Card cardCommon(Customer customer) {
-        Card card = new Card();
-
-        card.setCustomerId(customer.getId());
-        card.setCvv(401);
-        card.setHolderName("Lucas Dos Santos Alves");
-        card.setExpiresAt("0522");
-        card.setNumber("4111111111111111");
-
-        return card;
-    }
-
-    protected Subscription subscriptionCommon(Plan plan, Customer customer, Card card) {
-        Subscription subscription = new Subscription();
-
-        subscription.setCustomer(customer);
-        subscription.setPlanId(plan.getId());
-        subscription.setCardId(card.getId());
-
-        return subscription;
-    }
-
 }
