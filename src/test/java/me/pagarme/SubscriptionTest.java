@@ -89,6 +89,7 @@ public class SubscriptionTest extends BaseTest {
         card.setNumber(CARD_NUMBER);
         card.setExpiresAt(CARD_EXPIRATION_DATE);
         card.setCvv(CARD_CVV);
+        card.save();
 
         Subscription subscription = new Subscription();
         subscription.setCustomer(customer);
