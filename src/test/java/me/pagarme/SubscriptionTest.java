@@ -13,104 +13,89 @@ import me.pagar.model.Customer;
 import me.pagar.model.Phone;
 import me.pagar.model.Plan;
 import me.pagar.model.Subscription;
+import me.pagarme.factory.PlanFactory;
+import me.pagarme.factory.SubscriptionFactory;
 
 public class SubscriptionTest extends BaseTest {
 
-    private Plan plan;
-	private Subscription subscription;
+    private PlanFactory planFactory;
+    private SubscriptionFactory subscriptionFactory;
 
-    private static Integer AMOUNT = 100;
+    private static String CARD_HOLDER_NAME = "Pagarme LTDA";
+    private static String CARD_NUMBER = "4111111111111111";
+    private static Integer CARD_CVV = 401;
+    private static String CARD_EXPIRATION_DATE = "1022";
 
     @Before
     public void setUp() {
         super.setUp();
-        plan = new Plan();
-        customer = new Customer();
-	    subscription = new Subscription();
-    }
-
-    @Test
-    public void testCreatePlan() throws Throwable {
-
-	    plan = this.planCommon(AMOUNT);
-	    plan.save();
-
-        Assert.assertNotNull(plan.getId());
-    }
-
-    @Test
-    public void testFindPlan() throws Throwable {
-	    plan = this.planCommon(AMOUNT);
-	    plan.save();
-
-	    Plan searchPlan = new Plan();
-	    searchPlan.find(plan.getId());
-
-	    Assert.assertEquals(searchPlan.getId(), plan.getId());
-    }
-
-    @Test
-    public void testListPlan() throws Throwable {
-	    plan = this.planCommon(AMOUNT);
-	    plan.save();
-
-	    Collection<Plan> plans = plan.list();
-	    Assert.assertTrue(plans.size() >= 1);
     }
 
     @Test
     public void testCreateSubscription() throws Throwable {
 
-		createSubscription();
+        Subscription subscription = createSubscription();
+        subscription.save();
 
         Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.paid);
-	    Assert.assertNotNull(subscription.getId());
+        Assert.assertNotNull(subscription.getId());
     }
 
     @Test
     public void testFindSubscription() throws Throwable {
-		createSubscription();
-	    Subscription searchSubscription = new Subscription();
-	    searchSubscription.find(subscription.getId());
+        Subscription subscription = createSubscription();
+        subscription.save();
 
-	    Assert.assertEquals(subscription.getId(), searchSubscription.getId());
-	    Assert.assertEquals(subscription.getCard().getId(), searchSubscription.getCard().getId());
+        Subscription searchSubscription = new Subscription();
+        searchSubscription.find(subscription.getId());
+
+        Assert.assertEquals(subscription.getId(), searchSubscription.getId());
+        Assert.assertEquals(subscription.getCard().getId(), searchSubscription.getCard().getId());
     }
 
-	@Test
-	public void testListSubscription() throws Throwable {
-		createSubscription();
+    @Test
+    public void testListSubscription() throws Throwable {
+        Subscription subscription = createSubscription();
+        subscription.save();
 
-		Collection<Subscription> subscriptions = subscription.list();
+        Collection<Subscription> subscriptions = subscription.findCollection();
 
-		Assert.assertTrue(subscriptions.size() >= 1);
-	}
+        Assert.assertTrue(subscriptions.size() >= 1);
+    }
 
-	@Test
-	public void testCancelSubscription() throws Throwable {
-		createSubscription();
+    @Test
+    public void testCancelSubscription() throws Throwable {
+        Subscription subscription = createSubscription();
+        subscription.save();
 
-		subscription.cancel();
+        subscription.cancel();
 
-		Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.canceled);
-	}
+        Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.canceled);
+    }
 
-	private void createSubscription() throws Throwable {
-	    Customer customer = this.customerCommon();
-	    Address address = this.addressCommon();
-	    Phone phone = this.phoneCommon();
+    private Subscription createSubscription() throws Throwable {
+        Customer customer = this.customerCommon();
+        Address address = this.addressCommon();
+        Phone phone = this.phoneCommon();
 
-	    customer.setPhone(phone);
-	    customer.setAddress(address);
+        customer.setPhone(phone);
+        customer.setAddress(address);
 
-	    plan = this.planCommon(AMOUNT);
-	    plan.save();
+        Plan plan = planFactory.create();
+        plan.save();
 
-	    Card card = this.cardCommon(customer);
-	    card.save();
+        Card card = new Card();
+        card.setHolderName(CARD_HOLDER_NAME);
+        card.setNumber(CARD_NUMBER);
+        card.setExpiresAt(CARD_EXPIRATION_DATE);
+        card.setCvv(CARD_CVV);
 
-	    subscription = this.subscriptionCommon(plan, customer, card);
-	    subscription.save();
+        Subscription subscription = new Subscription();
+        subscription.setCustomer(customer);
+        subscription.setCardId(card.getId());
+        subscription.setPlanId(plan.getId());
+
+        return subscription;
     }
 
 }
