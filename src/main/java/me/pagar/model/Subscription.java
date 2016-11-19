@@ -106,11 +106,11 @@ public class Subscription extends PagarMeModel<Integer> {
         return other;
     }
 
-	public Collection<Subscription> list() throws PagarMeException {
-		return list(100, 0);
+	public Collection<Subscription> findCollection() throws PagarMeException {
+		return findCollection(100, 0);
 	}
 
-	public Collection<Subscription> list(Integer totalPerPage, Integer page) throws PagarMeException {
+	public Collection<Subscription> findCollection(Integer totalPerPage, Integer page) throws PagarMeException {
 		return JSONUtils.getAsList(super.paginate(totalPerPage, page), new TypeToken<Collection<Subscription>>() {
 		}.getType());
 	}
