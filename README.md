@@ -144,7 +144,7 @@ Plan plan = new Plan();
 plan.find(planId);
 ```
 
-### List plan
+### List plan collection
 ```java
 Plan plan = new Plan();
 plan.list(10,0);
