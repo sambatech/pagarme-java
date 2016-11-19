@@ -1,7 +1,7 @@
 package me.pagarme;
 
-import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.joda.time.LocalDate;
 
 import me.pagar.model.Address;
 import me.pagar.model.CompaniesTempory;

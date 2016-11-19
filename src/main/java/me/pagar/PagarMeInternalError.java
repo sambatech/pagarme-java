@@ -4,38 +4,38 @@ import com.google.gson.annotations.SerializedName;
 
 public class PagarMeInternalError {
 
-	
-	@SerializedName("type")
-	private String type;
-	
-	@SerializedName("parameter_name")
-	private String parameterName;
-	
-	@SerializedName("message")
-	private String message;
 
-	public String getType() {
-		return type;
-	}
+    @SerializedName("type")
+    private String type;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    @SerializedName("parameter_name")
+    private String parameterName;
 
-	public String getParameterName() {
-		return parameterName;
-	}
+    @SerializedName("message")
+    private String message;
 
-	public void setParameterName(String parameterName) {
-		this.parameterName = parameterName;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName = parameterName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }
