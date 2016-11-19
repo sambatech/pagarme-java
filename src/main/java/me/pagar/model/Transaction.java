@@ -88,9 +88,9 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("card_emv_data")
     private String cardEmvData;
 
-	@Expose(deserialize = false)
-	@SerializedName("card_emv_response")
-	private String cardEmvResponse;	
+    @Expose(deserialize = false)
+    @SerializedName("card_emv_response")
+    private String cardEmvResponse;
 
     @Expose(deserialize = false)
     @SerializedName("card_pin_mode")

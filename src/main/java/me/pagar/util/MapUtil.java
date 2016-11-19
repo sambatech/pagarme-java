@@ -15,71 +15,71 @@ import java.util.List;
 import java.util.Map;
 
 public class MapUtil {
-	public static String mapToString(final Map<String, Object> map) {
-		final StringBuilder stringBuilder = new StringBuilder();
+    public static String mapToString(final Map<String, Object> map) {
+        final StringBuilder stringBuilder = new StringBuilder();
 
-		for (String key : map.keySet()) {
+        for (String key : map.keySet()) {
 
-			if (stringBuilder.length() > 0) {
-				stringBuilder.append("&");
-			}
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
 
-			final String value = String.valueOf(map.get(key));
+            final String value = String.valueOf(map.get(key));
 
-			try {
-				stringBuilder.append(URLEncoder.encode(Strings.nullToEmpty(key), "UTF-8"));
-				stringBuilder.append("=");
-				stringBuilder.append(URLEncoder.encode(Strings.nullToEmpty(value), "UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException("This method requires UTF-8 encoding support", e);
-			}
+            try {
+                stringBuilder.append(URLEncoder.encode(Strings.nullToEmpty(key), "UTF-8"));
+                stringBuilder.append("=");
+                stringBuilder.append(URLEncoder.encode(Strings.nullToEmpty(value), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("This method requires UTF-8 encoding support", e);
+            }
 
-		}
+        }
 
-		return stringBuilder.toString();
-	}
+        return stringBuilder.toString();
+    }
 
-	public static Map<String, String> queryToMap(final String query) {
-		final Map<String, String> map = new HashMap<String, String>();
-		final String[] keyValuePairs = query.split("&");
+    public static Map<String, String> queryToMap(final String query) {
+        final Map<String, String> map = new HashMap<String, String>();
+        final String[] keyValuePairs = query.split("&");
 
-		for (String KeyValuePair : keyValuePairs) {
-			final String[] KeyValue = KeyValuePair.split("=");
+        for (String KeyValuePair : keyValuePairs) {
+            final String[] KeyValue = KeyValuePair.split("=");
 
-			try {
-				map.put(URLDecoder.decode(KeyValue[0], "UTF-8"), Strings.nullToEmpty(KeyValue[1]));
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException("This method requires UTF-8 encoding support", e);
-			}
+            try {
+                map.put(URLDecoder.decode(KeyValue[0], "UTF-8"), Strings.nullToEmpty(KeyValue[1]));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("This method requires UTF-8 encoding support", e);
+            }
 
-		}
+        }
 
-		return map;
-	}
+        return map;
+    }
 
-	public static Map<String, Object> objectToMap(final Object obj) {
-		return objectToMap(obj, new ArrayList<String>());
-	}
+    public static Map<String, Object> objectToMap(final Object obj) {
+        return objectToMap(obj, new ArrayList<String>());
+    }
 
-	public static Map<String, Object> objectToMap(final Object obj, final List<String> whitelist) {
-		final Map<String, Object> result = new HashMap<String, Object>();
+    public static Map<String, Object> objectToMap(final Object obj, final List<String> whitelist) {
+        final Map<String, Object> result = new HashMap<String, Object>();
 
-		try {
-			final BeanInfo info = Introspector.getBeanInfo(obj.getClass());
+        try {
+            final BeanInfo info = Introspector.getBeanInfo(obj.getClass());
 
-			for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
-				final Method reader = pd.getReadMethod();
+            for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+                final Method reader = pd.getReadMethod();
 
-				if (reader != null && (whitelist.size() == 0 || whitelist.contains(pd.getName()))) {
-					result.put(pd.getName(), reader.invoke(obj));
-				}
+                if (reader != null && (whitelist.size() == 0 || whitelist.contains(pd.getName()))) {
+                    result.put(pd.getName(), reader.invoke(obj));
+                }
 
-			}
+            }
 
-		} catch (Exception ignored) {
-		}
+        } catch (Exception ignored) {
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 }  
