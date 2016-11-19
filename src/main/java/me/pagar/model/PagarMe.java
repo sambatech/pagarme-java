@@ -43,41 +43,41 @@ public abstract class PagarMe {
             return false;
         }
 
-	    String algorithm;
-	    final String[] parts = signature.split("=");
+        String algorithm;
+        final String[] parts = signature.split("=");
 
-	    if (parts.length != 2) // Wrong signature param
-		    return false;
+        if (parts.length != 2) // Wrong signature param
+            return false;
 
-	    if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
-		    algorithm = HMAC_SHA1_ALGORITHM;
-	    } else if (parts[0].equalsIgnoreCase(SHA256_ALGORITHM)) {
-		    algorithm = HMAC_SHA256_ALGORITHM;
-	    } else {
-			return false; // Cannot set algorithm.
-	    }
+        if (parts[0].equalsIgnoreCase(SHA1_ALGORITHM)) {
+            algorithm = HMAC_SHA1_ALGORITHM;
+        } else if (parts[0].equalsIgnoreCase(SHA256_ALGORITHM)) {
+            algorithm = HMAC_SHA256_ALGORITHM;
+        } else {
+            return false; // Cannot set algorithm.
+        }
 
-	    try {
-		    // Get hmac key from the raw key bytes
-		    byte[] keyBytes = apiKey.getBytes();
-		    SecretKeySpec signingKey = new SecretKeySpec(keyBytes, algorithm);
+        try {
+            // Get hmac key from the raw key bytes
+            byte[] keyBytes = apiKey.getBytes();
+            SecretKeySpec signingKey = new SecretKeySpec(keyBytes, algorithm);
 
-		    // Get hmac Mac instance and initialize with the signing key
-		    Mac mac = Mac.getInstance(algorithm);
-		    mac.init(signingKey);
+            // Get hmac Mac instance and initialize with the signing key
+            Mac mac = Mac.getInstance(algorithm);
+            mac.init(signingKey);
 
-		    // Compute the hmac on input data bytes
-		    byte[] rawHmac = mac.doFinal(payload.getBytes());
+            // Compute the hmac on input data bytes
+            byte[] rawHmac = mac.doFinal(payload.getBytes());
 
-		    // Convert raw bytes to Hex
-		    byte[] hexBytes = new Hex().encode(rawHmac);
+            // Convert raw bytes to Hex
+            byte[] hexBytes = new Hex().encode(rawHmac);
 
-		    //  Covert array of Hex bytes to a String
-		    String hash = new String(hexBytes, "UTF-8");
-		    return parts[1].equals(hash);
-	    } catch (Exception e) {
-		    return false;
-	    }
+            //  Covert array of Hex bytes to a String
+            String hash = new String(hexBytes, "UTF-8");
+            return parts[1].equals(hash);
+        } catch (Exception e) {
+            return false;
+        }
 
     }
 }
