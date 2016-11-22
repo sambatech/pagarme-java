@@ -1,19 +1,21 @@
 package me.pagar.model;
 
+import java.util.Collection;
+import java.util.Map;
+
+import javax.ws.rs.HttpMethod;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import com.google.common.base.CaseFormat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import me.pagar.util.JSONUtils;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
-import javax.ws.rs.HttpMethod;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import me.pagar.util.JSONUtils;
 
 public class Transaction extends PagarMeModel<Integer> {
 

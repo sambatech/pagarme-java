@@ -4,37 +4,37 @@ import com.google.gson.annotations.SerializedName;
 
 public class CardHashKey {
 
+	
+	private int id;
+	@SerializedName("date_created")
+	private String dateCreated;
+	
+	@SerializedName("public_key")
+	private String publickey;
 
-    private int id;
-    @SerializedName("date_created")
-    private String dateCreated;
+	public int getId() {
+		return id;
+	}
 
-    @SerializedName("public_key")
-    private String publickey;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public String getDateCreated() {
+		return dateCreated;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
 
-    public String getDateCreated() {
-        return dateCreated;
-    }
+	public String getPublickey() {
+		return publickey;
+	}
 
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getPublickey() {
-        return publickey;
-    }
-
-    public void setPublickey(String publickey) {
-        this.publickey = publickey;
-    }
-
-
+	public void setPublickey(String publickey) {
+		this.publickey = publickey;
+	}
+	
+	
 }
