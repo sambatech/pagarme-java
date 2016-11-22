@@ -12,7 +12,7 @@ import java.util.Collection;
 
 public class Recipient  extends PagarMeModel<String> {
 
-    @Expose(serialize = false)
+    @Expose
     @SerializedName(value = "automatic_anticipation_enabled")
     private Boolean automaticAnticipationEnabled;
 
@@ -79,6 +79,15 @@ public class Recipient  extends PagarMeModel<String> {
     public DateTime getUpdatedAt() {
         return updatedAt;
     }
+
+	public Boolean getAutomaticAnticipationEnabled() {
+		return automaticAnticipationEnabled;
+	}
+
+	public void setAutomaticAnticipationEnabled(Boolean automaticAnticipationEnabled) {
+		this.automaticAnticipationEnabled = automaticAnticipationEnabled;
+		addUnsavedProperty("automatic_anticipation_enabled");
+	}
 
     public void setTransferEnabled(Boolean transferEnabled) {
         this.transferEnabled = transferEnabled;
