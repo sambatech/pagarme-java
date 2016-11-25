@@ -38,6 +38,7 @@ public class RecipientTest extends BaseTest{
         recipient.save();
         Assert.assertEquals(recipient.getTransferInterval(), RecipientFactory.DEFAULT_TRANSFER_INTERVAL);
         Assert.assertEquals(recipient.isTransferEnabled(), RecipientFactory.DEFAULT_TRANSFER_ENABLED);
+		Assert.assertEquals(recipient.getAutomaticAnticipationEnabled(), RecipientFactory.DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED);
 
         int recipientBankAccountId = recipient.getBankAccount().getId();
         Assert.assertEquals(recipientBankAccountId, bankAccountId);

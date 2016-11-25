@@ -8,6 +8,7 @@ public class RecipientFactory {
 
     public static final Integer DEFAULT_TRANSFER_DAY = 1;
     public static final Boolean DEFAULT_TRANSFER_ENABLED = true;
+	public static final Boolean DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED = true;
     public static final TransferInterval DEFAULT_TRANSFER_INTERVAL = TransferInterval.WEEKLY;
     private BankAccountFactory bankAccountFactory = new BankAccountFactory();
     
@@ -18,6 +19,7 @@ public class RecipientFactory {
         recipient.setTransferDay(DEFAULT_TRANSFER_DAY);
         recipient.setTransferEnabled(DEFAULT_TRANSFER_ENABLED);
         recipient.setTransferInterval(TransferInterval.WEEKLY);
+		recipient.setAutomaticAnticipationEnabled(DEFAULT_AUTOMATIC_ANTICIPATION_ENABLED);
         return recipient;
     }
 }
