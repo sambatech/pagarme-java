@@ -1073,7 +1073,7 @@ public class Transaction extends PagarMeModel<Integer> {
     }
 
     private void copy(Transaction other) {
-        setId(other.getId());
+        super.copy(other);
         this.subscriptionId = other.subscriptionId;
         this.amount = other.amount;
         this.installments = other.installments;

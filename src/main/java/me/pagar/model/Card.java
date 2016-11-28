@@ -157,7 +157,7 @@ public class Card extends PagarMeModel<String> {
     }
 
     private void copy(Card other) {
-        setId(other.getId());
+        super.copy(other);
         this.brand = other.brand;
         this.holderName = other.holderName;
         this.firstDigits = other.firstDigits;
