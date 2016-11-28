@@ -10,7 +10,7 @@ public class TransactionFactory {
      * @param pinMode can be online or offline. With online option, the bank will check the card, and with offline the pin is used to check the card. 
      * @return the transaction
      */
-    public Transaction create(String pinMode) {
+    public Transaction createCreditCardOfflineTransaction() {
         Transaction transaction = new Transaction();
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.DEBIT_CARD);
@@ -23,9 +23,25 @@ public class TransactionFactory {
         transaction.setCardTrack1("0");
         transaction.setCardTrack2("0");
         transaction.setCardTrack3("0");
-        transaction.setCardPinMode(pinMode);
+        transaction.setCardPinMode("offline");
 
-        if (pinMode.equals("offline")) return transaction;
+        return transaction;
+    }
+    
+    public Transaction createCreditCardOnlineTransaction(){
+        Transaction transaction = new Transaction();
+        transaction.setAmount(100);
+        transaction.setPaymentMethod(Transaction.PaymentMethod.DEBIT_CARD);
+        transaction.setCaptureMethod(Transaction.CaptureMethod.EMV);
+        transaction.setCardHolderName("Lucas Dos Santos Alves");
+        transaction.setCardExpirationDate("0517");
+        transaction.setCardNumber("4111111111111111");
+        transaction.setInstallments(1);
+        transaction.setCardEmvData("0");
+        transaction.setCardTrack1("0");
+        transaction.setCardTrack2("0");
+        transaction.setCardTrack3("0");
+        transaction.setCardPinMode("online");
 
         transaction.setCardPin("0");
         transaction.setCardPinKek("0");
@@ -33,7 +49,7 @@ public class TransactionFactory {
         return transaction;
     }
     
-    public Transaction createCreditCardTransaction() {
+    public Transaction createCreditCardTransactionWithoutPinMode() {
         Transaction transaction = new Transaction();
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.CREDIT_CARD);

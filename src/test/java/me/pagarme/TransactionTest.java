@@ -42,7 +42,7 @@ public class TransactionTest extends BaseTest {
     
     @Test
     public void testCreatedDateExistence() throws PagarMeException{
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.save();
         
         Assert.assertNotNull(transaction.getCreatedAt());
@@ -51,7 +51,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionWithOfflineDebitCard() throws Throwable {
 
-        transaction = transactionFactory.create("offline");
+        transaction = transactionFactory.createCreditCardOfflineTransaction();
         transaction.setCapture(true);
         transaction.save();
 
@@ -62,7 +62,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndAuthorizedTransactionWithOfflineDebitCard() throws Throwable {
 
-        transaction = transactionFactory.create("offline");
+        transaction = transactionFactory.createCreditCardOfflineTransaction();
         transaction.setCapture(false);
         transaction.save();
 
@@ -73,7 +73,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionWithOnlineDebitCard() throws Throwable {
 
-        transaction = transactionFactory.create("online");
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.setCapture(true);
         transaction.save();
 
@@ -84,7 +84,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionWithCardEmv() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         String cardEmvTest = "Card Emv Testee";
         String cardTrack2Test = "Card Track 2 Testee";
         transaction.setCardEmvData(cardEmvTest);
@@ -99,7 +99,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndAuthorizedTransactionWithOnlineDebitCard() throws Throwable {
 
-        transaction = transactionFactory.create("online");
+        transaction = transactionFactory.createCreditCardOnlineTransaction();
         transaction.setCapture(false);
         transaction.save();
 
@@ -110,7 +110,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionWithSoftDescriptor() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setSoftDescriptor("API Test");
         transaction.save();
 
@@ -122,7 +122,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionWithCreditCardWithoutGoingThroughFraud() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
         transaction.save();
 
@@ -133,7 +133,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionMetaData() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
         Map<String, Object> metadata =  new HashMap<String, Object>();
@@ -157,7 +157,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionAntifraudMetaDataMap() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
         Map<String, Object> antifraudMetadata =  new HashMap<String, Object>();
@@ -177,7 +177,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionAntifraudMetaDataPojo() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
         AntifraudMetadataPojo antifraudMetadata = new AntifraudMetadataPojo();
@@ -195,7 +195,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndCaptureTransactionMetaDataInCapture() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(false);
         transaction.save();
 
@@ -213,7 +213,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreateAndAuthorizedTransactionWithCreditCardWithoutGoingThroughFraud() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(false);
         transaction.save();
 
@@ -224,7 +224,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionCreatePostbackUrl() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setPostbackUrl("http://pagar.me");
         transaction.save();
 
@@ -234,7 +234,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionAuthAndCaptureCaptureTotalValue() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(false);
         transaction.save();
 
@@ -248,7 +248,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionCanBeMadeString() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
 
         transaction.toString();
     }
@@ -256,7 +256,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionCanBeMadeJSON() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(false);
         transaction.save();
 
@@ -269,7 +269,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionAuthAndCaptureCapturePartialValue() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(false);
         transaction.save();
 
@@ -285,7 +285,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionAuthAndCaptureRefoundPartialValue() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
         transaction.save();
 
@@ -321,7 +321,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testTransactionAuthAndCaptureRefoundTotalValue() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
         transaction.save();
 
@@ -356,7 +356,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testFindTransactionById() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.save();
 
         Integer transactionId = transaction.getId();
@@ -368,7 +368,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testCreatingCustomerTransactionThroughTheTransaction() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
 
         Customer customer = this.customerCommon();
@@ -400,7 +400,7 @@ public class TransactionTest extends BaseTest {
     @Test
     public void testSplitTransaction() throws Throwable {
 
-        transaction = transactionFactory.createCreditCardTransaction();
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setCapture(true);
         transaction.setAmount(10000);
 
