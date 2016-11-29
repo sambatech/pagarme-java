@@ -1,6 +1,7 @@
 package me.pagar.model;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.HttpMethod;
@@ -1015,6 +1016,24 @@ public class Transaction extends PagarMeModel<Integer> {
 
         return other;
     }
+    
+    public Transaction refund(final BankAccount bankAccount) throws PagarMeException {
+        validateId();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
+                String.format("/%s/%s/refund", getClassName(), getId()));
+                
+        Map<String, Object> bankAccountMap = JSONUtils.objectToMap(bankAccount);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("bank_account", bankAccountMap);
+        request.setParameters(parameters);
+
+        final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
+        copy(other);
+        flush();
+
+        return other;
+    }
 
     /**
      * Você pode capturar o valor de uma transação após a autorização desta, no
@@ -1234,3 +1253,4 @@ public class Transaction extends PagarMeModel<Integer> {
     }
 
 }
+
