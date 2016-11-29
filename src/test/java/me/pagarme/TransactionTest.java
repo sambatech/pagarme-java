@@ -46,6 +46,7 @@ public class TransactionTest extends BaseTest {
         transaction.save();
         
         Assert.assertNotNull(transaction.getCreatedAt());
+        Assert.assertNotNull(transaction.getUpdatedAt());
     }
 
     @Test

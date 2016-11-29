@@ -21,6 +21,14 @@ public class RecipientTest extends BaseTest{
     }
     
     @Test
+    public void testCreateDateExistence() throws PagarMeException{
+        Recipient recipient = recipientFactory.create();
+        recipient.save();
+        Assert.assertNotNull(recipient.getCreatedAt());
+        Assert.assertNotNull(recipient.getUpdatedAt());
+    }
+    
+    @Test
     public void testCreateRecipient() throws PagarMeException {
 
         int bankAccountId = bankAccountFactory.create().save().getId();

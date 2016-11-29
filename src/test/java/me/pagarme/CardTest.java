@@ -23,6 +23,19 @@ public class CardTest extends BaseTest {
     private static String EXPIRATION_DATE = "1022";
 
     @Test
+    public void testDateExistence() throws PagarMeException{
+        card.setHolderName(HOLDER_NAME);
+        card.setNumber(CARD_NUMBER);
+        card.setExpiresAt(CARD_EXPIRATION_DATE);
+        card.setCvv(CARD_CVV);
+        card.setExpiresAt(EXPIRATION_DATE);
+        card.save();
+        
+        Assert.assertNotNull(card.getCreatedAt());
+        Assert.assertNotNull(card.getUpdatedAt());
+    }
+    
+    @Test
     public void testCreateCard() {
 
         card.setHolderName(HOLDER_NAME);
