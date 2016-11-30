@@ -80,14 +80,14 @@ public class Recipient  extends PagarMeModel<String> {
         return updatedAt;
     }
 
-	public Boolean getAutomaticAnticipationEnabled() {
-		return automaticAnticipationEnabled;
-	}
+    public Boolean getAutomaticAnticipationEnabled() {
+        return automaticAnticipationEnabled;
+    }
 
-	public void setAutomaticAnticipationEnabled(Boolean automaticAnticipationEnabled) {
-		this.automaticAnticipationEnabled = automaticAnticipationEnabled;
-		addUnsavedProperty("automatic_anticipation_enabled");
-	}
+    public void setAutomaticAnticipationEnabled(Boolean automaticAnticipationEnabled) {
+        this.automaticAnticipationEnabled = automaticAnticipationEnabled;
+        addUnsavedProperty("automatic_anticipation_enabled");
+    }
 
     public void setTransferEnabled(Boolean transferEnabled) {
         this.transferEnabled = transferEnabled;
