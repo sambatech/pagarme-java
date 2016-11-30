@@ -183,10 +183,7 @@ public class Customer extends PagarMeModel<Integer>{
     }
 
     private void copy(Customer other) {
-
-        setId(other.getId());
-
-        this.setId(other.getId());
+        super.copy(other);
         this.documentNumber = other.documentNumber;
         this.documentType   = other.documentType;
         this.name           = other.name;

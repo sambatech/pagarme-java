@@ -144,7 +144,7 @@ public class Recipient  extends PagarMeModel<String> {
     }
 
     private void copy(Recipient other) {
-        setId(other.getId());
+        super.copy(other);
         this.automaticAnticipationEnabled = other.automaticAnticipationEnabled;
         this.transferEnabled = other.transferEnabled;
         this.transferDay = other.transferDay;

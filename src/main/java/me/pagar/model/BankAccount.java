@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import me.pagar.util.JSONUtils;
-import me.pagar.util.JSONUtils;
 
 import javax.ws.rs.HttpMethod;
 import java.util.Collection;
@@ -158,7 +157,7 @@ public class BankAccount extends PagarMeModel<Integer> {
     }
 
     public void copy(BankAccount other) {
-        setId(other.getId());
+        super.copy(other);
         this.chargeTransferFees = other.chargeTransferFees;
         this.bankCode = other.bankCode;
         this.agencia = other.agencia;

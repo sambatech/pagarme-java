@@ -8,16 +8,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 public class CustomerTest extends BaseTest {
-
-    private Customer customer;
 
     @Before
     public void setUp() {
         super.setUp();
         customer = new Customer();
+    }
+    
+    @Test
+    public void testDatesExistence() throws PagarMeException{
+        Customer customer = this.customerCreateCommon();
+        customer.save();
+        Assert.assertNotNull(customer.getCreatedAt());
     }
 
     @Test
