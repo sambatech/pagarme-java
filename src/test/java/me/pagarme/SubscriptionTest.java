@@ -41,6 +41,27 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertNotNull(subscription.getId());
     }
 
+
+    @Test
+    public void testUpdateSubscriptionPlan() throws Throwable {
+
+        Subscription subscription = createSubscription();
+        subscription.save();
+
+        Plan plan = planFactory.create();
+        plan.setAmount(111);
+        plan.save();
+
+        Integer planId = plan.getId();
+
+        Subscription editSubscription = new Subscription();
+        editSubscription.setId(subscription.getId());
+        editSubscription.setPlanId(planId);
+        editSubscription.save();
+
+        Assert.assertEquals(editSubscription.getPlan().getId(), planId);
+    }
+
     @Test
     public void testFindSubscription() throws Throwable {
         Subscription subscription = createSubscription();
