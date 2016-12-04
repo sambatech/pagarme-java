@@ -31,11 +31,9 @@ public abstract class BaseTest {
     public void setUp() {
         transaction = new Transaction();
 
-        if (PagarMe.getApiKey() == null) {
-            PagarMe.init("test_key");
-            String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey();
-            PagarMe.init(apiKey);
-        }
+        PagarMe.init("test_key");
+        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey();
+        PagarMe.init(apiKey);
     }
 
     /**
