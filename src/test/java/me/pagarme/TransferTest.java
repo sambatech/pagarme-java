@@ -54,7 +54,6 @@ public class TransferTest extends BaseTest {
     public void testTransferTransferToRecipient() throws PagarMeException{
         Transfer transfer = new Transfer(10000, newRecipient.getId());
         transfer.save();
-        String a = PagarMe.getApiKey();
 
         Assert.assertEquals(Transfer.Status.PENDING_TRANSFER, transfer.getStatus());
         Assert.assertEquals(Transfer.Type.TED, transfer.getType());
