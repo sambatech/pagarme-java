@@ -1,6 +1,18 @@
 package me.pagar.model;
 
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.HttpMethod;
+
+import org.atteo.evo.inflector.English;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import com.google.common.base.CaseFormat;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -8,19 +20,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import me.pagar.util.DateTimeAdapter;
 import me.pagar.util.JSONUtils;
 import me.pagar.util.LocalDateAdapter;
-import me.pagar.util.DateTimeAdapter;
-import org.atteo.evo.inflector.English;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
-import javax.ws.rs.HttpMethod;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class PagarMeModel<PK extends Serializable> {
 
@@ -100,25 +104,49 @@ public abstract class PagarMeModel<PK extends Serializable> {
 
         return request.execute();
     }
+    
+    protected JsonObject getThrough(PagarMeModel modelFilter) throws PagarMeException {
+        validateId();
+
+        if (null == id) {
+            throw new IllegalArgumentException("You must provide an ID to get this object data");
+        }
+        String path = "";
+        path += "/" + this.getClassName() + "/" + this.getId();
+        path += "/" + modelFilter.getClassName() + "/" + modelFilter.getId();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
+
+        return request.execute();
+    }
 
     protected JsonArray paginate(final Integer totalPerPage) throws PagarMeException {
         return paginate(totalPerPage, 1);
     }
 
     protected JsonArray paginate(final Integer totalPerPage, Integer page) throws PagarMeException {
+        return paginateThrough(totalPerPage, page, this);
+    }
+    
+    protected <T extends PagarMeModel> JsonArray  paginateThrough(final Integer totalPerPage, Integer page, PagarMeModel modelFilter) throws PagarMeException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
 
         if (null != totalPerPage && 0 != totalPerPage) {
             parameters.put("count", totalPerPage);
         }
-
         if (null == page || 0 >= page) {
             page = 1;
         }
-
         parameters.put("page", page);
-
-        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s", className));
+        
+        String path = "";
+        if(this == modelFilter || modelFilter == null){
+            path += "/" + modelFilter.getClassName();
+        }else{
+            path += "/" + this.getClassName() + "/" + this.getId() + "/" + modelFilter.getClassName();
+        }
+        
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
         request.getParameters().putAll(parameters);
 
         return request.execute();

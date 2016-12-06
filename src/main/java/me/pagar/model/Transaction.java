@@ -1059,6 +1059,24 @@ public class Transaction extends PagarMeModel<Integer> {
 
         return other;
     }
+    
+    public Collection<Payable> findPayableCollection(final Integer totalPerPage, Integer page)
+            throws PagarMeException {
+        validateId();
+        JsonArray responseArray = super.paginateThrough(totalPerPage, page, new Payable());
+        return JSONUtils.getAsList(responseArray, new TypeToken<Collection<Payable>>() {
+        }.getType());
+    }
+    
+    public Payable findPayable(String payableId)
+            throws PagarMeException {
+        validateId();
+        Payable payable = new Payable();
+        payable.setId(payableId);
+        JsonObject responseObject = super.getThrough(payable);
+        return JSONUtils.getAsObject(responseObject, Payable.class);
+    }
+
 
     /**
      * Atualiza a instância do objeto com os dados mais recentes do backend.
