@@ -2,6 +2,9 @@ package me.pagar.util;
 
 import com.google.common.base.Strings;
 import com.google.gson.*;
+
+import me.pagar.format.CommonFormats;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -13,7 +16,7 @@ public class DateTimeAdapter  implements JsonDeserializer<DateTime>, JsonSeriali
     private final DateTimeFormatter formatter;
 
     public DateTimeAdapter() {
-        this.formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        this.formatter = DateTimeFormat.forPattern(CommonFormats.DATE_TIME);
     }
 
     public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

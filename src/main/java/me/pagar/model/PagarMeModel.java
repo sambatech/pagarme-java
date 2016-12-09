@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import me.pagar.model.filter.QueriableFields;
 import me.pagar.util.DateTimeAdapter;
 import me.pagar.util.JSONUtils;
 import me.pagar.util.LocalDateAdapter;
@@ -125,29 +126,53 @@ public abstract class PagarMeModel<PK extends Serializable> {
     }
 
     protected JsonArray paginate(final Integer totalPerPage, Integer page) throws PagarMeException {
-        return paginateThrough(totalPerPage, page, this);
+        return paginate(totalPerPage, page, null);
     }
-    
-    protected <T extends PagarMeModel> JsonArray  paginateThrough(final Integer totalPerPage, Integer page, PagarMeModel modelFilter) throws PagarMeException {
+
+    protected JsonArray paginate(final Integer totalPerPage, Integer page, QueriableFields modelFilter) throws PagarMeException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
 
         if (null != totalPerPage && 0 != totalPerPage) {
             parameters.put("count", totalPerPage);
         }
+
         if (null == page || 0 >= page) {
             page = 1;
         }
         parameters.put("page", page);
-        
-        String path = "";
-        if(this == modelFilter || modelFilter == null){
-            path += "/" + modelFilter.getClassName();
-        }else{
-            path += "/" + this.getClassName() + "/" + this.getId() + "/" + modelFilter.getClassName();
-        }
-        
+        String path = "/" + getClassName();
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
         request.getParameters().putAll(parameters);
+
+        if(modelFilter != null){
+            Map<String, Object> filter = modelFilter.toMap();
+            request.getParameters().putAll(filter);
+        }
+
+        return request.execute();
+    }
+
+    protected <T extends PagarMeModel> JsonArray  paginateThrough(final Integer totalPerPage, Integer page, QueriableFields modelFilter) throws PagarMeException {
+        final Map<String, Object> parameters = new HashMap<String, Object>();
+
+        if (null != totalPerPage && 0 != totalPerPage) {
+            parameters.put("count", totalPerPage);
+        }
+
+        if (null == page || 0 >= page) {
+            page = 1;
+        }
+        parameters.put("page", page);
+
+        String path = "/" + this.getClassName() + "/" + this.getId() + "/" + modelFilter.pagarmeRelatedModel();
+        Map<String, Object> filter = new  HashMap<String, Object>();
+        if(modelFilter != null){
+            filter = modelFilter.toMap();
+        }
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
+        request.getParameters().putAll(parameters);
+        request.getParameters().putAll(filter);
 
         return request.execute();
     }

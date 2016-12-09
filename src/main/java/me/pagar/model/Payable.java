@@ -14,9 +14,10 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import me.pagar.model.Transaction.PaymentMethod;
+import me.pagar.model.filter.QueriableFields;
 import me.pagar.util.JSONUtils;
 
-public class Payable extends PagarMeModel<String> {
+public class Payable extends PagarMeModel<Integer> {
 
     @Expose(serialize = false)
     private Integer amount;
@@ -28,7 +29,7 @@ public class Payable extends PagarMeModel<String> {
     private Integer installment;
 
     @Expose(serialize = false)
-    private String transactionId;
+    private Integer transactionId;
 
     @Expose(serialize = false)
     private String splitRuleId;
@@ -61,7 +62,7 @@ public class Payable extends PagarMeModel<String> {
         super();
     }
 
-    public Payable find(String id) throws PagarMeException {
+    public Payable find(Integer id) throws PagarMeException {
 
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, String.format("/%s/%s", getClassName(), id));
 
@@ -74,6 +75,12 @@ public class Payable extends PagarMeModel<String> {
 
     public Collection<Payable> findCollection(final Integer totalPerPage, Integer page) throws PagarMeException {
         JsonArray response = super.paginate(totalPerPage, page);
+        return JSONUtils.getAsList(response, new TypeToken<Collection<Payable>>() {
+        }.getType());
+    }
+
+    public Collection<Payable> findCollection(final Integer totalPerPage, Integer page, QueriableFields payableFilter) throws PagarMeException {
+        JsonArray response = super.paginate(totalPerPage, page, payableFilter);
         return JSONUtils.getAsList(response, new TypeToken<Collection<Payable>>() {
         }.getType());
     }
@@ -95,6 +102,11 @@ public class Payable extends PagarMeModel<String> {
         this.type = other.type;
     }
 
+    @Override
+    public void setId(Integer id) {
+        throw new UnsupportedOperationException("Not allowed.");
+    }
+
     public Integer getAmount() {
         return amount;
     }
@@ -107,12 +119,17 @@ public class Payable extends PagarMeModel<String> {
         return installment;
     }
 
-    public String getTransactionId() {
+    public Integer getTransactionId() {
         return transactionId;
     }
 
     public String getSplitRuleId() {
         return splitRuleId;
+    }
+    
+    @Deprecated
+    public DateTime getPayment(){
+        return paymentDate;
     }
 
     public DateTime getPaymentDate() {
@@ -159,7 +176,7 @@ public class Payable extends PagarMeModel<String> {
         this.installment = installment;
     }
 
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -205,19 +222,23 @@ public class Payable extends PagarMeModel<String> {
     }
 
     public enum Status {
+
         @SerializedName("paid")
         PAID,
-        
+
         @SerializedName("waiting_funds")
         WAITING_FUNDS
 
     }
 
     public enum Type {
+
         @SerializedName("chargeback")
         CHARGEBACK,
+
         @SerializedName("credit")
         CREDIT,
+
         @SerializedName("refund")
         REFUND
 
