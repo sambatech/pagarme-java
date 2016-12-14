@@ -46,7 +46,7 @@ public class SubscriptionTest extends BaseTest {
     public void testCreateSubscription() throws Throwable {
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
-        Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.paid);
+        Assert.assertEquals(SubscriptionStatus.TRIALING, subscription.getStatus());
         Assert.assertNotNull(subscription.getId());
     }
 
@@ -82,7 +82,7 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertEquals(subscription.getCreatedAt(), foundSubscription.getCreatedAt());
         Assert.assertEquals(subscription.getCurrentPeriodEnd(), foundSubscription.getCurrentPeriodEnd());
         Assert.assertEquals(subscription.getCurrentPeriodStart(), foundSubscription.getCurrentPeriodStart());
-        Assert.assertEquals(subscription.getCurrentTransaction().getId(), foundSubscription.getCurrentTransaction().getId());
+        Assert.assertEquals(subscription.getCurrentTransaction(), foundSubscription.getCurrentTransaction());
         Assert.assertEquals(subscription.getCustomer().getId(), foundSubscription.getCustomer().getId());
         Assert.assertEquals(subscription.getMetadata(), foundSubscription.getMetadata());
         Assert.assertEquals(PaymentMethod.CREDIT_CARD, foundSubscription.getPaymentMethod());
@@ -101,6 +101,7 @@ public class SubscriptionTest extends BaseTest {
         Subscription subscription2 = subscriptionFactory.createBoletoSubscription(defaultPlan.getId(), otherCustomer);
         subscription2.save();
 
+        //There's a delay between the response and the db insertion...
         Thread.sleep(2000);
         Collection<Subscription> subscriptions = new Subscription().findCollection(10, 0);
 
@@ -114,7 +115,7 @@ public class SubscriptionTest extends BaseTest {
 
         subscription.cancel();
 
-        Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.canceled);
+        Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.CANCELED);
     }
 
 }

@@ -1,6 +1,5 @@
 package me.pagarme;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Assert;
@@ -27,7 +26,9 @@ public class PlanTest extends BaseTest {
         Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_AMOUNT), plan.getAmount());
         Assert.assertEquals(PlanFactory.DEFAULT_NAME, plan.getName());
         Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_DAYS), plan.getDays());
-        Assert.assertNotNull(plan.getCharges());
+        Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_CHARGES), plan.getCharges());
+        Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_INSTALLMENTS), plan.getInstallments());
+        Assert.assertEquals(Integer.valueOf(PlanFactory.DEFAULT_TRIAL_DAYS), plan.getTrialDays());
         Assert.assertNotNull(plan.getCreatedAt());
     }
 
@@ -50,6 +51,8 @@ public class PlanTest extends BaseTest {
         Plan plan2 = planFactory.create();
         plan2.save();
 
+        //There's a delay between the response and the db insertion...
+        Thread.sleep(2000);
         Collection<Plan> plans = new Plan().findCollection(10, 0);
         Assert.assertEquals(2, plans.size());
     }
