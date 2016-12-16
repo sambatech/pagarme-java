@@ -20,7 +20,7 @@ public class PlanFactory {
         Plan plan = new Plan();
         plan.setCreationParameters(DEFAULT_AMOUNT, DEFAULT_DAYS, DEFAULT_NAME);
         plan.setPaymentMethods(Arrays.asList(
-                PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
+            PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
         ));
         plan.setCharges(DEFAULT_CHARGES);
         plan.setColor(DEFAULT_COLOR);
