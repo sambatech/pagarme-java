@@ -136,10 +136,10 @@ public abstract class PagarMeModel<PK extends Serializable> {
             parameters.put("count", totalPerPage);
         }
 
-        if (null == page || 0 >= page) {
-            page = 1;
+        if (null != page && 0 != page) {
+            parameters.put("page", page);
         }
-        parameters.put("page", page);
+        
         String path = "/" + getClassName();
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
         request.getParameters().putAll(parameters);

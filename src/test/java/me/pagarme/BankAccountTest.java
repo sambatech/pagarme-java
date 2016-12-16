@@ -71,11 +71,11 @@ public class BankAccountTest extends BaseTest{
     public void testFindBankAccountCollection() {
 
         try {
-        	BankAccount bankAccount = bankAccountFactory.create();
-        	bankAccount.save();
-        	BankAccount otherBankAccount = bankAccountFactory.create();
-        	otherBankAccount.save();
-        	
+            BankAccount bankAccount = bankAccountFactory.create();
+            bankAccount.save();
+            BankAccount otherBankAccount = bankAccountFactory.create();
+            otherBankAccount.save();
+            
             Collection<BankAccount> currentBanckAccount = bankAccount.findCollection(2,0);
 
             Assert.assertEquals(currentBanckAccount.size(), 2);

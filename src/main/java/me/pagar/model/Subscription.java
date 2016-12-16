@@ -145,12 +145,8 @@ public class Subscription extends PagarMeModel<String> {
 
     public void setUpdatableParameters(String cardId, String cardHash, String planId){
         this.planId = planId;
-
-        if(!Strings.isNullOrEmpty(cardId)){
-            this.cardHash = cardId;
-        }else if(!Strings.isNullOrEmpty(cardHash)){
-            this.cardHash = cardHash;
-        }
+        this.cardId = cardId;
+        this.cardHash = cardHash;
     }
 
     public String getCardHash() {
