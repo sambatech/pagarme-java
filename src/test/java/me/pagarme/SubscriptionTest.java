@@ -50,7 +50,6 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertNotNull(subscription.getId());
     }
 
-
     @Test
     public void testUpdateSubscriptionPlan() throws Throwable {
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
@@ -117,5 +116,4 @@ public class SubscriptionTest extends BaseTest {
 
         Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.CANCELED);
     }
-
 }
