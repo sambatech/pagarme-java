@@ -53,7 +53,7 @@ public class PlanTest extends BaseTest {
 
         //There's a delay between the response and the db insertion...
         Thread.sleep(2000);
-        Collection<Plan> plans = new Plan().findCollection(10, 0);
+        Collection<Plan> plans = new Plan().findCollection(10, 1);
         Assert.assertEquals(2, plans.size());
     }
 

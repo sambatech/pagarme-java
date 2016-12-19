@@ -9,6 +9,7 @@ import org.junit.Test;
 import me.pagar.SubscriptionStatus;
 import me.pagar.model.Card;
 import me.pagar.model.Customer;
+import me.pagar.model.PagarMe;
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Plan;
 import me.pagar.model.Subscription;
@@ -100,9 +101,7 @@ public class SubscriptionTest extends BaseTest {
         Subscription subscription2 = subscriptionFactory.createBoletoSubscription(defaultPlan.getId(), otherCustomer);
         subscription2.save();
 
-        //There's a delay between the response and the db insertion...
-        Thread.sleep(2000);
-        Collection<Subscription> subscriptions = new Subscription().findCollection(10, 0);
+        Collection<Subscription> subscriptions = new Subscription().findCollection(10, 1);
 
         Assert.assertEquals(2, subscriptions.size());
     }

@@ -132,11 +132,11 @@ public abstract class PagarMeModel<PK extends Serializable> {
     protected JsonArray paginate(final Integer totalPerPage, Integer page, QueriableFields modelFilter) throws PagarMeException {
         final Map<String, Object> parameters = new HashMap<String, Object>();
 
-        if (null != totalPerPage) {
+        if (null != totalPerPage && totalPerPage > 0) {
             parameters.put("count", totalPerPage);
         }
 
-        if (null != page) {
+        if (null != page && page > 0) {
             parameters.put("page", page);
         }
         
