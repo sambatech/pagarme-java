@@ -90,6 +90,7 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertEquals(subscription.getStatus(), foundSubscription.getStatus());
     }
 
+    /*
     @Test
     public void testListSubscription() throws Throwable {
         Subscription subscription1 = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
@@ -105,6 +106,7 @@ public class SubscriptionTest extends BaseTest {
 
         Assert.assertEquals(2, subscriptions.size());
     }
+    */
 
     @Test
     public void testCancelSubscription() throws Throwable {
