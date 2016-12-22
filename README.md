@@ -130,10 +130,14 @@ customer.findCollection(10,0);
 ### Create plan
 ```java
 Plan plan = new Plan();
-plan.setTrialDays(0);
-plan.setDays(30);
-plan.setAmount(amount);
-plan.setName("Test Plan Pagarme");
+plan.setCreationParameters(DEFAULT_AMOUNT, DEFAULT_DAYS, DEFAULT_NAME);
+plan.setPaymentMethods(Arrays.asList(
+    PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
+));
+plan.setCharges(DEFAULT_CHARGES);
+plan.setColor(DEFAULT_COLOR);
+plan.setInstallments(DEFAULT_INSTALLMENTS);
+plan.setTrialDays(DEFAULT_TRIAL_DAYS);
 plan.save();
 ```
 
@@ -147,28 +151,35 @@ plan.find(planId);
 ### List plan
 ```java
 Plan plan = new Plan();
-plan.list(10,0);
+plan.findCollection(10,0);
 ```
 
 ### Create subscription
 ```java
 Subscription subscription = new Subscription();
-subscription.setCustomer(customer);
-subscription.setPlanId(plan.getId());
-subscription.setCardId(card.getId());
+subscription.setCreditCardSubscriptionWithCardId(planId, cardId, customer);
+subscription.save();
+
+Subscription subscription2 = new Subscription();
+subscription2.setCreditCardSubscriptionWithCardHash(planId, cardHash, customer);
+subscription2.save();
+
+
+Subscription subscription3 = new Subscription();
+subscription3.setBoletoSubscription(planId, customer);
+subscription3.save();
+
 ```
 
 ### Find subscription
 ```java
 Integer subscriptionId = 999;
-Subscription subscription = new Subscription();
-subscription.find(subscriptionId);
+Subscription foundSubscription = new Subscription().find(subscriptionId);
 ```
 
 ### List subscription collection
 ```java
-Subscription subscription = new Subscription();
-subscription.list(10,0);
+ Collection<Subscription> subscriptions = new Subscription().findCollection(10, 1);
 ```
 
 ### Cancel subscription
@@ -184,7 +195,7 @@ subscription.cancel();
 Integer subscriptionId = 999;
 Subscription subscription = new Subscription();
 subscription.find(subscriptionId);
-subscription.transactions();
+Collection<Transaction> transactions = subscription.transactions();
 ```
 
 ### Agradecimento
