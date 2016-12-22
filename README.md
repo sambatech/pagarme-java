@@ -129,15 +129,22 @@ customer.findCollection(10,0);
 
 ### Create plan
 ```java
+int amount = 100;
+int days = 30;
+int charges = 100;
+int installments = 2;
+int trialDays = 3;
+String name = "Plano teste";
+String color = "#bababa";
 Plan plan = new Plan();
-plan.setCreationParameters(DEFAULT_AMOUNT, DEFAULT_DAYS, DEFAULT_NAME);
+plan.setCreationParameters(amount, days, name);
 plan.setPaymentMethods(Arrays.asList(
     PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
 ));
-plan.setCharges(DEFAULT_CHARGES);
-plan.setColor(DEFAULT_COLOR);
-plan.setInstallments(DEFAULT_INSTALLMENTS);
-plan.setTrialDays(DEFAULT_TRIAL_DAYS);
+plan.setCharges(charges);
+plan.setColor(color);
+plan.setInstallments(installments);
+plan.setTrialDays(trialDays);
 plan.save();
 ```
 
