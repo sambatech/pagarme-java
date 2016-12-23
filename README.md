@@ -171,11 +171,9 @@ Subscription subscription2 = new Subscription();
 subscription2.setCreditCardSubscriptionWithCardHash(planId, cardHash, customer);
 subscription2.save();
 
-
 Subscription subscription3 = new Subscription();
 subscription3.setBoletoSubscription(planId, customer);
 subscription3.save();
-
 ```
 
 ### Find subscription
