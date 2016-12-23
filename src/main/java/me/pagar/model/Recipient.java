@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.ws.rs.HttpMethod;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import me.pagar.model.BulkAnticipation.Timeframe;
+import me.pagar.util.DateTimeTimestampAdapter;
 import me.pagar.util.JSONUtils;
 
 public class Recipient  extends PagarMeModel<String> {
@@ -187,7 +186,7 @@ public class Recipient  extends PagarMeModel<String> {
         validateId();
         String path = String.format("/%s/%s/%s", getClassName(), getId(), anticipation.getClassName());
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST, path);
-        Map<String, Object> parameters = anticipation.toMap();
+        Map<String, Object> parameters = JSONUtils.objectToMap(anticipation, new DateTimeTimestampAdapter());
         request.setParameters(parameters);
         JsonObject response = request.execute();
         BulkAnticipation newAnticipation = JSONUtils.getAsObject(response, BulkAnticipation.class);
@@ -218,16 +217,13 @@ public class Recipient  extends PagarMeModel<String> {
         BulkAnticipation confirmedAnticipation = JSONUtils.getAsObject(response, BulkAnticipation.class);
         return confirmedAnticipation;
     }
-    public Collection<BulkAnticipation> findAnticipations(Integer count, Integer page) throws PagarMeException{
+
+    public Collection<BulkAnticipation> findAnticipations(int count, int page) throws PagarMeException{
         validateId();
         String path = String.format("/%s/%s/bulk_anticipations", getClassName(), getId());
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET, path);
-        if(count != null){
-            request.getParameters().put("count", count);
-        }
-        if(page != null){
-            request.getParameters().put("page", page);
-        }
+        request.getParameters().put("count", count);
+        request.getParameters().put("page", page);
         JsonArray response = request.<JsonArray>execute();
         Collection<BulkAnticipation> anticipations = JSONUtils.getAsList(response, new TypeToken<Collection<BulkAnticipation>>(){}.getType());
         return anticipations;
