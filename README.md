@@ -125,7 +125,7 @@ Customer customer = new Customer();
 customer.findCollection(10,0);
 ```
 
-## Subscription
+## Subscription & Plans
 
 ### Create plan
 ```java
@@ -184,7 +184,7 @@ Subscription foundSubscription = new Subscription().find(subscriptionId);
 
 ### List subscription collection
 ```java
- Collection<Subscription> subscriptions = new Subscription().findCollection(10, 1);
+Collection<Subscription> subscriptions = new Subscription().findCollection(10, 1);
 ```
 
 ### Cancel subscription
