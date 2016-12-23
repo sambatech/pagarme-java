@@ -49,7 +49,6 @@ public class BankAccountTest extends BaseTest{
     public void testFindBankAccountById() {
 
         try {
-
             BankAccount bankAccount = bankAccountFactory.create();
             BankAccount savedBankAccount = bankAccount.save();
             BankAccount foundBanckAccount = new BankAccount().find(bankAccount.getId());
@@ -72,7 +71,6 @@ public class BankAccountTest extends BaseTest{
     public void testFindBankAccountCollection() {
 
         try {
-
             BankAccount bankAccount = bankAccountFactory.create();
             bankAccount.save();
             BankAccount otherBankAccount = bankAccountFactory.create();

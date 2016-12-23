@@ -125,5 +125,83 @@ Customer customer = new Customer();
 customer.findCollection(10,0);
 ```
 
+## Subscription & Plans
+
+### Create plan
+```java
+int amount = 100;
+int days = 30;
+int charges = 100;
+int installments = 2;
+int trialDays = 3;
+String name = "Plano teste";
+String color = "#bababa";
+Plan plan = new Plan();
+plan.setCreationParameters(amount, days, name);
+plan.setPaymentMethods(Arrays.asList(
+    PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
+));
+plan.setCharges(charges);
+plan.setColor(color);
+plan.setInstallments(installments);
+plan.setTrialDays(trialDays);
+plan.save();
+```
+
+### Find plan
+```java
+Integer planId = 999;
+Plan plan = new Plan();
+plan.find(planId);
+```
+
+### List plan
+```java
+Plan plan = new Plan();
+plan.findCollection(10,0);
+```
+
+### Create subscription
+```java
+Subscription subscription = new Subscription();
+subscription.setCreditCardSubscriptionWithCardId(planId, cardId, customer);
+subscription.save();
+
+Subscription subscription2 = new Subscription();
+subscription2.setCreditCardSubscriptionWithCardHash(planId, cardHash, customer);
+subscription2.save();
+
+Subscription subscription3 = new Subscription();
+subscription3.setBoletoSubscription(planId, customer);
+subscription3.save();
+```
+
+### Find subscription
+```java
+Integer subscriptionId = 999;
+Subscription foundSubscription = new Subscription().find(subscriptionId);
+```
+
+### List subscription collection
+```java
+Collection<Subscription> subscriptions = new Subscription().findCollection(10, 1);
+```
+
+### Cancel subscription
+```java
+Integer subscriptionId = 999;
+Subscription subscription = new Subscription();
+subscription.find(subscriptionId);
+subscription.cancel();
+```
+
+### List all subscription transactions
+```java
+Integer subscriptionId = 999;
+Subscription subscription = new Subscription();
+subscription.find(subscriptionId);
+Collection<Transaction> transactions = subscription.transactions();
+```
+
 ### Agradecimento
 development based on library pagarme-java [Adriano Luis](https://github.com/adrianoluis)
