@@ -11,7 +11,7 @@ import me.pagar.model.Recipient;
 import me.pagar.model.Transaction;
 import me.pagarme.factory.TransactionFactory;
 
-public class TestCases {
+public class BulkAnticipationHelpers {
 
     private static TransactionFactory transactionFactory = new TransactionFactory();
 
