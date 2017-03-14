@@ -1049,8 +1049,7 @@ public class Transaction extends PagarMeModel<Integer> {
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
                 String.format("/%s/%s/capture", getClassName(), getId()));
         
-        if (amount != null)
-            request.getParameters().put("amount", amount);
+        request.getParameters().put("amount", amount);
         
         if (this.getMetadata() != null)
             request.getParameters().put("metadata", this.getMetadata());

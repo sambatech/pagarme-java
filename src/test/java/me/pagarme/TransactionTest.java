@@ -22,12 +22,14 @@ import me.pagar.model.Transaction;
 import me.pagar.model.Transaction.CaptureMethod;
 import me.pagar.util.JSONUtils;
 import me.pagarme.factory.RecipientFactory;
+import me.pagarme.factory.CustomerFactory;
 import me.pagarme.factory.TransactionFactory;
 import me.pagarme.helper.TestEndpoints;
 
 public class TransactionTest extends BaseTest {
 
     private RecipientFactory recipientFactory = new RecipientFactory();
+    private CustomerFactory customerFactory = new CustomerFactory();
     private TransactionFactory transactionFactory = new TransactionFactory();
     private TestEndpoints testEndpoints = new TestEndpoints();
 
@@ -396,6 +398,48 @@ public class TransactionTest extends BaseTest {
         Phone transactionPhone = transactionCustomer.getPhone();
         Assert.assertEquals(transactionPhone.getDdd(), "11");
         Assert.assertEquals(transactionPhone.getNumber(), "55284132");
+    }
+    
+    @Test
+    public void testCaptureFalseWithSplitTransaction() throws Throwable {
+
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
+        transaction.setCapture(false);
+        transaction.setAmount(10000);
+        Customer customer = customerFactory.create();
+        transaction.setCustomer(customer);
+        
+        transaction.save();
+        
+        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
+        
+        Recipient recipient1 = recipientFactory.create();
+        recipient1.save();
+        SplitRule splitRule = new SplitRule();
+        splitRule.setRecipientId(recipient1.getId());
+        splitRule.setPercentage(50);
+        splitRule.setLiable(true);
+        splitRule.setChargeProcessingFee(true);
+        splitRules.add(splitRule);
+
+        Recipient recipient2  = recipientFactory.create();
+        SplitRule splitRule2 = new SplitRule();
+        recipient2.save();
+        splitRule2.setRecipientId(recipient2.getId());
+        splitRule2.setPercentage(50);
+        splitRule2.setLiable(true);
+        splitRule2.setChargeProcessingFee(true);
+
+        splitRules.add(splitRule2);
+        //transaction.setSplitRules(splitRules);
+        
+        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
+        transaction.setSplitRules(splitRules);
+        transaction.capture(transaction.getAmount());
+        Transaction foundTransaction = new Transaction().find(transaction.getId());
+        Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
+        Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+        
     }
 
     @Test
