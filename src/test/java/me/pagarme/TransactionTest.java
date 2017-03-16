@@ -431,7 +431,6 @@ public class TransactionTest extends BaseTest {
         splitRule2.setChargeProcessingFee(true);
 
         splitRules.add(splitRule2);
-        //transaction.setSplitRules(splitRules);
         
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
         transaction.setSplitRules(splitRules);
