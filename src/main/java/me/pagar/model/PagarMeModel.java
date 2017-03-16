@@ -22,7 +22,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import me.pagar.model.filter.QueriableFields;
-import me.pagar.util.DateTimeAdapter;
+import me.pagar.util.DateTimeIsodateAdapter;
 import me.pagar.util.JSONUtils;
 import me.pagar.util.LocalDateAdapter;
 
@@ -229,7 +229,7 @@ public abstract class PagarMeModel<PK extends Serializable> {
 
     public String toJson() {
         return new GsonBuilder()
-                .registerTypeAdapter(DateTime.class, new DateTimeAdapter())
+                .registerTypeAdapter(DateTime.class, new DateTimeIsodateAdapter())
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .create()
                 .toJson(this);
