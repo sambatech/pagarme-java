@@ -227,8 +227,11 @@ public class Payable extends PagarMeModel<Integer> {
         PAID,
 
         @SerializedName("waiting_funds")
-        WAITING_FUNDS
-
+        WAITING_FUNDS,
+        
+        @SerializedName("suspended")
+        SUSPENDED
+        
     }
 
     public enum Type {
