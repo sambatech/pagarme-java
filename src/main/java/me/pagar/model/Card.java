@@ -178,6 +178,9 @@ public class Card extends PagarMeModel<String> {
 
         @SerializedName("discover")
         DISCOVER,
+        
+        @SerializedName("diners")
+        DINERS,
 
         @SerializedName("elo")
         ELO,
