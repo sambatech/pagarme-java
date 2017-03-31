@@ -97,7 +97,7 @@ public class Subscription extends PagarMeModel<String> {
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
                 String.format("/%s/%s/%s", getClassName(), getId(), transaction.getClassName()));
 
-        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Postback>>() {
+        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Transaction>>() {
         }.getType());
     }
 
