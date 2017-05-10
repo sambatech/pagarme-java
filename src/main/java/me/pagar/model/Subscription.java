@@ -149,6 +149,10 @@ public class Subscription extends PagarMeModel<String> {
         this.cardHash = cardHash;
     }
 
+    public void setPostbackUrl(String postbackUrl){
+        this.postbackUrl = postbackUrl;
+    }
+
     public String getCardHash() {
         return cardHash;
     }
