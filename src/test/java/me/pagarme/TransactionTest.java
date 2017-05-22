@@ -30,7 +30,6 @@ public class TransactionTest extends BaseTest {
     private RecipientFactory recipientFactory = new RecipientFactory();
     private TransactionFactory transactionFactory = new TransactionFactory();
     private TestEndpoints testEndpoints = new TestEndpoints();
-
     private static Integer AMOUNT = 100;
     private static Integer PAID_AMOUNT_PARTIAL = 50;
 
@@ -39,9 +38,10 @@ public class TransactionTest extends BaseTest {
         super.setUp();
         transaction = new Transaction();
     }
-    
+
     @Test
     public void testCreatedDateExistence() throws PagarMeException{
+
         transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.save();
         
@@ -81,7 +81,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
         Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
     }
-    
+
     @Test
     public void testCreateAndCaptureTransactionWithCardEmv() throws Throwable {
 
@@ -94,7 +94,7 @@ public class TransactionTest extends BaseTest {
         transaction.save();
 
         Assert.assertNotNull(transaction.getCardEmvResponse());
-        
+
     }
 
     @Test
@@ -150,8 +150,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(foundTransaction.getStatus(), Transaction.Status.PAID);
         Assert.assertEquals(foundTransaction.getMetadata().get("metadata1"), "value1");
         Assert.assertEquals(foundTransaction.getMetadata().get("metadata2"), "value2");
-        
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -174,7 +173,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(antifraudMetadataRes.get("antifraudMetadata1"), "value1");
         Assert.assertEquals(antifraudMetadataRes.get("antifraudMetadata2"), "value2");
     }
-    
+
     @Test
     public void testCreateAndCaptureTransactionAntifraudMetaDataPojo() throws Throwable {
 
@@ -297,7 +296,7 @@ public class TransactionTest extends BaseTest {
         Assert.assertEquals(transaction.getRefundedAmount(), PAID_AMOUNT_PARTIAL);
         Assert.assertEquals(transaction.getAuthorizedAmount(), AMOUNT);
     }
-    
+
     @Test
     public void testBoletoTransactionAuthAndCaptureRefund() throws Throwable {
 
@@ -306,16 +305,16 @@ public class TransactionTest extends BaseTest {
         transaction.setAmount(10000);
         transaction.save();
         transaction = testEndpoints.payBoleto(transaction);
-        
+
         Transaction transaction2 = transactionFactory.createBoletoTransaction();
         transaction2.setCapture(true);
         transaction2.setAmount(10000);
         transaction2.save();
         transaction2 = testEndpoints.payBoleto(transaction2);
-        
+
         BankAccount bankAccount = (BankAccount)new BankAccount().findCollection(1, 0).toArray()[0];
         transaction.refund(bankAccount);
-        
+
         Assert.assertEquals(Transaction.Status.PENDING_REFUND, transaction.getStatus());
     }
 
