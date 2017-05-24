@@ -127,4 +127,15 @@ public class SubscriptionTest extends BaseTest {
 
         Assert.assertEquals(subscription.getStatus(), SubscriptionStatus.CANCELED);
     }
+
+    @Test
+    public void testChangePostbackUrl() throws PagarMeException{
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+
+        subscription.setPostbackUrl("http://requestb.in/t5mzh9t5");
+
+        subscription.save();
+
+        Assert.assertNotNull(subscription.getPostbackUrl());
+    }
 }

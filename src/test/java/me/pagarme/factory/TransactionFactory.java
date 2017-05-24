@@ -2,6 +2,8 @@ package me.pagarme.factory;
 
 import org.joda.time.LocalDate;
 
+import me.pagar.model.Card;
+
 import me.pagar.model.Transaction;
 
 public class TransactionFactory {
@@ -10,14 +12,20 @@ public class TransactionFactory {
      * @param pinMode can be online or offline. With online option, the bank will check the card, and with offline the pin is used to check the card. 
      * @return the transaction
      */
+	private CardFactory cardFactory = new CardFactory();
+
     public Transaction createCreditCardOfflineTransaction() {
+
+        Card card = cardFactory.create();
+
         Transaction transaction = new Transaction();
+
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.DEBIT_CARD);
         transaction.setCaptureMethod(Transaction.CaptureMethod.EMV);
-        transaction.setCardHolderName("Lucas Dos Santos Alves");
-        transaction.setCardExpirationDate("0517");
-        transaction.setCardNumber("4111111111111111");
+        transaction.setCardHolderName(card.getHolderName());
+        transaction.setCardExpirationDate(card.getExpiresAt());
+        transaction.setCardNumber(card.getNumber());
         transaction.setInstallments(1);
         transaction.setCardEmvData("0");
         transaction.setCardTrack1("0");
@@ -27,15 +35,19 @@ public class TransactionFactory {
 
         return transaction;
     }
-    
+
     public Transaction createCreditCardOnlineTransaction(){
+
+        Card card = cardFactory.create();
+
         Transaction transaction = new Transaction();
+
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.DEBIT_CARD);
         transaction.setCaptureMethod(Transaction.CaptureMethod.EMV);
-        transaction.setCardHolderName("Lucas Dos Santos Alves");
-        transaction.setCardExpirationDate("0517");
-        transaction.setCardNumber("4111111111111111");
+        transaction.setCardHolderName(card.getHolderName());
+        transaction.setCardExpirationDate(card.getExpiresAt());
+        transaction.setCardNumber(card.getNumber());
         transaction.setInstallments(1);
         transaction.setCardEmvData("0");
         transaction.setCardTrack1("0");
@@ -48,22 +60,28 @@ public class TransactionFactory {
 
         return transaction;
     }
-    
+
     public Transaction createCreditCardTransactionWithoutPinMode() {
+
+        Card card = cardFactory.create();
+
         Transaction transaction = new Transaction();
+
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.CREDIT_CARD);
-        transaction.setCardHolderName("Lucas Dos Santos Alves");
-        transaction.setCardExpirationDate("0517");
-        transaction.setCardCvv("401");
-        transaction.setCardNumber("4111111111111111");
+        transaction.setCardHolderName(card.getHolderName());
+        transaction.setCardExpirationDate(card.getExpiresAt());
+        transaction.setCardCvv(Integer.toString(card.getCvv()));
+        transaction.setCardNumber(card.getNumber());
         transaction.setInstallments(1);
 
         return transaction;
     }
-    
+
     public Transaction createBoletoTransaction() {
+
         Transaction transaction = new Transaction();
+
         transaction.setBoletoExpirationDate(LocalDate.now().plusDays(4));
         transaction.setAmount(100);
         transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
