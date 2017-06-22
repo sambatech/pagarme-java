@@ -83,7 +83,7 @@ public class Plan extends PagarMeModel<String> {
     }
 
     public void setName(String name){
-    	this.name = name;
+        this.name = name;
     }
 
     private void copy(Plan other) {
