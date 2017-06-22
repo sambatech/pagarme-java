@@ -86,6 +86,14 @@ public class Plan extends PagarMeModel<String> {
         this.name = name;
     }
 
+    public void setDays(Integer days){
+        this.days = days;
+    }
+
+    public void setAmount(Integer amount){
+        this.amount = amount;
+    }
+
     private void copy(Plan other) {
         super.copy(other);
         this.amount = other.getAmount();
