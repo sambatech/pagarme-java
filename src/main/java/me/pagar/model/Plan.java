@@ -50,6 +50,7 @@ public class Plan extends PagarMeModel<String> {
         }.getType());
     }
 
+    @Deprecated
     public void setCreationParameters(Integer amount, Integer days, String name){
         this.amount = amount;
         this.days = days;
