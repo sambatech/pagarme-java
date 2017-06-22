@@ -43,36 +43,6 @@ public class PlanTest extends BaseTest {
         Assert.assertEquals(searchPlan.getId(), plan.getId());
     }
 
-    @Test
-    public void testSetName() throws Throwable {
-        Plan plan = planFactory.create();
-
-        plan.setName("Plano teste 2");
-        plan.save();
-
-        Assert.assertEquals("Plano teste 2", plan.getName());
-    }
-
-    @Test
-    public void testSetDays() throws Throwable {
-        Plan plan = planFactory.create();
-
-        plan.setDays(12);
-        plan.save();
-
-        Assert.assertEquals(12,plan.getDays(),0);
-    }
- 
-    @Test
-    public void testSetAmount() throws Throwable {
-        Plan plan = planFactory.create();
-
-        plan.setAmount(200);
-        plan.save();
-
-        Assert.assertEquals(200, plan.getAmount(),0);
-    }
-
     /*
     @Test
     public void testListPlan() throws Throwable {
