@@ -18,7 +18,9 @@ public class PlanFactory {
 
     public Plan create() {
         Plan plan = new Plan();
-        plan.setCreationParameters(DEFAULT_AMOUNT, DEFAULT_DAYS, DEFAULT_NAME);
+        plan.setAmount(DEFAULT_AMOUNT);
+        plan.setDays(DEFAULT_DAYS);
+        plan.setName(DEFAULT_NAME);
         plan.setPaymentMethods(Arrays.asList(
             PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
         ));
