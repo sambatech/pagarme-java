@@ -165,6 +165,10 @@ public class Subscription extends PagarMeModel<String> {
         this.planId = planId;
     }
 
+    public void setPaymentMethod (PaymentMethod paymentMethod){
+        this.paymentMethod = paymentMethod;
+    }
+
     public String getCardHash() {
         return cardHash;
     }
