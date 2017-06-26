@@ -143,6 +143,7 @@ public class Subscription extends PagarMeModel<String> {
         setId(id);
     }
 
+    @Deprecated
     public void setUpdatableParameters(String cardId, String cardHash, String planId){
         this.planId = planId;
         this.cardId = cardId;
