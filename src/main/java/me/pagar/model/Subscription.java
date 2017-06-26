@@ -157,6 +157,10 @@ public class Subscription extends PagarMeModel<String> {
         this.cardId = cardId;
     }
 
+    public void setCardHash (String cardHash){
+        this.cardHash = cardHash;
+    }
+
     public String getCardHash() {
         return cardHash;
     }
