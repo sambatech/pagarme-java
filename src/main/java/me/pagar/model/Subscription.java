@@ -143,6 +143,7 @@ public class Subscription extends PagarMeModel<String> {
         setId(id);
     }
 
+    @Deprecated
     public void setUpdatableParameters(String cardId, String cardHash, String planId){
         this.planId = planId;
         this.cardId = cardId;
@@ -151,6 +152,22 @@ public class Subscription extends PagarMeModel<String> {
 
     public void setPostbackUrl(String postbackUrl){
         this.postbackUrl = postbackUrl;
+    }
+
+    public void setCardId(String cardId){
+        this.cardId = cardId;
+    }
+
+    public void setCardHash (String cardHash){
+        this.cardHash = cardHash;
+    }
+
+    public void setPlanId(String planId){
+        this.planId = planId;
+    }
+
+    public void setPaymentMethod (PaymentMethod paymentMethod){
+        this.paymentMethod = paymentMethod;
     }
 
     public String getCardHash() {
