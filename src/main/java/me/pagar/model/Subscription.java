@@ -172,6 +172,14 @@ public class Subscription extends PagarMeModel<String> {
         this.paymentMethod = paymentMethod;
     }
 
+    public void setSplitRules(final Collection<SplitRule> splitRules) {
+        this.splitRules = splitRules;
+
+        if (this.splitRules.size() != 0) {
+            addUnsavedProperty("splitRules");
+        }
+    }
+
     public String getCardHash() {
         return cardHash;
     }
@@ -198,6 +206,10 @@ public class Subscription extends PagarMeModel<String> {
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public Collection<SplitRule> getSplitRules() {
+        return splitRules;
     }
 
     public DateTime getCurrentPeriodStart() {
