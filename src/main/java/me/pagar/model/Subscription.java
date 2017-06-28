@@ -38,6 +38,8 @@ public class Subscription extends PagarMeModel<String> {
     private DateTime currentPeriodEnd;
     @Expose
     private Map<String, Object> metadata;
+    @Expose
+    private Collection<SplitRule> splitRules;
 
     @Expose(serialize = false)
     private Plan plan;
