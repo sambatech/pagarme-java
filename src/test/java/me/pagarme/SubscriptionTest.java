@@ -22,6 +22,7 @@ import me.pagarme.factory.CardFactory;
 import me.pagarme.factory.CustomerFactory;
 import me.pagarme.factory.PlanFactory;
 import me.pagarme.factory.RecipientFactory;
+import me.pagarme.factory.SplitRulesFactory;
 import me.pagarme.factory.SubscriptionFactory;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
@@ -32,11 +33,13 @@ public class SubscriptionTest extends BaseTest {
     private CustomerFactory customerFactory = new CustomerFactory();
     private CardFactory cardFactory = new CardFactory();
     private RecipientFactory recipientFactory = new RecipientFactory();
+    private SplitRulesFactory splitRulesFactory = new SplitRulesFactory();
 
     private Plan defaultPlanWithTrialDays;
     private Plan defaultPlanWithoutTrialDays;
     private Customer defaultCustomer;
     private Card defaultCard;
+    private SplitRule defaultSplitRuleWithPercentage;
 
     @Before
     public void beforeEach() throws PagarMeException {
@@ -153,28 +156,7 @@ public class SubscriptionTest extends BaseTest {
     public void testSplitSubscription() throws Throwable {
 
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
-        Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
-
-        Recipient recipient1 = recipientFactory.create();
-        recipient1.save();
-
-        SplitRule splitRule = new SplitRule();
-        splitRule.setRecipientId(recipient1.getId());
-        splitRule.setPercentage(50);
-        splitRule.setLiable(true);
-        splitRule.setChargeProcessingFee(true);
-        splitRules.add(splitRule);
-
-        Recipient recipient2  = recipientFactory.create();
-        recipient2.save();
-
-        SplitRule splitRule2 = new SplitRule();
-        recipient2.save();
-        splitRule2.setRecipientId(recipient2.getId());
-        splitRule2.setPercentage(50);
-        splitRule2.setLiable(true);
-        splitRule2.setChargeProcessingFee(true);
-        splitRules.add(splitRule2);
+        Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithPercentage();
 
         subscription.setSplitRules(splitRules);
         subscription.save();
