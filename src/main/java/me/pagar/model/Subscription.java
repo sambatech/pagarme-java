@@ -174,10 +174,6 @@ public class Subscription extends PagarMeModel<String> {
 
     public void setSplitRules(final Collection<SplitRule> splitRules) {
         this.splitRules = splitRules;
-
-        if (this.splitRules.size() != 0) {
-            addUnsavedProperty("splitRules");
-        }
     }
 
     public String getCardHash() {

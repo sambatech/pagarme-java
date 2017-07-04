@@ -1,6 +1,5 @@
 package me.pagarme;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -13,7 +12,6 @@ import me.pagar.model.Card;
 import me.pagar.model.Customer;
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Plan;
-import me.pagar.model.Recipient;
 import me.pagar.model.SplitRule;
 import me.pagar.model.Subscription;
 import me.pagar.model.Transaction;
@@ -21,7 +19,6 @@ import me.pagar.model.Transaction.PaymentMethod;
 import me.pagarme.factory.CardFactory;
 import me.pagarme.factory.CustomerFactory;
 import me.pagarme.factory.PlanFactory;
-import me.pagarme.factory.RecipientFactory;
 import me.pagarme.factory.SplitRulesFactory;
 import me.pagarme.factory.SubscriptionFactory;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -32,14 +29,12 @@ public class SubscriptionTest extends BaseTest {
     private SubscriptionFactory subscriptionFactory = new SubscriptionFactory();
     private CustomerFactory customerFactory = new CustomerFactory();
     private CardFactory cardFactory = new CardFactory();
-    private RecipientFactory recipientFactory = new RecipientFactory();
     private SplitRulesFactory splitRulesFactory = new SplitRulesFactory();
 
     private Plan defaultPlanWithTrialDays;
     private Plan defaultPlanWithoutTrialDays;
     private Customer defaultCustomer;
     private Card defaultCard;
-    private SplitRule defaultSplitRuleWithPercentage;
 
     @Before
     public void beforeEach() throws PagarMeException {
@@ -123,7 +118,7 @@ public class SubscriptionTest extends BaseTest {
     */
     @Test
     public void testTransactionsCollectionInSubscription() throws PagarMeException{
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
         Iterator t = subscription.transactions().iterator();
         while(t.hasNext()){
