@@ -169,6 +169,7 @@ public class RestClient {
                 is = httpClient.getInputStream();
                 responseCode = httpClient.getResponseCode();
             } catch (IOException e) {
+                e.printStackTrace();
                 is = httpClient.getErrorStream();
                 responseCode = httpClient.getResponseCode();
             }
@@ -184,10 +185,12 @@ public class RestClient {
             reader.close();
             httpClient.disconnect();
 
+            System.out.println("[PAGARME] RESPONSE DEBUG: " + builder.toString());
+
             return new PagarMeResponse(responseCode,
                     JSONUtils.getInterpreter().fromJson(builder.toString(), JsonElement.class));
         } catch (Exception e) {
-
+            e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
                 throw new PagarMeException(responseCode, url, method, builder.toString());
             }
