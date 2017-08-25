@@ -137,21 +137,34 @@ public class SubscriptionTest extends BaseTest {
     }
 
     @Test
-    public void testChangePostbackUrl() throws PagarMeException{
+    public void testSavePostbackUrl() throws PagarMeException{
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
-
         subscription.setPostbackUrl("http://requestb.in/t5mzh9t5");
+        subscription = subscription.save();
 
-        subscription.save();
-
-        Assert.assertNotNull(subscription.getPostbackUrl());
+        Assert.assertEquals("http://requestb.in/t5mzh9t5", subscription.getPostbackUrl());
     }
 
     @Test
-    public void testSplitSubscription() throws Throwable {
+    public void testSplitSubscriptionPercentage() throws Throwable {
 
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
         Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithPercentage();
+
+        subscription.setSplitRules(splitRules);
+        subscription.save();
+
+        Transaction foundTransaction = new Transaction().find(subscription.getCurrentTransaction().getId());
+
+        Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
+        Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+    }
+
+    @Test
+    public void testSplitSubscriptionAmount() throws Throwable {
+
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
+        Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithAmount(defaultPlanWithoutTrialDays);
 
         subscription.setSplitRules(splitRules);
         subscription.save();

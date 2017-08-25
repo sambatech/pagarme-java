@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import me.pagar.model.PagarMeException;
+import me.pagar.model.Plan;
 import me.pagar.model.Recipient;
 import me.pagar.model.SplitRule;
 
@@ -41,23 +42,29 @@ public class SplitRulesFactory {
         return splitRules;
     }
 
-    public Collection<SplitRule> createSplitRuleWithAmount(){
+    public Collection<SplitRule> createSplitRuleWithAmount(Plan currentPlan) throws PagarMeException{
 
         Recipient recipient1 = recipientFactory.create();
+        recipient1.save();
+
         Recipient recipient2 = recipientFactory.create();
+        recipient2.save();
+
         Collection<SplitRule> splitRules = new ArrayList<SplitRule>();
+
+        int amountPlan = (currentPlan.getAmount() / 2);
 
         SplitRule splitRule1 = new SplitRule();
 
         splitRule1.setRecipientId(recipient1.getId());
-        splitRule1.setAmount(50);
+        splitRule1.setAmount(amountPlan);
         splitRule1.setChargeProcessingFee(true);
         splitRule1.setLiable(true);
 
         SplitRule splitRule2 = new SplitRule();
 
         splitRule2.setRecipientId(recipient2.getId());
-        splitRule2.setAmount(50);
+        splitRule2.setAmount(amountPlan);
         splitRule2.setChargeProcessingFee(false);
         splitRule2.setLiable(false);
 

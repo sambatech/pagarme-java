@@ -38,7 +38,7 @@ public class Subscription extends PagarMeModel<String> {
     private DateTime currentPeriodEnd;
     @Expose
     private Map<String, Object> metadata;
-    @Expose
+    @Expose(deserialize = false)
     private Collection<SplitRule> splitRules;
 
     @Expose(serialize = false)
