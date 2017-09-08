@@ -1,5 +1,6 @@
 package me.pagarme;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.Assert;
@@ -11,12 +12,14 @@ import me.pagar.model.Card;
 import me.pagar.model.Customer;
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Plan;
+import me.pagar.model.SplitRule;
 import me.pagar.model.Subscription;
 import me.pagar.model.Transaction;
 import me.pagar.model.Transaction.PaymentMethod;
 import me.pagarme.factory.CardFactory;
 import me.pagarme.factory.CustomerFactory;
 import me.pagarme.factory.PlanFactory;
+import me.pagarme.factory.SplitRulesFactory;
 import me.pagarme.factory.SubscriptionFactory;
 import static org.hamcrest.CoreMatchers.instanceOf;
 
@@ -26,8 +29,10 @@ public class SubscriptionTest extends BaseTest {
     private SubscriptionFactory subscriptionFactory = new SubscriptionFactory();
     private CustomerFactory customerFactory = new CustomerFactory();
     private CardFactory cardFactory = new CardFactory();
+    private SplitRulesFactory splitRulesFactory = new SplitRulesFactory();
 
-    private Plan defaultPlan;
+    private Plan defaultPlanWithTrialDays;
+    private Plan defaultPlanWithoutTrialDays;
     private Customer defaultCustomer;
     private Card defaultCard;
 
@@ -37,8 +42,11 @@ public class SubscriptionTest extends BaseTest {
         defaultCustomer = customerFactory.create();
         defaultCustomer.save();
 
-        defaultPlan = planFactory.create();
-        defaultPlan.save();
+        defaultPlanWithTrialDays = planFactory.create();
+        defaultPlanWithTrialDays.save();
+
+        defaultPlanWithoutTrialDays = planFactory.createPlanWithoutTrialDays();
+        defaultPlanWithoutTrialDays.save();
 
         defaultCard = cardFactory.create();
         defaultCard.save();
@@ -46,7 +54,7 @@ public class SubscriptionTest extends BaseTest {
 
     @Test
     public void testCreateSubscription() throws Throwable {
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
         Assert.assertEquals(SubscriptionStatus.TRIALING, subscription.getStatus());
         Assert.assertNotNull(subscription.getId());
@@ -54,7 +62,7 @@ public class SubscriptionTest extends BaseTest {
 
     @Test
     public void testUpdateSubscriptionPlan() throws Throwable {
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
 
         Plan newPlan = planFactory.create();
@@ -72,7 +80,7 @@ public class SubscriptionTest extends BaseTest {
 
     @Test
     public void testFindSubscription() throws Throwable {
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
 
         Subscription foundSubscription = new Subscription().find(subscription.getId());
@@ -110,7 +118,7 @@ public class SubscriptionTest extends BaseTest {
     */
     @Test
     public void testTransactionsCollectionInSubscription() throws PagarMeException{
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
         Iterator t = subscription.transactions().iterator();
         while(t.hasNext()){
@@ -120,7 +128,7 @@ public class SubscriptionTest extends BaseTest {
 
     @Test
     public void testCancelSubscription() throws Throwable {
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
 
         subscription.cancel();
@@ -129,13 +137,41 @@ public class SubscriptionTest extends BaseTest {
     }
 
     @Test
-    public void testChangePostbackUrl() throws PagarMeException{
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlan.getId(), defaultCard.getId(), defaultCustomer);
-
+    public void testSavePostbackUrl() throws PagarMeException{
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.setPostbackUrl("http://requestb.in/t5mzh9t5");
+        subscription = subscription.save();
 
+        Assert.assertEquals("http://requestb.in/t5mzh9t5", subscription.getPostbackUrl());
+    }
+
+    @Test
+    public void testSplitSubscriptionPercentage() throws Throwable {
+
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
+        Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithPercentage();
+
+        subscription.setSplitRules(splitRules);
         subscription.save();
 
-        Assert.assertNotNull(subscription.getPostbackUrl());
+        Transaction foundTransaction = new Transaction().find(subscription.getCurrentTransaction().getId());
+
+        Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
+        Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+    }
+
+    @Test
+    public void testSplitSubscriptionAmount() throws Throwable {
+
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
+        Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithAmount(defaultPlanWithoutTrialDays);
+
+        subscription.setSplitRules(splitRules);
+        subscription.save();
+
+        Transaction foundTransaction = new Transaction().find(subscription.getCurrentTransaction().getId());
+
+        Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
+        Assert.assertEquals(splitRules.size(), foundSplitRules.size());
     }
 }
