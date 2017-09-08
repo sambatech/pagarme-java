@@ -1,10 +1,12 @@
-package me.pagarme;
+package me.pagarme.transaction;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.pagarme.AntifraudMetadataPojo;
+import me.pagarme.BaseTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,65 +49,6 @@ public class TransactionTest extends BaseTest {
         
         Assert.assertNotNull(transaction.getCreatedAt());
         Assert.assertNotNull(transaction.getUpdatedAt());
-    }
-
-    @Test
-    public void testCreateAndCaptureTransactionWithOfflineDebitCard() throws Throwable {
-
-        transaction = transactionFactory.createCreditCardOfflineTransaction();
-        transaction.setCapture(true);
-        transaction.save();
-
-        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
-        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
-    }
-
-    @Test
-    public void testCreateAndAuthorizedTransactionWithOfflineDebitCard() throws Throwable {
-
-        transaction = transactionFactory.createCreditCardOfflineTransaction();
-        transaction.setCapture(false);
-        transaction.save();
-
-        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
-        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
-    }
-
-    @Test
-    public void testCreateAndCaptureTransactionWithOnlineDebitCard() throws Throwable {
-
-        transaction = transactionFactory.createCreditCardOnlineTransaction();
-        transaction.setCapture(true);
-        transaction.save();
-
-        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
-        Assert.assertEquals(transaction.getStatus(), Transaction.Status.PAID);
-    }
-
-    @Test
-    public void testCreateAndCaptureTransactionWithCardEmv() throws Throwable {
-
-        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
-        String cardEmvTest = "9F26009F02009F10009F37009F360095009A009C005F2A009F1A0082009F03009F33009F3400";
-        String cardTrack2Test = "Card Track 2 Teste";
-        transaction.setCardEmvData(cardEmvTest);
-        transaction.setCardTrack2(cardTrack2Test);
-        transaction.setCaptureMethod(CaptureMethod.EMV);
-        transaction.save();
-
-        Assert.assertNotNull(transaction.getCardEmvResponse());
-
-    }
-
-    @Test
-    public void testCreateAndAuthorizedTransactionWithOnlineDebitCard() throws Throwable {
-
-        transaction = transactionFactory.createCreditCardOnlineTransaction();
-        transaction.setCapture(false);
-        transaction.save();
-
-        Assert.assertEquals(transaction.getPaymentMethod(), Transaction.PaymentMethod.DEBIT_CARD);
-        Assert.assertEquals(transaction.getStatus(), Transaction.Status.AUTHORIZED);
     }
 
     @Test
