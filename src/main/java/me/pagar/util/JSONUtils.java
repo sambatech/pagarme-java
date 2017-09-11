@@ -17,51 +17,72 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JSONUtils {
-    private static final Gson GSON_DATA_PROVIDER;
-
-    static {
-        GSON_DATA_PROVIDER = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(DateTime.class, new DateTimeAdapter())
-                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setExclusionStrategies(new ExclusionStrategy(){
-
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-
-                    public boolean shouldSkipField(FieldAttributes fieldAttrs) {
-                        return fieldAttrs.equals(null);
-                    }
-                    
-                })
-                .create();
-    }
 
     public static final Gson getInterpreter() {
-        return GSON_DATA_PROVIDER;
+        return getNewDefaultGsonBuilder().create();
     }
 
     public static <T> T getAsObject(JsonObject json, Class<T> clazz) {
-        return GSON_DATA_PROVIDER.fromJson(json, clazz);
+        return getNewDefaultGsonBuilder().create().fromJson(json, clazz);
+    }
+
+    public static <T> T getAsObject(JsonObject json, DateTimeAdapter adapter, Class<T> clazz) {
+        GsonBuilder builder = getNewDefaultGsonBuilder().registerTypeAdapter(DateTime.class, adapter);
+        return builder.create().fromJson(json, clazz);
     }
 
     public static <T> Collection<T> getAsList(JsonArray json, Type listType) {
-        return GSON_DATA_PROVIDER.fromJson(json, listType);
+        return getNewDefaultGsonBuilder().create().fromJson(json, listType);
+    }
+
+    public static <T> Collection<T> getAsList(JsonArray json, DateTimeAdapter adapter, Type listType) {
+        GsonBuilder builder = getNewDefaultGsonBuilder().registerTypeAdapter(DateTime.class, adapter);
+        return builder.create().fromJson(json, listType);
     }
 
     public static String getAsJson(Object object) {
-        return GSON_DATA_PROVIDER.toJson(object);
+        return getNewDefaultGsonBuilder().create().toJson(object);
+    }
+
+    public static String getAsJson(Object object, DateTimeAdapter adapter) {
+        GsonBuilder builder = getNewDefaultGsonBuilder().registerTypeAdapter(DateTime.class, adapter);
+        return builder.create().toJson(object);
     }
 
     public static Map<String, Object> objectToMap(Object object) {
-        final String json = GSON_DATA_PROVIDER.toJson(object);
-        return GSON_DATA_PROVIDER.fromJson(json, new TypeToken<HashMap<String, Object>>() {
+        GsonBuilder builder = getNewDefaultGsonBuilder();
+        final String json = builder.create().toJson(object);
+        return builder.create().fromJson(json, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+    }
+
+    public static Map<String, Object> objectToMap(Object object, DateTimeAdapter adapter) {
+        GsonBuilder builder = getNewDefaultGsonBuilder().registerTypeAdapter(DateTime.class, adapter);
+        final String json = builder.create().toJson(object);
+        return builder.create().fromJson(json, new TypeToken<HashMap<String, Object>>() {
         }.getType());
     }
 
     public static JsonObject treeToJson(Object object) {
-        return GSON_DATA_PROVIDER.toJsonTree(object).getAsJsonObject();
+        return getNewDefaultGsonBuilder().create().toJsonTree(object).getAsJsonObject();
+    }
+
+    private static GsonBuilder getNewDefaultGsonBuilder(){
+        return new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(DateTime.class, new DateTimeIsodateAdapter())
+            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .setExclusionStrategies(new ExclusionStrategy(){
+
+                public boolean shouldSkipClass(Class<?> clazz) {
+                    return false;
+                }
+
+                public boolean shouldSkipField(FieldAttributes fieldAttrs) {
+                    return fieldAttrs.equals(null);
+                }
+                
+            });
     }
 }

@@ -44,7 +44,7 @@ public class PagarMeRequest {
      * @param key
      * @param value 
      */
-    public void setParamter(String key,String value) {
+    public void setParameter(String key,String value) {
         parameters.add(ImmutableMap.of(key,value));
     }
     
@@ -54,7 +54,7 @@ public class PagarMeRequest {
      */
     public void setParameters(Map<String,Object> objectProperties) {
         for (String key : objectProperties.keySet()) {
-            setParamter(key, String.valueOf(objectProperties.get(key)));
+            setParameter(key, String.valueOf(objectProperties.get(key)));
         }
     }
     

@@ -18,7 +18,9 @@ public class PlanFactory {
 
     public Plan create() {
         Plan plan = new Plan();
-        plan.setCreationParameters(DEFAULT_AMOUNT, DEFAULT_DAYS, DEFAULT_NAME);
+        plan.setAmount(DEFAULT_AMOUNT);
+        plan.setDays(DEFAULT_DAYS);
+        plan.setName(DEFAULT_NAME);
         plan.setPaymentMethods(Arrays.asList(
             PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
         ));
@@ -26,6 +28,21 @@ public class PlanFactory {
         plan.setColor(DEFAULT_COLOR);
         plan.setInstallments(DEFAULT_INSTALLMENTS);
         plan.setTrialDays(DEFAULT_TRIAL_DAYS);
+        return plan;
+    }
+
+    public Plan createPlanWithoutTrialDays (){
+        Plan plan = new Plan();
+        plan.setAmount(DEFAULT_AMOUNT);
+        plan.setDays(DEFAULT_DAYS);
+        plan.setName(DEFAULT_NAME);
+        plan.setPaymentMethods(Arrays.asList(
+            PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
+        ));
+        plan.setCharges(DEFAULT_CHARGES);
+        plan.setColor(DEFAULT_COLOR);
+        plan.setInstallments(DEFAULT_INSTALLMENTS);
+        plan.setTrialDays(0);
         return plan;
     }
 

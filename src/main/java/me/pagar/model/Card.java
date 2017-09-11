@@ -105,6 +105,14 @@ public class Card extends PagarMeModel<String> {
         return customer;
     }
 
+    public String getExpiresAt(){
+        return expiresAt;
+    }
+
+    public String getNumber(){
+        return number;
+    }
+
     public void setHash(String hash) {
         this.hash = hash;
         addUnsavedProperty("hash");
@@ -178,6 +186,9 @@ public class Card extends PagarMeModel<String> {
 
         @SerializedName("discover")
         DISCOVER,
+        
+        @SerializedName("diners")
+        DINERS,
 
         @SerializedName("elo")
         ELO,

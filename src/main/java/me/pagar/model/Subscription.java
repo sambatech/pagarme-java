@@ -38,6 +38,8 @@ public class Subscription extends PagarMeModel<String> {
     private DateTime currentPeriodEnd;
     @Expose
     private Map<String, Object> metadata;
+    @Expose(deserialize = false)
+    private Collection<SplitRule> splitRules;
 
     @Expose(serialize = false)
     private Plan plan;
@@ -97,7 +99,7 @@ public class Subscription extends PagarMeModel<String> {
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
                 String.format("/%s/%s/%s", getClassName(), getId(), transaction.getClassName()));
 
-        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Postback>>() {
+        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Transaction>>() {
         }.getType());
     }
 
@@ -143,10 +145,35 @@ public class Subscription extends PagarMeModel<String> {
         setId(id);
     }
 
+    @Deprecated
     public void setUpdatableParameters(String cardId, String cardHash, String planId){
         this.planId = planId;
         this.cardId = cardId;
         this.cardHash = cardHash;
+    }
+
+    public void setPostbackUrl(String postbackUrl){
+        this.postbackUrl = postbackUrl;
+    }
+
+    public void setCardId(String cardId){
+        this.cardId = cardId;
+    }
+
+    public void setCardHash (String cardHash){
+        this.cardHash = cardHash;
+    }
+
+    public void setPlanId(String planId){
+        this.planId = planId;
+    }
+
+    public void setPaymentMethod (PaymentMethod paymentMethod){
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setSplitRules(final Collection<SplitRule> splitRules) {
+        this.splitRules = splitRules;
     }
 
     public String getCardHash() {
@@ -175,6 +202,10 @@ public class Subscription extends PagarMeModel<String> {
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public Collection<SplitRule> getSplitRules() {
+        return splitRules;
     }
 
     public DateTime getCurrentPeriodStart() {
