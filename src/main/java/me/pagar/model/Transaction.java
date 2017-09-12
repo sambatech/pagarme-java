@@ -1050,7 +1050,12 @@ public class Transaction extends PagarMeModel<Integer> {
                 String.format("/%s/%s/capture", getClassName(), getId()));
 
         request.getParameters().put("amount", amount);
-        request.getParameters().put("metadata", this.getMetadata());
+		
+        if (this.getMetadata() != null)
+            request.getParameters().put("metadata", this.getMetadata());
+
+        if (this.getSplitRules() != null)
+            request.getParameters().put("split_rules", this.getSplitRules());
 
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);
