@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import me.pagar.model.BankAccount;
+import me.pagar.model.PagarMe;
 import me.pagar.model.PagarMeException;
 import me.pagarme.factory.BankAccountFactory;
 
@@ -31,7 +32,6 @@ public class BankAccountTest extends BaseTest{
             
             BankAccount bankAccount = bankAccountFactory.create();
             BankAccount savedBankAccount = bankAccount.save();
-            
             Assert.assertNotNull(savedBankAccount.getId());
             Assert.assertEquals(savedBankAccount.getAgencia(), BankAccountFactory.DEFAULT_AGENCIA);
             Assert.assertEquals(savedBankAccount.getAgenciaDv(), BankAccountFactory.DEFAULT_AGENCIA_DV);
@@ -40,6 +40,7 @@ public class BankAccountTest extends BaseTest{
             Assert.assertEquals(savedBankAccount.getBankCode(), BankAccountFactory.DEFAULT_BANK_CODE);
             Assert.assertEquals(savedBankAccount.getDocumentNumber(), BankAccountFactory.DEFAULT_DOCUMENT_NUMBER);
             Assert.assertEquals(savedBankAccount.getLegalName(), BankAccountFactory.DEFAULT_LEGAL_NAME);
+            Assert.assertEquals(savedBankAccount.getType(), BankAccountFactory.DEFAULT_TYPE);
         } catch (Exception exception) {
             throw new UnsupportedOperationException(exception);
         }
@@ -62,6 +63,7 @@ public class BankAccountTest extends BaseTest{
             Assert.assertEquals(savedBankAccount.getBankCode(), BankAccountFactory.DEFAULT_BANK_CODE);
             Assert.assertEquals(savedBankAccount.getDocumentNumber(), BankAccountFactory.DEFAULT_DOCUMENT_NUMBER);
             Assert.assertEquals(savedBankAccount.getLegalName(), BankAccountFactory.DEFAULT_LEGAL_NAME);
+            Assert.assertEquals(savedBankAccount.getType(), BankAccountFactory.DEFAULT_TYPE);
         } catch (Exception exception) {
             throw new UnsupportedOperationException(exception);
         }
@@ -89,6 +91,7 @@ public class BankAccountTest extends BaseTest{
                 Assert.assertEquals(bankAccountVar.getBankCode(), BankAccountFactory.DEFAULT_BANK_CODE);
                 Assert.assertEquals(bankAccountVar.getDocumentNumber(), BankAccountFactory.DEFAULT_DOCUMENT_NUMBER);
                 Assert.assertEquals(bankAccountVar.getLegalName(), BankAccountFactory.DEFAULT_LEGAL_NAME);
+                Assert.assertEquals(bankAccountVar.getType(), BankAccountFactory.DEFAULT_TYPE);
             }
         } catch (Exception exception) {
             throw new UnsupportedOperationException(exception);

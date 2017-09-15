@@ -1,5 +1,6 @@
 package me.pagarme.factory;
 
+import me.pagar.BankAccountType;
 import me.pagar.model.BankAccount;
 
 public class BankAccountFactory {
@@ -11,6 +12,7 @@ public class BankAccountFactory {
     public static String DEFAULT_BANK_CODE = "341";
     public static String DEFAULT_LEGAL_NAME = "Conta teste";
     public static String DEFAULT_DOCUMENT_NUMBER = "18344334799";
+    public static BankAccountType DEFAULT_TYPE = BankAccountType.CONTA_CORRENTE;
     
     
     public BankAccount create(){
@@ -22,7 +24,7 @@ public class BankAccountFactory {
         bankAccount.setContaDv(DEFAULT_CONTA_DV);
         bankAccount.setLegalName(DEFAULT_LEGAL_NAME);
         bankAccount.setDocumentNumber(DEFAULT_DOCUMENT_NUMBER);
-        
+        bankAccount.setType(DEFAULT_TYPE);
         return bankAccount;
     }
 }
