@@ -12,7 +12,7 @@ public class BankAccountFactory {
     public static String DEFAULT_BANK_CODE = "341";
     public static String DEFAULT_LEGAL_NAME = "Conta teste";
     public static String DEFAULT_DOCUMENT_NUMBER = "18344334799";
-    public static BankAccountType DEFAULT_TYPE = BankAccountType.CONTA_CORRENTE;
+    public static BankAccountType DEFAULT_TYPE = BankAccountType.CORRENTE;
     
     
     public BankAccount create(){
