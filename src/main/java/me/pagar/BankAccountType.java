@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public enum BankAccountType {
     @SerializedName("conta_corrente")
-    CONTA_CORRENTE,
+    CORRENTE,
     @SerializedName("conta_poupanca")
-    CONTA_POUPANCA,
+    POUPANCA,
     @SerializedName("conta_corrente_conjunta")
-    CONTA_CORRENTE_CONJUNTA,
+    CORRENTE_CONJUNTA,
     @SerializedName("conta_poupanca_conjunta")
-    CONTA_POUPANCA_CONJUNTA
+    POUPANCA_CONJUNTA
 }
