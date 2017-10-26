@@ -569,6 +569,8 @@ public class Transaction extends PagarMeModel<Integer> {
         return boletoUrl;
     }
 
+    public LocalDate getBoletoExpirationDate() { return boletoExpirationDate; }
+
     /**
      * @return {@link #boletoBarcode}
      */
@@ -1067,6 +1069,7 @@ public class Transaction extends PagarMeModel<Integer> {
         this.paymentMethod = other.paymentMethod;
         this.boletoUrl = other.boletoUrl;
         this.boletoBarcode = other.boletoBarcode;
+        this.boletoExpirationDate = other.boletoExpirationDate;
         this.referer = other.referer;
         this.ip = other.ip;
         this.cardId = other.cardId;
