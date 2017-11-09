@@ -43,9 +43,8 @@ public abstract class PagarMe {
 
     public static boolean validateRequestSignature(final String payload, final String signature) {
 
-        // failsafe
-        if (Strings.isNullOrEmpty(signature)) {
-            return true;
+        if (Strings.isNullOrEmpty(payload) || Strings.isNullOrEmpty(signature)) {
+            return false;
         }
 
         final String[] parts = signature.split("=");
