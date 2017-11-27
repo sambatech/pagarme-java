@@ -48,6 +48,13 @@ public class Customer extends PagarMeModel<Integer>{
     @Expose
     private Collection<Phone> phones;
 
+    @Expose
+    @SerializedName("external_id")
+    private String externalId;
+
+    @Expose
+    private String type;
+
     public Customer() {
         super();
     }
@@ -102,6 +109,14 @@ public class Customer extends PagarMeModel<Integer>{
         return phones;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
     public void setDocumentNumber(final String documentNumber) {
         this.documentNumber = documentNumber;
         addUnsavedProperty("documentNumber");
@@ -134,6 +149,10 @@ public class Customer extends PagarMeModel<Integer>{
         }
     }
 
+    public void setExternalId(final String externalId) {
+        this.externalId = externalId;
+    }
+
     public void setPhone(final Phone phone) {
         this.phone = phone;
         addUnsavedProperty("phone");
@@ -152,6 +171,11 @@ public class Customer extends PagarMeModel<Integer>{
     public void setPhones(final Collection<Phone> phones) {
         this.phones = phones;
         addUnsavedProperty("phones");
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+        addUnsavedProperty("type");
     }
 
     public Customer save() throws PagarMeException {
