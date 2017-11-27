@@ -53,7 +53,20 @@ public class Customer extends PagarMeModel<Integer>{
     private String externalId;
 
     @Expose
-    private String type;
+    private Type type;
+
+    @Expose
+    private String country;
+
+    @Expose
+    private Collection<Document> documents;
+
+    @Expose
+    @SerializedName("phone_numbers")
+    private Collection<String> phoneNumbers;
+
+    @Expose
+    private String birthday;
 
     public Customer() {
         super();
@@ -113,8 +126,24 @@ public class Customer extends PagarMeModel<Integer>{
         return externalId;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public Collection<String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public Collection<Document> getDocuments() {
+        return documents;
     }
 
     public void setDocumentNumber(final String documentNumber) {
@@ -173,9 +202,36 @@ public class Customer extends PagarMeModel<Integer>{
         addUnsavedProperty("phones");
     }
 
-    public void setType(final String type) {
+    public void setType(final Type type) {
         this.type = type;
-        addUnsavedProperty("type");
+    }
+
+    public void setCountry(final String country) {
+        this.country = country;
+        addUnsavedProperty("country");
+    }
+
+    public void setPhoneNumbers(final Collection<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+        addUnsavedProperty("phones_numbers");
+    }
+
+    public void setBirthday(final String birthday) {
+        this.birthday = birthday;
+        addUnsavedProperty("birthday");
+    }
+
+    public void setDocuments(final Collection<Document> documents) {
+        this.documents = documents;
+        addUnsavedProperty("documents");
+    }
+
+    public enum Type {
+        @SerializedName("individual")
+        INDIVIDUAL,
+
+        @SerializedName("corporation")
+        CORPORATION
     }
 
     public Customer save() throws PagarMeException {
