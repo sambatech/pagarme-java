@@ -429,6 +429,9 @@ public class Transaction extends PagarMeModel<Integer> {
     private Shipping shipping;
 
     @Expose
+    private Billing billing;
+
+    @Expose
     private Collection<Item> items;
 
     public Transaction() {
@@ -706,6 +709,10 @@ public class Transaction extends PagarMeModel<Integer> {
         return shipping;
     }
 
+    public Billing getBilling() {
+        return billing;
+    }
+
     public Collection<Item> getItems() {
         return items;
     }
@@ -790,6 +797,10 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setShipping(final Shipping shipping) {
         this.shipping = shipping;
+    }
+
+    public void setBilling(final Billing billing) {
+        this.billing = billing;
     }
 
     public void setItems(final Collection<Item> items) {
