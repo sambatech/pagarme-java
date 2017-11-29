@@ -428,6 +428,9 @@ public class Transaction extends PagarMeModel<Integer> {
     @Expose
     private Shipping shipping;
 
+    @Expose
+    private Collection<Item> items;
+
     public Transaction() {
         super();
     }
@@ -703,6 +706,10 @@ public class Transaction extends PagarMeModel<Integer> {
         return shipping;
     }
 
+    public Collection<Item> getItems() {
+        return items;
+    }
+
     public void setAsync(final Boolean async) {
         this.async = async;
         addUnsavedProperty("async");
@@ -783,6 +790,10 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public void setShipping(final Shipping shipping) {
         this.shipping = shipping;
+    }
+
+    public void setItems(final Collection<Item> items) {
+        this.items = items;
     }
 
     public Collection<SplitRule> getSplitRules() {
