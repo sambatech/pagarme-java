@@ -32,7 +32,15 @@ public abstract class BaseTest {
         transaction = new Transaction();
 
         PagarMe.init("test_key");
-        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey();
+        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey("2013-03-01");
+        PagarMe.init(apiKey);
+    }
+
+    public void setUp(String apiVersion) {
+        transaction = new Transaction();
+
+        PagarMe.init("test_key");
+        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey(apiVersion);
         PagarMe.init(apiKey);
     }
 
