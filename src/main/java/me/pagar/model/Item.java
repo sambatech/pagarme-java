@@ -3,7 +3,7 @@ package me.pagar.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Item extends PagarMeModel<String>{
+public class Item {
     @Expose
     private String id;
 
@@ -33,7 +33,6 @@ public class Item extends PagarMeModel<String>{
         this.tangible = tangible;
     }
 
-    @Override
     public String getId() {
         return id;
     }
@@ -54,7 +53,6 @@ public class Item extends PagarMeModel<String>{
         return tangible;
     }
 
-    @Override
     public void setId(String id) {
         this.id = id;
     }
