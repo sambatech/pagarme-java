@@ -1,5 +1,7 @@
 package me.pagarme.factory;
 
+import java.util.Arrays;
+import java.util.Collection;
 import org.joda.time.LocalDate;
 
 import me.pagar.model.Address;
@@ -14,8 +16,14 @@ public class CustomerFactory {
     public static final String DEFAULT_EMAIL = "theo.emanuel.oliveira@negocios-de-valor.com";
     public static final String DEFAULT_GENDER = "M";
     public static final LocalDate DEFAULT_BORN_AT = new LocalDate();
+    public static final String DEFAULT_EXTERNAL_ID = "12345666";
+    public static final Customer.Type DEFAULT_TYPE = Customer.Type.INDIVIDUAL;
+    public static final String DEFAULT_COUNTRY = "br";
+    public static final Collection<String> DEFAULT_PHONES = Arrays.asList("+551187486324", "+551187486327");
+    public static final String DEFAULT_BIRTHDAY = "1994-11-05";
 
     private AddressFactory addressFactory = new AddressFactory();
+    private DocumentFactory documentFactory = new DocumentFactory();
     private PhoneFactory phoneFactory = new PhoneFactory();
 
     public Customer create(Address address, Phone phone){
@@ -35,6 +43,20 @@ public class CustomerFactory {
         customer.setDocumentType(DEFAULT_DOCUMENT_TYPE);
         customer.setPhone(phoneFactory.create());
         customer.setAddress(addressFactory.create());
+        return customer;
+    }
+
+    public Customer createApiV3() {
+        Customer customer = new Customer();
+        customer.setExternalId(DEFAULT_EXTERNAL_ID);
+        customer.setName(DEFAULT_NAME);
+        customer.setType(DEFAULT_TYPE);
+        customer.setCountry(DEFAULT_COUNTRY);
+        customer.setEmail(DEFAULT_EMAIL);
+        customer.setDocuments(documentFactory.create());
+        customer.setPhoneNumbers(DEFAULT_PHONES);
+        customer.setBirthday(DEFAULT_BIRTHDAY);
+
         return customer;
     }
 }
