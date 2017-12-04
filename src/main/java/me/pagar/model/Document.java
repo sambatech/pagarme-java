@@ -3,7 +3,7 @@ package me.pagar.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Document extends PagarMeModel<Integer> {
+public class Document extends PagarMeModel<String> {
 
     @Expose
     @SerializedName("type")
