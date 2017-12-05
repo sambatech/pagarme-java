@@ -208,22 +208,18 @@ public class Customer extends PagarMeModel<Integer>{
 
     public void setCountry(final String country) {
         this.country = country;
-        addUnsavedProperty("country");
     }
 
     public void setPhoneNumbers(final Collection<String> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
-        addUnsavedProperty("phones_numbers");
     }
 
     public void setBirthday(final String birthday) {
         this.birthday = birthday;
-        addUnsavedProperty("birthday");
     }
 
     public void setDocuments(final Collection<Document> documents) {
         this.documents = documents;
-        addUnsavedProperty("documents");
     }
 
     public enum Type {
