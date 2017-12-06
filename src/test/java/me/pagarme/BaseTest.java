@@ -3,7 +3,7 @@ package me.pagarme;
 import org.junit.Assert;
 
 import me.pagar.model.Address;
-import me.pagar.model.CompaniesTempory;
+import me.pagar.model.CompaniesTemporary;
 import me.pagar.model.Customer;
 import me.pagar.model.PagarMe;
 import me.pagar.model.Phone;
@@ -28,11 +28,22 @@ public abstract class BaseTest {
     protected static Integer TRANSFER_DAY = 1;
     protected static Boolean TRANSFER_ENABLE = true;
 
+    /*
+        API Version 2017-08-28
+    */
+
+    protected static final String DEFAULT_EXTERNAL_ID = "12345666";
+    protected static final String DEFAULT_NAME = "Theo Emanuel Felipe Oliveira";
+    protected static final Customer.Type DEFAULT_TYPE = Customer.Type.INDIVIDUAL;
+    protected static final String DEFAULT_COUNTRY = "br";
+    protected static final String DEFAULT_EMAIL = "theo.emanuel.oliveira@negocios-de-valor.com";
+    protected static final String DEFAULT_BIRTHDAY = "1994-11-05";
+
     public void setUp() {
         transaction = new Transaction();
 
         PagarMe.init("test_key");
-        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey("2013-03-01");
+        String apiKey = new CompaniesTemporary().getTemporaryCompanyApiKey("2013-03-01");
         PagarMe.init(apiKey);
     }
 
@@ -40,7 +51,7 @@ public abstract class BaseTest {
         transaction = new Transaction();
 
         PagarMe.init("test_key");
-        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey(apiVersion);
+        String apiKey = new CompaniesTemporary().getTemporaryCompanyApiKey(apiVersion);
         PagarMe.init(apiKey);
     }
 
@@ -121,6 +132,21 @@ public abstract class BaseTest {
         this.assertCustomerData(customer);
         this.assertAddress(customerAddress);
         this.assertPhone(phoneCommon());
+    }
+
+    /**
+     *
+     * @param customer
+     */
+    protected void assertCustomer(Customer customer) {
+        Assert.assertEquals(DEFAULT_EXTERNAL_ID, customer.getExternalId());
+        Assert.assertEquals(DEFAULT_NAME, customer.getName());
+        Assert.assertEquals(DEFAULT_TYPE, customer.getType());
+        Assert.assertEquals(DEFAULT_COUNTRY, customer.getCountry());
+        Assert.assertEquals(DEFAULT_EMAIL, customer.getEmail());
+        Assert.assertEquals(DEFAULT_BIRTHDAY, customer.getBirthday());
+        Assert.assertEquals(1, customer.getDocuments().size());
+        Assert.assertEquals(2, customer.getPhoneNumbers().size());
     }
 
     /**
