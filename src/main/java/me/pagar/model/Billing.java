@@ -3,9 +3,6 @@ package me.pagar.model;
 import com.google.gson.annotations.Expose;
 
 public class Billing extends PagarMeModel<Integer> {
-    /*
-        API Version 2017-08-28
-    */
 
     @Expose
     private String name;

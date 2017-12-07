@@ -12,9 +12,6 @@ import java.util.HashMap;
 
 public class CompaniesTemporary extends PagarMeModel<Integer>{
 
-    /**
-     * Objeto com dados do telefone do cliente
-     */
     @Expose
     @SerializedName("api_key")
     private Map<String, Object> apiKey;

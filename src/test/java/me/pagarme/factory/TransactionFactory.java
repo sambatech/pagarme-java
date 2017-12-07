@@ -101,9 +101,6 @@ public class TransactionFactory {
         return transaction;
     }
 
-    /*
-        API Version 2017-08-28
-    */
     public Transaction createCreditCardTransactionApiV3() {
         Card card = cardFactory.create();
         Billing billing = billingFactory.create();

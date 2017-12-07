@@ -421,10 +421,6 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 
-    /*
-        API Version 2017-08-28
-    */
-
     @Expose
     private Shipping shipping;
 

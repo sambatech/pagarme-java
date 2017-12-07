@@ -14,10 +14,6 @@ public class TransactionTestApiV3 extends BaseTest {
     private TransactionFactory transactionFactory = new TransactionFactory();
     private static Integer AMOUNT = 1000;
 
-    /*
-        API Version 2017-08-28
-    */
-
     @Before
     public void SetUpV3() {
         super.setUp("2017-08-28");

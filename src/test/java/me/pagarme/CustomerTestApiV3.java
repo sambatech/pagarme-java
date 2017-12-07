@@ -11,10 +11,6 @@ import me.pagarme.factory.CustomerFactory;
 public class CustomerTestApiV3 extends BaseTest{
     private final CustomerFactory customerFactory = new CustomerFactory();
 
-    /*
-        API Version 2017-08-28
-    */
-
     @Before
     public void SetUpV3() {
         super.setUp("2017-08-28");
