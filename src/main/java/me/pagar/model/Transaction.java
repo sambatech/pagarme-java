@@ -421,6 +421,15 @@ public class Transaction extends PagarMeModel<Integer> {
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
 
+    @Expose
+    private Shipping shipping;
+
+    @Expose
+    private Billing billing;
+
+    @Expose
+    private Collection<Item> items;
+
     public Transaction() {
         super();
     }
@@ -692,6 +701,18 @@ public class Transaction extends PagarMeModel<Integer> {
         return antifraudMetadata;
     }
 
+    public Shipping getShipping() {
+        return shipping;
+    }
+
+    public Billing getBilling() {
+        return billing;
+    }
+
+    public Collection<Item> getItems() {
+        return items;
+    }
+
     public void setAsync(final Boolean async) {
         this.async = async;
         addUnsavedProperty("async");
@@ -768,6 +789,18 @@ public class Transaction extends PagarMeModel<Integer> {
     public void setAntifraudMetadata(Object antifraudMetadata) {
         this.antifraudMetadata = antifraudMetadata;
         addUnsavedProperty("antifraud_metadata");
+    }
+
+    public void setShipping(final Shipping shipping) {
+        this.shipping = shipping;
+    }
+
+    public void setBilling(final Billing billing) {
+        this.billing = billing;
+    }
+
+    public void setItems(final Collection<Item> items) {
+        this.items = items;
     }
 
     public Collection<SplitRule> getSplitRules() {

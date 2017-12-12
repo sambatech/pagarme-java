@@ -2,7 +2,6 @@ package me.pagarme;
 
 import java.util.Collection;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +12,9 @@ import me.pagar.model.BulkAnticipation.Timeframe;
 import me.pagar.model.Limit;
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Recipient;
-import me.pagar.model.Transaction;
 import me.pagarme.factory.TransactionFactory;
 import me.pagarme.helper.BulkAnticipationHelpers;
+import me.pagarme.util.PagarmeCalendar;
 
 public class AnticipationTest extends BaseTest {
 
@@ -31,8 +30,8 @@ public class AnticipationTest extends BaseTest {
     }
 
     @Test
-    public void testMaxAnticipationLimit() throws PagarMeException{
-        Limit limit = defaultRecipient.getMaxAnticipationLimit(new DateTime().plusDays(10), Timeframe.START);
+    public void testMaxAnticipationLimit() throws PagarMeException, Exception {
+        Limit limit = defaultRecipient.getMaxAnticipationLimit(PagarmeCalendar.getValidWeekday() , Timeframe.START);
 
         Assert.assertEquals((Integer)0, limit.getAmount());
         Assert.assertEquals((Integer)0, limit.getAnticipationFee());
@@ -40,8 +39,8 @@ public class AnticipationTest extends BaseTest {
     }
 
     @Test
-    public void testMinAnticipationLimit() throws PagarMeException{
-        Limit limit = defaultRecipient.getMinAnticipationLimit(new DateTime().plusDays(10), Timeframe.START);
+    public void testMinAnticipationLimit() throws PagarMeException, Exception {
+        Limit limit = defaultRecipient.getMinAnticipationLimit(PagarmeCalendar.getValidWeekday(), Timeframe.START);
 
         Assert.assertEquals((Integer)0, limit.getAmount());
         Assert.assertEquals((Integer)0, limit.getAnticipationFee());
@@ -49,13 +48,13 @@ public class AnticipationTest extends BaseTest {
     }
 
     @Test
-    public void testAnticipationCreation() throws PagarMeException{
-        Transaction transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
+    public void testAnticipationCreation() throws PagarMeException, Exception {
+        transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setAmount(1000000);
         transaction.save();
 
         BulkAnticipation anticipation = new BulkAnticipation();
-        anticipation.setRequiredParametersForCreation(new DateTime().plusDays(3), Timeframe.START, 1234567, false);
+        anticipation.setRequiredParametersForCreation(PagarmeCalendar.getValidWeekday(), Timeframe.START, 1234567, false);
         anticipation = defaultRecipient.anticipate(anticipation);
         Assert.assertNotNull(anticipation.getId());
         Assert.assertNotNull(anticipation.getAnticipationFee());
@@ -65,24 +64,24 @@ public class AnticipationTest extends BaseTest {
     }
 
     @Test
-    public void testAnticipationList() throws PagarMeException{
-        BulkAnticipation anticipation1 = BulkAnticipationHelpers.createAnticipationOnRecipient(12345678, defaultRecipient);
-        BulkAnticipation anticipation2 = BulkAnticipationHelpers.createAnticipationOnRecipient(1234567, defaultRecipient);
+    public void testAnticipationList() throws PagarMeException, Exception {
+        BulkAnticipationHelpers.createAnticipation(12345678, Timeframe.END, false, defaultRecipient);
+        BulkAnticipationHelpers.createAnticipation(1234567, Timeframe.END, false, defaultRecipient);
 
         Collection<BulkAnticipation> anticipations = defaultRecipient.findAnticipations(10, 1);
         Assert.assertEquals(2, anticipations.size());
     }
 
     @Test
-    public void testAnticipationCancelation() throws PagarMeException{
-        BulkAnticipation anticipation = BulkAnticipationHelpers.createAnticipationOnRecipient(12345678, defaultRecipient);
+    public void testAnticipationCancelation() throws PagarMeException, Exception {
+        BulkAnticipation anticipation = BulkAnticipationHelpers.createAnticipation(12345678, Timeframe.END, false, defaultRecipient);
         anticipation = defaultRecipient.cancelAnticipation(anticipation);
         Assert.assertEquals(Status.CANCELED, anticipation.getStatus());
     }
 
     @Test
-    public void testAnticipationDeletion() throws PagarMeException{
-        BulkAnticipation anticipation = BulkAnticipationHelpers.createBuildingAnticipationOnRecipient(12345678, defaultRecipient);
+    public void testAnticipationDeletion() throws PagarMeException, Exception {
+        BulkAnticipation anticipation = BulkAnticipationHelpers.createAnticipation(12345678, Timeframe.END, true, defaultRecipient);
 
         Collection<BulkAnticipation> anticipations = defaultRecipient.findAnticipations(10, 1);
         Assert.assertEquals(1, anticipations.size());
@@ -94,8 +93,8 @@ public class AnticipationTest extends BaseTest {
     }
 
     @Test
-    public void testAnticipationConfirmation() throws PagarMeException{
-        BulkAnticipation anticipation = BulkAnticipationHelpers.createBuildingAnticipationOnRecipient(12345678, defaultRecipient);
+    public void testAnticipationConfirmation() throws PagarMeException, Exception {
+        BulkAnticipation anticipation = BulkAnticipationHelpers.createAnticipation(12345678, Timeframe.END, true, defaultRecipient);
         Assert.assertEquals(Status.BUILDING, anticipation.getStatus());
 
         anticipation = defaultRecipient.confirmBulkAnticipation(anticipation);

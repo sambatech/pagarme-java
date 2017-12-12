@@ -3,16 +3,18 @@ package me.pagarme;
 import org.junit.Assert;
 
 import me.pagar.model.Address;
-import me.pagar.model.CompaniesTempory;
+import me.pagar.model.CompaniesTemporary;
 import me.pagar.model.Customer;
 import me.pagar.model.PagarMe;
 import me.pagar.model.Phone;
 import me.pagar.model.Transaction;
+import me.pagarme.factory.CustomerFactory;
 
 public abstract class BaseTest {
 
     protected Transaction transaction;
     protected Customer customer;
+    protected CustomerFactory customerFactory = new CustomerFactory();
 
     protected static String NAME = "Teste Create Customer";
     protected static String DOCUMENT_NUMBER = "84344469283";
@@ -32,7 +34,15 @@ public abstract class BaseTest {
         transaction = new Transaction();
 
         PagarMe.init("test_key");
-        String apiKey = new CompaniesTempory().getTemporaryCompanyApiKey();
+        String apiKey = new CompaniesTemporary().getTemporaryCompanyApiKey("2013-03-01");
+        PagarMe.init(apiKey);
+    }
+
+    public void setUp(String apiVersion) {
+        transaction = new Transaction();
+
+        PagarMe.init("test_key");
+        String apiKey = new CompaniesTemporary().getTemporaryCompanyApiKey(apiVersion);
         PagarMe.init(apiKey);
     }
 
@@ -113,6 +123,22 @@ public abstract class BaseTest {
         this.assertCustomerData(customer);
         this.assertAddress(customerAddress);
         this.assertPhone(phoneCommon());
+    }
+
+    /**
+     *
+     * @param customer
+     */
+    protected void assertCustomer(Customer customer) {
+        customer = customerFactory.createApiV3();
+        Assert.assertEquals(customer.getExternalId(), customer.getExternalId());
+        Assert.assertEquals(customer.getName(), customer.getName());
+        Assert.assertEquals(customer.getType(), customer.getType());
+        Assert.assertEquals(customer.getCountry(), customer.getCountry());
+        Assert.assertEquals(customer.getEmail(), customer.getEmail());
+        Assert.assertEquals(customer.getBirthday(), customer.getBirthday());
+        Assert.assertEquals(1, customer.getDocuments().size());
+        Assert.assertEquals(2, customer.getPhoneNumbers().size());
     }
 
     /**

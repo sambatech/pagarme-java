@@ -1,9 +1,12 @@
 package me.pagarme.factory;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import java.util.Collection;
 
+import me.pagar.model.Billing;
 import me.pagar.model.Card;
-
+import me.pagar.model.Item;
+import me.pagar.model.Shipping;
 import me.pagar.model.Transaction;
 
 public class TransactionFactory {
@@ -19,7 +22,11 @@ public class TransactionFactory {
      * @param pinMode can be online or offline. With online option, the bank will check the card, and with offline the pin is used to check the card. 
      * @return the transaction
      */
-	private CardFactory cardFactory = new CardFactory();
+        private BillingFactory billingFactory = new BillingFactory();
+        private CustomerFactory customerFactory = new CustomerFactory();
+        private CardFactory cardFactory = new CardFactory();
+        private ItemFactory itemFactory = new ItemFactory();
+        private ShippingFactory shippingFactory = new ShippingFactory();
 
     public Transaction createCreditCardOfflineTransaction() {
 
@@ -91,6 +98,39 @@ public class TransactionFactory {
 
         transaction.setAmount(AMOUNT);
         transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
+        return transaction;
+    }
+
+    public Transaction createCreditCardTransactionApiV3() {
+        Card card = cardFactory.create();
+        Billing billing = billingFactory.create();
+        Shipping shipping = shippingFactory.create();
+        Collection<Item> items = itemFactory.create();
+
+        Transaction transaction = new Transaction();
+        transaction.setPaymentMethod(Transaction.PaymentMethod.CREDIT_CARD);
+        transaction.setCardHolderName(card.getHolderName());
+        transaction.setCardNumber(card.getNumber());
+        transaction.setCardExpirationDate(card.getExpiresAt());
+        transaction.setCardCvv(Integer.toString(card.getCvv()));
+        transaction.setBilling(billing);
+        transaction.setShipping(shipping);
+        transaction.setItems(items);
+
+        return transaction;
+    }
+
+    public Transaction createBoletoTransactionApiV3() {
+        Billing billing = billingFactory.create();
+        Shipping shipping = shippingFactory.create();
+        Collection<Item> items = itemFactory.create();
+
+        Transaction transaction = new Transaction();
+        transaction.setPaymentMethod(Transaction.PaymentMethod.BOLETO);
+        transaction.setBilling(billing);
+        transaction.setShipping(shipping);
+        transaction.setItems(items);
+
         return transaction;
     }
 }

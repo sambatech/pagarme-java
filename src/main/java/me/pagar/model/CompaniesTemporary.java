@@ -10,12 +10,8 @@ import javax.ws.rs.HttpMethod;
 import java.util.Map;
 import java.util.HashMap;
 
-@Deprecated
-public class CompaniesTempory extends PagarMeModel<Integer>{
+public class CompaniesTemporary extends PagarMeModel<Integer>{
 
-    /**
-     * Objeto com dados do telefone do cliente
-     */
     @Expose
     @SerializedName("api_key")
     private Map<String, Object> apiKey;
@@ -24,7 +20,7 @@ public class CompaniesTempory extends PagarMeModel<Integer>{
         try {
             final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST, "/companies/temporary");
             request.setParameters(buildApiVersionParameter(apiVersion));
-            CompaniesTempory company = JSONUtils.getAsObject((JsonObject) request.execute(), CompaniesTempory.class);
+            CompaniesTemporary company = JSONUtils.getAsObject((JsonObject) request.execute(), CompaniesTemporary.class);
 
             return company.apiKey.get("test").toString();
 
