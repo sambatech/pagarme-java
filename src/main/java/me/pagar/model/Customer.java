@@ -48,6 +48,26 @@ public class Customer extends PagarMeModel<Integer>{
     @Expose
     private Collection<Phone> phones;
 
+    @Expose
+    @SerializedName("external_id")
+    private String externalId;
+
+    @Expose
+    private Type type;
+
+    @Expose
+    private String country;
+
+    @Expose
+    private Collection<Document> documents;
+
+    @Expose
+    @SerializedName("phone_numbers")
+    private Collection<String> phoneNumbers;
+
+    @Expose
+    private String birthday;
+
     public Customer() {
         super();
     }
@@ -102,6 +122,30 @@ public class Customer extends PagarMeModel<Integer>{
         return phones;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public Collection<String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public Collection<Document> getDocuments() {
+        return documents;
+    }
+
     public void setDocumentNumber(final String documentNumber) {
         this.documentNumber = documentNumber;
         addUnsavedProperty("documentNumber");
@@ -134,6 +178,10 @@ public class Customer extends PagarMeModel<Integer>{
         }
     }
 
+    public void setExternalId(final String externalId) {
+        this.externalId = externalId;
+    }
+
     public void setPhone(final Phone phone) {
         this.phone = phone;
         addUnsavedProperty("phone");
@@ -152,6 +200,34 @@ public class Customer extends PagarMeModel<Integer>{
     public void setPhones(final Collection<Phone> phones) {
         this.phones = phones;
         addUnsavedProperty("phones");
+    }
+
+    public void setType(final Type type) {
+        this.type = type;
+    }
+
+    public void setCountry(final String country) {
+        this.country = country;
+    }
+
+    public void setPhoneNumbers(final Collection<String> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public void setBirthday(final String birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setDocuments(final Collection<Document> documents) {
+        this.documents = documents;
+    }
+
+    public enum Type {
+        @SerializedName("individual")
+        INDIVIDUAL,
+
+        @SerializedName("corporation")
+        CORPORATION
     }
 
     public Customer save() throws PagarMeException {

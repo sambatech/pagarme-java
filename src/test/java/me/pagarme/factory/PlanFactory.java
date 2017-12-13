@@ -31,4 +31,19 @@ public class PlanFactory {
         return plan;
     }
 
+    public Plan createPlanWithoutTrialDays (){
+        Plan plan = new Plan();
+        plan.setAmount(DEFAULT_AMOUNT);
+        plan.setDays(DEFAULT_DAYS);
+        plan.setName(DEFAULT_NAME);
+        plan.setPaymentMethods(Arrays.asList(
+            PaymentMethod.BOLETO, PaymentMethod.CREDIT_CARD
+        ));
+        plan.setCharges(DEFAULT_CHARGES);
+        plan.setColor(DEFAULT_COLOR);
+        plan.setInstallments(DEFAULT_INSTALLMENTS);
+        plan.setTrialDays(0);
+        return plan;
+    }
+
 }

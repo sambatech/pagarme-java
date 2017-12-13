@@ -6,7 +6,7 @@ public class AddressFactory {
 
     public static final String DEFAULT_CITY = "Cidade";
     public static final String DEFAULT_COMPLEMENTARY = "Complemento";
-    public static final String DEFAULT_COUNTRY = "Brasil";
+    public static final String DEFAULT_COUNTRY = "br";
     public static final String DEFAULT_NEIGHBORHOOD = "bairro";
     public static final String DEFAULT_STATE = "Estado";
     public static final String DEFAULT_STREET = "rua";

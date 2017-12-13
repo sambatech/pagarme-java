@@ -2,14 +2,13 @@ package me.pagarme.helper;
 
 import java.util.Collection;
 
-import org.joda.time.DateTime;
-
 import me.pagar.model.BulkAnticipation;
 import me.pagar.model.BulkAnticipation.Timeframe;
 import me.pagar.model.PagarMeException;
 import me.pagar.model.Recipient;
 import me.pagar.model.Transaction;
 import me.pagarme.factory.TransactionFactory;
+import me.pagarme.util.PagarmeCalendar;
 
 public class BulkAnticipationHelpers {
 
@@ -20,24 +19,14 @@ public class BulkAnticipationHelpers {
         return recipient.save();
     }
 
-    public static BulkAnticipation createAnticipationOnRecipient(Integer requestedAmount, Recipient recipient) throws PagarMeException{
+    public static BulkAnticipation createAnticipation(Integer requestedAmount, Timeframe timeFrame, Boolean build, Recipient recipient)
+            throws PagarMeException, Exception {
         Transaction transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
         transaction.setAmount(requestedAmount);
         transaction.save();
 
         BulkAnticipation anticipation = new BulkAnticipation();
-        anticipation.setRequiredParametersForCreation(new DateTime().plusDays(3), Timeframe.END, requestedAmount, false);
-        anticipation = recipient.anticipate(anticipation);
-        return anticipation;
-    }
-
-    public static BulkAnticipation createBuildingAnticipationOnRecipient(Integer requestedAmount, Recipient recipient) throws PagarMeException{
-        Transaction transaction = transactionFactory.createCreditCardTransactionWithoutPinMode();
-        transaction.setAmount(requestedAmount);
-        transaction.save();
-
-        BulkAnticipation anticipation = new BulkAnticipation();
-        anticipation.setRequiredParametersForCreation(new DateTime().plusDays(3), Timeframe.END, requestedAmount, true);
+        anticipation.setRequiredParametersForCreation(PagarmeCalendar.getValidWeekday() , timeFrame, requestedAmount, build);
         anticipation = recipient.anticipate(anticipation);
         return anticipation;
     }

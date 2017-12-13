@@ -8,6 +8,7 @@ import me.pagar.util.JSONUtils;
 
 import javax.ws.rs.HttpMethod;
 import java.util.Collection;
+import me.pagar.BankAccountType;
 
 public class BankAccount extends PagarMeModel<Integer> {
     @Expose(serialize = false)
@@ -43,6 +44,9 @@ public class BankAccount extends PagarMeModel<Integer> {
     @Expose
     @SerializedName("document_type")
     private DocumentType documentType;
+    @Expose
+    @SerializedName("type")
+    private BankAccountType type;
 
     public Boolean isChargeTransferFees() {
         return chargeTransferFees;
@@ -78,6 +82,10 @@ public class BankAccount extends PagarMeModel<Integer> {
 
     public DocumentType getDocumentType() {
         return documentType;
+    }
+    
+    public BankAccountType getType(){
+        return type;
     }
 
     public void setBankCode(String bankCode) {
@@ -118,6 +126,10 @@ public class BankAccount extends PagarMeModel<Integer> {
     public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
         addUnsavedProperty("documentType");
+    }
+    public void setType(BankAccountType type){
+        this.type = type;
+        addUnsavedProperty("type");
     }
 
     public BankAccount find(int id) throws PagarMeException {
@@ -167,6 +179,7 @@ public class BankAccount extends PagarMeModel<Integer> {
         this.documentNumber = other.documentNumber;
         this.legalName = other.legalName;
         this.documentType = other.documentType;
+        this.type = other.type;
     }
 
     public enum DocumentType {

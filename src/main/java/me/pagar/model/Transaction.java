@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.ws.rs.HttpMethod;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import com.google.common.base.CaseFormat;
 import com.google.gson.JsonArray;
@@ -351,7 +350,7 @@ public class Transaction extends PagarMeModel<Integer> {
      */
     @Expose(deserialize = false)
     @SerializedName("boleto_expiration_date")
-    private LocalDate boletoExpirationDate;
+    private DateTime boletoExpirationDate;
 
     /**
      * Data de atualização da transação no formato ISODate
@@ -421,6 +420,15 @@ public class Transaction extends PagarMeModel<Integer> {
     @Expose(serialize = true)
     @SerializedName("split_rules")
     private Collection<SplitRule> splitRules;
+
+    @Expose
+    private Shipping shipping;
+
+    @Expose
+    private Billing billing;
+
+    @Expose
+    private Collection<Item> items;
 
     public Transaction() {
         super();
@@ -643,6 +651,10 @@ public class Transaction extends PagarMeModel<Integer> {
         return metadata;
     }
 
+    public DateTime getBoletoExpirationDate(){
+        return boletoExpirationDate;
+    }
+
     /**
      * @return {@link #card}
      */
@@ -687,6 +699,18 @@ public class Transaction extends PagarMeModel<Integer> {
 
     public Object getAntifraudMetadata() {
         return antifraudMetadata;
+    }
+
+    public Shipping getShipping() {
+        return shipping;
+    }
+
+    public Billing getBilling() {
+        return billing;
+    }
+
+    public Collection<Item> getItems() {
+        return items;
     }
 
     public void setAsync(final Boolean async) {
@@ -744,7 +768,7 @@ public class Transaction extends PagarMeModel<Integer> {
         addUnsavedProperty("customer");
     }
 
-    public void setBoletoExpirationDate(final LocalDate boletoExpirationDate) {
+    public void setBoletoExpirationDate(final DateTime boletoExpirationDate) {
         this.boletoExpirationDate = boletoExpirationDate;
         addUnsavedProperty("boletoExpirationDate");
     }
@@ -765,6 +789,18 @@ public class Transaction extends PagarMeModel<Integer> {
     public void setAntifraudMetadata(Object antifraudMetadata) {
         this.antifraudMetadata = antifraudMetadata;
         addUnsavedProperty("antifraud_metadata");
+    }
+
+    public void setShipping(final Shipping shipping) {
+        this.shipping = shipping;
+    }
+
+    public void setBilling(final Billing billing) {
+        this.billing = billing;
+    }
+
+    public void setItems(final Collection<Item> items) {
+        this.items = items;
     }
 
     public Collection<SplitRule> getSplitRules() {
@@ -1050,7 +1086,12 @@ public class Transaction extends PagarMeModel<Integer> {
                 String.format("/%s/%s/capture", getClassName(), getId()));
 
         request.getParameters().put("amount", amount);
-        request.getParameters().put("metadata", this.getMetadata());
+		
+        if (this.getMetadata() != null)
+            request.getParameters().put("metadata", this.getMetadata());
+
+        if (this.getSplitRules() != null)
+            request.getParameters().put("split_rules", this.getSplitRules());
 
         final Transaction other = JSONUtils.getAsObject((JsonObject) request.execute(), Transaction.class);
         copy(other);

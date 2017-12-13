@@ -38,6 +38,8 @@ public class Subscription extends PagarMeModel<String> {
     private DateTime currentPeriodEnd;
     @Expose
     private Map<String, Object> metadata;
+    @Expose(deserialize = false)
+    private Collection<SplitRule> splitRules;
 
     @Expose(serialize = false)
     private Plan plan;
@@ -170,6 +172,10 @@ public class Subscription extends PagarMeModel<String> {
         this.paymentMethod = paymentMethod;
     }
 
+    public void setSplitRules(final Collection<SplitRule> splitRules) {
+        this.splitRules = splitRules;
+    }
+
     public String getCardHash() {
         return cardHash;
     }
@@ -196,6 +202,10 @@ public class Subscription extends PagarMeModel<String> {
 
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public Collection<SplitRule> getSplitRules() {
+        return splitRules;
     }
 
     public DateTime getCurrentPeriodStart() {
