@@ -227,6 +227,9 @@ public class Subscription extends PagarMeModel<String> {
         return charges;
     }
 
+    public void setStatus(SubscriptionStatus status) {
+        this.status = status;
+    }
     public SubscriptionStatus getStatus() {
         return status;
     }
