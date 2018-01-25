@@ -22,6 +22,7 @@ import me.pagarme.factory.PlanFactory;
 import me.pagarme.factory.SplitRulesFactory;
 import me.pagarme.factory.SubscriptionFactory;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import org.joda.time.DateTime;
 
 public class SubscriptionTest extends BaseTest {
 
@@ -97,8 +98,8 @@ public class SubscriptionTest extends BaseTest {
         Assert.assertEquals(subscription.getPlan().getId(), foundSubscription.getPlan().getId());
         Assert.assertEquals(subscription.getStatus(), foundSubscription.getStatus());
 
-        Assert.assertEquals("some_metadata",foundSubscription.getMetadata().keySet().iterator().next());
-        Assert.assertEquals("123456",foundSubscription.getMetadata().values().iterator().next());
+        Assert.assertEquals("some_metadata", foundSubscription.getMetadata().keySet().iterator().next());
+        Assert.assertEquals("123456", foundSubscription.getMetadata().values().iterator().next());
     }
 
     /*
@@ -117,13 +118,13 @@ public class SubscriptionTest extends BaseTest {
 
         Assert.assertEquals(2, subscriptions.size());
     }
-    */
+     */
     @Test
-    public void testTransactionsCollectionInSubscription() throws PagarMeException{
+    public void testTransactionsCollectionInSubscription() throws PagarMeException {
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.save();
         Iterator t = subscription.transactions().iterator();
-        while(t.hasNext()){
+        while (t.hasNext()) {
             Assert.assertThat(t.next(), instanceOf(Transaction.class));
         }
     }
@@ -139,7 +140,7 @@ public class SubscriptionTest extends BaseTest {
     }
 
     @Test
-    public void testSavePostbackUrl() throws PagarMeException{
+    public void testSavePostbackUrl() throws PagarMeException {
         Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         subscription.setPostbackUrl("http://requestb.in/t5mzh9t5");
         subscription = subscription.save();
@@ -150,7 +151,7 @@ public class SubscriptionTest extends BaseTest {
     @Test
     public void testSplitSubscriptionPercentage() throws Throwable {
 
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithPercentage();
 
         subscription.setSplitRules(splitRules);
@@ -165,7 +166,7 @@ public class SubscriptionTest extends BaseTest {
     @Test
     public void testSplitSubscriptionAmount() throws Throwable {
 
-        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(),defaultCard.getId(), defaultCustomer);
+        Subscription subscription = subscriptionFactory.createCreditCardSubscription(defaultPlanWithoutTrialDays.getId(), defaultCard.getId(), defaultCustomer);
         Collection<SplitRule> splitRules = splitRulesFactory.createSplitRuleWithAmount(defaultPlanWithoutTrialDays);
 
         subscription.setSplitRules(splitRules);
@@ -175,5 +176,40 @@ public class SubscriptionTest extends BaseTest {
 
         Collection<SplitRule> foundSplitRules = foundTransaction.getSplitRules();
         Assert.assertEquals(splitRules.size(), foundSplitRules.size());
+    }
+
+    @Test
+    public void testDefaultSettleCharges() throws Throwable {
+        Subscription subscription = subscriptionFactory.createBoletoSubscription(defaultPlanWithoutTrialDays.getId(), defaultCustomer);
+        subscription.save();
+        subscription = subscription.settleCharges();
+
+        Subscription foundSubscription = new Subscription();
+        foundSubscription.find(subscription.getId());
+
+        DateTime expectedCurrentPeriodEnd = DateTime.now().plusDays(
+                foundSubscription.getPlan().getDays()
+        );
+
+        Assert.assertEquals(
+                foundSubscription.getCurrentPeriodEnd().toLocalDate(),
+                expectedCurrentPeriodEnd.toLocalDate()
+        );
+    }
+
+    @Test
+    public void testSettleChargesWithParameter() throws Throwable {
+        Subscription subscription = subscriptionFactory.createBoletoSubscription(defaultPlanWithoutTrialDays.getId(), defaultCustomer);
+        subscription.save();
+
+        int chargesToSettle = 2;
+
+        subscription = subscription.settleCharges(chargesToSettle);
+
+        Subscription foundSubscription = new Subscription();
+        foundSubscription.find(subscription.getId());
+
+        Assert.assertEquals(chargesToSettle, foundSubscription.getSettledCharges().size());
+
     }
 }
