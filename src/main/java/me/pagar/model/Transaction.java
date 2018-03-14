@@ -492,6 +492,10 @@ public class Transaction extends PagarMeModel<Integer> {
         return subscriptionId;
     }
 
+    public void setSubscriptionId(Integer id) {
+        this.subscriptionId = id;
+    }
+
     /**
      * @return {@link #amount}
      */
