@@ -7,11 +7,12 @@ import javax.ws.rs.HttpMethod;
 
 import org.joda.time.DateTime;
 
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
+import java.util.HashMap;
+import java.util.List;
 
 import me.pagar.model.Transaction.PaymentMethod;
 import me.pagar.SubscriptionStatus;
@@ -55,6 +56,8 @@ public class Subscription extends PagarMeModel<String> {
     private Address address;
     @Expose
     private Card card;
+    @Expose
+    private List<Integer> settledCharges;
 
     public Subscription save() throws PagarMeException {
         final Subscription saved = super.save(getClass());
@@ -112,6 +115,44 @@ public class Subscription extends PagarMeModel<String> {
         return other;
     }
 
+    public Collection<Postback> postbacks() throws PagarMeException {
+        validateId();
+
+        final Postback postback = new Postback();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s/%s", getClassName(), getId(), postback.getClassName()));
+
+        return JSONUtils.getAsList((JsonArray) request.execute(), new TypeToken<Collection<Postback>>() {
+        }.getType());
+    }
+
+    public Postback postbacks(final String postbackId) throws PagarMeException {
+        validateId();
+
+        final Postback postback = new Postback();
+
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.GET,
+                String.format("/%s/%s/%s/%s", getClassName(), getId(), postback.getClassName(), postbackId));
+
+        return JSONUtils.getAsObject((JsonObject) request.execute(), Postback.class);
+    }
+
+    public Subscription settleCharges(Integer chargesToSettle) throws PagarMeException {
+        validateId();
+        final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
+                String.format("/%s/%s/settle_charge", getClassName(), getId()));
+        if (chargesToSettle != null) {
+            Map<String, Object> charges = new HashMap<String, Object>();
+            charges.put("charges", chargesToSettle);
+            request.setParameters(charges);
+        } 
+        return JSONUtils.getAsObject((JsonObject) request.execute(), Subscription.class);
+    }
+   
+   public Subscription settleCharges() throws PagarMeException {
+        return settleCharges(null);
+    } 
     private void copy(Subscription other) {
         super.copy(other);
         this.plan = other.getPlan();
@@ -122,56 +163,63 @@ public class Subscription extends PagarMeModel<String> {
         this.charges = other.getCharges();
         this.status = other.getStatus();
         this.metadata = other.getMetadata();
+        this.customer = other.getCustomer();
+        this.paymentMethod = other.getPaymentMethod();
+        this.splitRules = other.getSplitRules();
+        this.phone = other.getPhone();
+        this.address = other.getAddress();
+        this.card = other.getCard();
+        this.settledCharges = other.getSettledCharges();
     }
 
-    public void setCreditCardSubscriptionWithCardHash(String planId, String cardHash, Customer customer){
+    public void setCreditCardSubscriptionWithCardHash(String planId, String cardHash, Customer customer) {
         this.planId = planId;
         this.cardHash = cardHash;
         this.customer = customer;
         this.paymentMethod = PaymentMethod.CREDIT_CARD;
     }
 
-    public void setCreditCardSubscriptionWithCardId(String planId, String cardId, Customer customer){
+    public void setCreditCardSubscriptionWithCardId(String planId, String cardId, Customer customer) {
         this.planId = planId;
         this.cardId = cardId;
         this.customer = customer;
         this.paymentMethod = PaymentMethod.CREDIT_CARD;
     }
 
-    public void setBoletoSubscription(String planId, Customer customer){
+    public void setBoletoSubscription(String planId, Customer customer) {
         this.planId = planId;
         this.paymentMethod = PaymentMethod.BOLETO;
         this.customer = customer;
     }
 
-    public void setRequiredUpdateParameters(String id){
+    public void setRequiredUpdateParameters(String id) {
         setId(id);
     }
 
     @Deprecated
-    public void setUpdatableParameters(String cardId, String cardHash, String planId){
+    public void setUpdatableParameters(String cardId, String cardHash, String planId) {
         this.planId = planId;
         this.cardId = cardId;
         this.cardHash = cardHash;
     }
 
-    public void setPostbackUrl(String postbackUrl){
+    public void setPostbackUrl(String postbackUrl) {
         this.postbackUrl = postbackUrl;
     }
 
-    public void setCardId(String cardId){
+    public void setCardId(String cardId) {
         this.cardId = cardId;
     }
 
-    public void setCardHash (String cardHash){
+    public void setCardHash(String cardHash) {
         this.cardHash = cardHash;
     }
 
-    public void setPlanId(String planId){
+    public void setPlanId(String planId) {
         this.planId = planId;
     }
 
-    public void setPaymentMethod (PaymentMethod paymentMethod){
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
@@ -179,7 +227,7 @@ public class Subscription extends PagarMeModel<String> {
         this.splitRules = splitRules;
     }
 
-     public void setMetadata(final Map<String, Object> metadata) {
+    public void setMetadata(final Map<String, Object> metadata) {
         this.metadata = metadata;
     }
 
@@ -249,6 +297,10 @@ public class Subscription extends PagarMeModel<String> {
 
     public Map<String, Object> getMetadata() {
         return metadata;
+    }
+
+    public List<Integer> getSettledCharges() {
+        return settledCharges;
     }
 
 }
