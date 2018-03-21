@@ -125,7 +125,7 @@ public class BulkAnticipation extends PagarMeModel<String> {
         @SerializedName("pending")
         PENDING, 
 
-        @SerializedName("aproved")
+        @SerializedName("approved")
         APPROVED, 
 
         @SerializedName("refused")
