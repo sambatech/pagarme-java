@@ -238,7 +238,7 @@ public class Recipient  extends PagarMeModel<String> {
         JsonArray response = request.<JsonArray>execute();
         Collection<BulkAnticipation> anticipations = JSONUtils.getAsList(response, new TypeToken<Collection<BulkAnticipation>>(){}.getType());
         if (anticipations != null && !anticipations.isEmpty()) {
-            Optional.of(anticipations.iterator().next());
+            return Optional.of(anticipations.iterator().next());
         }
         return Optional.empty();
     }
