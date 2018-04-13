@@ -50,7 +50,6 @@ public class Recipient  extends PagarMeModel<String> {
     private TransferInterval transferInterval;
 
     @Expose(serialize = false)
-    @SerializedName(value = "lastTransfer")
     private DateTime lastTransfer;
 
     @Expose(serialize = false)
