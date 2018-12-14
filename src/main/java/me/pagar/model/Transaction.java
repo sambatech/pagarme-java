@@ -1046,7 +1046,7 @@ public class Transaction extends PagarMeModel<Integer> {
         final PagarMeRequest request = new PagarMeRequest(HttpMethod.POST,
                 String.format("/%s/%s/refund", getClassName(), getId()));
         request.getParameters().put("amount", amount);
-        if (splitRules != null) {
+        if (splitRules != null && !splitRules.isEmpty()) {
             request.getParameters().put("split_rules", splitRules);
         }
         if (bankAccount != null) {
